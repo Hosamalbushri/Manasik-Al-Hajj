@@ -10,8 +10,10 @@ class LocalesSeeder extends Seeder
 {
     /**
      * Sync locales table from config (idempotent).
+     *
+     * @param  array  $parameters  Passed by Illuminate\Database\Seeder::call(); must be accepted for Laravel 11+.
      */
-    public function run(): void
+    public function run(array $parameters = []): void
     {
         if (! Schema::hasTable('locales')) {
             return;
