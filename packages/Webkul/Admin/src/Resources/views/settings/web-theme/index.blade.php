@@ -109,26 +109,7 @@
                                     <x-admin::form.control-group.error control-name="type" />
                                 </x-admin::form.control-group>
 
-                                <x-admin::form.control-group>
-                                    <x-admin::form.control-group.label class="required">
-                                        @lang('admin::app.settings.web-theme.create.theme-code')
-                                    </x-admin::form.control-group.label>
-
-                                    <x-admin::form.control-group.control
-                                        type="select"
-                                        name="theme_code"
-                                        rules="required"
-                                        value="{{ array_key_first(config('web.theme_definitions', [])) ?: 'web' }}"
-                                    >
-                                        @foreach (config('web.theme_definitions', []) as $code => $def)
-                                            <option value="{{ $code }}" v-pre>
-                                                {{ $def['name'] ?? $code }}
-                                            </option>
-                                        @endforeach
-                                    </x-admin::form.control-group.control>
-
-                                    <x-admin::form.control-group.error control-name="theme_code" />
-                                </x-admin::form.control-group>
+                                <input type="hidden" name="theme_code" value="{{ config('web.storefront_theme_code', 'web') }}">
                             </x-slot>
 
                             <x-slot:footer>
@@ -155,10 +136,7 @@
                         themeTypes: {
                             image_carousel: "@lang('admin::app.settings.web-theme.create.type.image-carousel')",
                             static_content: "@lang('admin::app.settings.web-theme.create.type.static-content')",
-                            footer_links: "@lang('admin::app.settings.web-theme.create.type.footer-links')",
-                            services_content: "@lang('admin::app.settings.web-theme.create.type.services-content')",
                             immersive_hero: "@lang('admin::app.settings.web-theme.create.type.immersive-hero')",
-                            portal_footer: "@lang('admin::app.settings.web-theme.create.type.portal-footer')",
                             web_header: "@lang('admin::app.settings.web-theme.create.type.web-header')",
                             web_footer: "@lang('admin::app.settings.web-theme.create.type.web-footer')",
                         },

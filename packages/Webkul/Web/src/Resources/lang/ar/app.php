@@ -66,6 +66,7 @@ return [
     'header' => [
         'lang_button' => 'اللغة',
         'login' => 'تسجيل الدخول',
+        'close_menu' => 'إغلاق القائمة',
     ],
 
     'home' => [

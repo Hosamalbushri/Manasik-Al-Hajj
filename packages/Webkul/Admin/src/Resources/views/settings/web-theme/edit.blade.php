@@ -1,7 +1,3 @@
-@php
-    $opts = is_array($theme->options) ? $theme->options : [];
-@endphp
-
 <x-admin::layouts>
     <x-slot:title>
         @lang('admin::app.settings.web-theme.edit.title')
@@ -51,6 +47,59 @@
                 </div>
             </div>
 
+            @php
+                $storeLocaleLabels = [];
+                foreach (core()->storeLocales() as $localeRow) {
+                    $code = strtolower((string) ($localeRow['value'] ?? ''));
+                    $title = (string) ($localeRow['title'] ?? strtoupper($code));
+                    if ($code !== '') {
+                        $storeLocaleLabels[$code] = $title;
+                    }
+                }
+            @endphp
+
+            @php
+                $adminDirection = in_array(strtolower(app()->getLocale()), ['ar', 'fa', 'he', 'ur', 'ku', 'dv'], true) ? 'rtl' : 'ltr';
+            @endphp
+
+            <div class="mt-2 flex items-center gap-x-1">
+                <x-admin::dropdown
+                    position="bottom-{{ $adminDirection === 'ltr' ? 'left' : 'right' }}"
+                    :class="count($storeLocaleCodes) <= 1 ? 'hidden' : ''"
+                >
+                    <x-slot:toggle>
+                        <button
+                            type="button"
+                            class="transparent-button px-1 py-1.5 hover:bg-gray-200 focus:bg-gray-200 dark:text-white dark:hover:bg-gray-800 dark:focus:bg-gray-800"
+                        >
+                            <span class="icon-language text-2xl"></span>
+
+                            <span v-pre>{{ $storeLocaleLabels[$activeLocale] ?? strtoupper($activeLocale) }}</span>
+
+                            <input
+                                type="hidden"
+                                name="locale"
+                                value="{{ $activeLocale }}"
+                            />
+
+                            <span class="icon-sort-down text-2xl"></span>
+                        </button>
+                    </x-slot>
+
+                    <x-slot:content class="!p-0">
+                        @foreach ($storeLocaleCodes as $localeCode)
+                            <a
+                                href="?{{ \Illuminate\Support\Arr::query(['locale' => $localeCode]) }}"
+                                class="flex gap-2.5 px-5 py-2 text-base cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-950 dark:text-white {{ $localeCode === $activeLocale ? 'bg-gray-100 dark:bg-gray-950' : ''}}"
+                                v-pre
+                            >
+                                {{ $storeLocaleLabels[$localeCode] ?? strtoupper($localeCode) }}
+                            </a>
+                        @endforeach
+                    </x-slot>
+                </x-admin::dropdown>
+            </div>
+
             {{-- Same two-column body as events edit: flex row, left flex-1, right w-[500px] --}}
             <div class="flex gap-2.5 max-xl:flex-wrap">
                 {{-- Left: section content in accordion (title in header, same pattern as details column) --}}
@@ -76,22 +125,7 @@
                                     'opts' => $opts,
                                 ])
 
-                                @includeWhen($theme->type === 'footer_links', 'admin::settings.web-theme.edit.footer-links', [
-                                    'theme' => $theme,
-                                    'opts' => $opts,
-                                ])
-
-                                @includeWhen($theme->type === 'services_content', 'admin::settings.web-theme.edit.services-content', [
-                                    'theme' => $theme,
-                                    'opts' => $opts,
-                                ])
-
                                 @includeWhen($theme->type === 'immersive_hero', 'admin::settings.web-theme.edit.immersive-hero', [
-                                    'theme' => $theme,
-                                    'opts' => $opts,
-                                ])
-
-                                @includeWhen($theme->type === 'portal_footer', 'admin::settings.web-theme.edit.portal-footer', [
                                     'theme' => $theme,
                                     'opts' => $opts,
                                 ])
@@ -106,11 +140,6 @@
                                     'opts' => $opts,
                                 ])
 
-                                @if ($theme->type === 'product_carousel')
-                                    <div class="box-shadow rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-100">
-                                        @lang('admin::app.settings.web-theme.edit.product-carousel-legacy')
-                                    </div>
-                                @endif
                             </div>
                         </x-slot>
                     </x-admin::accordion>
@@ -165,65 +194,67 @@
                                     @lang('admin::app.settings.web-theme.edit.type')
                                 </x-admin::form.control-group.label>
 
+                                <input
+                                    type="hidden"
+                                    name="type"
+                                    value="{{ $theme->type }}"
+                                >
+
                                 <x-admin::form.control-group.control
                                     type="select"
-                                    name="type"
-                                    rules="required"
+                                    name="type_display"
                                     :value="$theme->type"
+                                    disabled
+                                    class="cursor-not-allowed opacity-70"
                                 >
                                     <option value="image_carousel">@lang('admin::app.settings.web-theme.create.type.image-carousel')</option>
                                     <option value="static_content">@lang('admin::app.settings.web-theme.create.type.static-content')</option>
-                                    <option value="footer_links">@lang('admin::app.settings.web-theme.create.type.footer-links')</option>
-                                    <option value="services_content">@lang('admin::app.settings.web-theme.create.type.services-content')</option>
                                     <option value="immersive_hero">@lang('admin::app.settings.web-theme.create.type.immersive-hero')</option>
-                                    <option value="portal_footer">@lang('admin::app.settings.web-theme.create.type.portal-footer')</option>
                                     <option value="web_header">@lang('admin::app.settings.web-theme.create.type.web-header')</option>
                                     <option value="web_footer">@lang('admin::app.settings.web-theme.create.type.web-footer')</option>
-                                    @if ($theme->type === 'product_carousel')
-                                        <option value="product_carousel">@lang('admin::app.settings.web-theme.create.type.product-carousel-legacy')</option>
-                                    @endif
                                 </x-admin::form.control-group.control>
 
                                 <x-admin::form.control-group.error control-name="type" />
                             </x-admin::form.control-group>
 
-                            <x-admin::form.control-group>
-                                <x-admin::form.control-group.label class="required">
-                                    @lang('admin::app.settings.web-theme.create.theme-code')
-                                </x-admin::form.control-group.label>
-
-                                <x-admin::form.control-group.control
-                                    type="select"
-                                    name="theme_code"
-                                    rules="required"
-                                    :value="$theme->theme_code"
-                                >
-                                    @foreach (config('web.theme_definitions', []) as $code => $def)
-                                        <option value="{{ $code }}">{{ $def['name'] ?? $code }}</option>
-                                    @endforeach
-                                </x-admin::form.control-group.control>
-
-                                <x-admin::form.control-group.error control-name="theme_code" />
-                            </x-admin::form.control-group>
+                            <input type="hidden" name="theme_code" value="{{ config('web.storefront_theme_code', 'web') }}">
 
                             <x-admin::form.control-group class="!mb-0">
-                                <input
-                                    type="hidden"
-                                    name="status"
-                                    value="0"
-                                >
-
-                                <label class="flex cursor-pointer items-center gap-2.5 text-sm text-gray-800 dark:text-gray-200">
+                                @if (in_array($theme->type, ['web_header', 'web_footer'], true))
+                                    <input type="hidden" name="status" value="{{ $theme->status ? '1' : '0' }}">
+                                    <div class="pointer-events-none select-none opacity-60">
+                                        <label class="flex cursor-not-allowed items-center gap-2.5 text-sm text-gray-800 dark:text-gray-200">
+                                            <input
+                                                type="checkbox"
+                                                class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900"
+                                                disabled
+                                                {{ $theme->status ? 'checked' : '' }}
+                                            >
+                                            <span>@lang('admin::app.settings.web-theme.edit.status-active')</span>
+                                        </label>
+                                    </div>
+                                    <p class="mt-1.5 text-xs text-gray-500 dark:text-gray-400">
+                                        @lang('admin::app.settings.web-theme.edit.status-active-locked-hint')
+                                    </p>
+                                @else
                                     <input
-                                        type="checkbox"
+                                        type="hidden"
                                         name="status"
-                                        value="1"
-                                        class="rounded border-gray-300 text-brandColor focus:ring-brandColor dark:border-gray-600 dark:bg-gray-900"
-                                        {{ $theme->status ? 'checked' : '' }}
+                                        value="0"
                                     >
 
-                                    <span>@lang('admin::app.settings.web-theme.edit.status-active')</span>
-                                </label>
+                                    <label class="flex cursor-pointer items-center gap-2.5 text-sm text-gray-800 dark:text-gray-200">
+                                        <input
+                                            type="checkbox"
+                                            name="status"
+                                            value="1"
+                                            class="rounded border-gray-300 text-brandColor focus:ring-brandColor dark:border-gray-600 dark:bg-gray-900"
+                                            {{ $theme->status ? 'checked' : '' }}
+                                        >
+
+                                        <span>@lang('admin::app.settings.web-theme.edit.status-active')</span>
+                                    </label>
+                                @endif
                             </x-admin::form.control-group>
                         </x-slot>
                     </x-admin::accordion>

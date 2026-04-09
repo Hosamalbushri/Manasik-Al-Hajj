@@ -1,19 +1,83 @@
 @props(['opts' => []])
 
 @php
+    use Illuminate\Support\Facades\Storage;
+    use Webkul\Web\Support\WebHeaderPrimaryTabs;
+
     $o = is_array($opts) ? $opts : [];
     $brand = array_merge([
-        'icon' => 'fas fa-kaaba', 'title' => '', 'subtitle' => '', 'home_url' => '',
+        'icon' => 'fas fa-kaaba', 'title' => '', 'subtitle' => '', 'logo_path' => '',
     ], $o['brand'] ?? []);
-    $homeUrl = trim((string) ($brand['home_url'] ?? ''));
-    if ($homeUrl === '') {
-        $homeUrl = \Illuminate\Support\Facades\Route::has('web.home.index') ? route('web.home.index') : '#';
+    $homeUrl = \Illuminate\Support\Facades\Route::has('web.home.index') ? route('web.home.index') : '#';
+    $logoPath = trim((string) ($brand['logo_path'] ?? ''));
+    $logoUrl = '';
+    if ($logoPath !== '') {
+        $pub = ltrim(str_replace('storage/', '', $logoPath), '/');
+        if ($pub !== '' && Storage::disk('public')->exists($pub)) {
+            $logoUrl = Storage::url($pub);
+        }
     }
-    $dirAttr = (string) ($o['dir'] ?? 'auto');
-    if (! in_array($dirAttr, ['rtl', 'ltr'], true)) {
-        $dirAttr = in_array(app()->getLocale(), ['ar', 'fa'], true) ? 'rtl' : 'ltr';
+    $dirAttr = in_array(strtolower(app()->getLocale()), ['ar', 'fa', 'he', 'ur', 'ku', 'dv'], true) ? 'rtl' : 'ltr';
+
+    $navItems = [];
+    $primary = is_array($o['nav_primary'] ?? null) ? $o['nav_primary'] : [];
+    $hasPageKeys = isset($primary[0]['page_key']) && (string) $primary[0]['page_key'] !== '';
+    $headerNavFromStructured = false;
+
+    if ($hasPageKeys && count($primary) >= 4) {
+        foreach ($primary as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $key = (string) ($row['page_key'] ?? '');
+            if ($key === '') {
+                continue;
+            }
+            $navItems[] = [
+                'label' => (string) ($row['label'] ?? ''),
+                'url'   => WebHeaderPrimaryTabs::resolveUrl($key),
+            ];
+        }
+        $headerNavFromStructured = true;
+    } elseif (
+        is_array($o['nav_pages'] ?? null)
+        && count($o['nav_pages']) >= 4
+        && count($primary) >= 4
+    ) {
+        for ($i = 0; $i < 4; $i++) {
+            $navItems[] = [
+                'label' => (string) ($primary[$i]['label'] ?? ''),
+                'url'   => (string) ($o['nav_pages'][$i]['url'] ?? ''),
+            ];
+        }
+        $headerNavFromStructured = true;
+    } elseif (count($primary) >= 4) {
+        $order = WebHeaderPrimaryTabs::defaultKeyOrder();
+        foreach (range(0, 3) as $i) {
+            $k = $order[$i] ?? null;
+            if ($k === null) {
+                break;
+            }
+            $navItems[] = [
+                'label' => (string) ($primary[$i]['label'] ?? ''),
+                'url'   => WebHeaderPrimaryTabs::resolveUrl($k),
+            ];
+        }
+        $headerNavFromStructured = true;
+    } else {
+        $navItems = is_array($o['nav'] ?? null) ? $o['nav'] : [];
     }
-    $navItems = is_array($o['nav'] ?? null) ? $o['nav'] : [];
+
+    if ($headerNavFromStructured) {
+        foreach (is_array($o['nav_secondary'] ?? null) ? $o['nav_secondary'] : [] as $sec) {
+            $sl = trim((string) ($sec['label'] ?? ''));
+            $su = trim((string) ($sec['url'] ?? ''));
+            if ($sl === '' && $su === '') {
+                continue;
+            }
+            $navItems[] = ['label' => $sl, 'url' => $su];
+        }
+    }
     $lang = array_merge(['show_switcher' => true, 'button_label' => ''], $o['lang'] ?? []);
     $login = array_merge(['show' => true, 'label' => '', 'url' => ''], $o['login'] ?? []);
     $loginUrl = trim((string) ($login['url'] ?? ''));
@@ -22,28 +86,67 @@
     $currentLocaleDisplay = strtoupper(app()->getLocale());
     $storeLocalesList = core()->storeLocales();
     $showWebLangSwitcher = ! empty($lang['show_switcher']) && count($storeLocalesList) > 1;
+
+    $headerNavInlineStyle = '';
+    if (is_array($o['colors'] ?? null)) {
+        $headerThemeColors = array_merge(
+            ['primary' => '#1F6E2F', 'secondary' => '#2C8E3C'],
+            $o['colors']
+        );
+        $hp = strtoupper(trim((string) ($headerThemeColors['primary'] ?? '')));
+        $hs = strtoupper(trim((string) ($headerThemeColors['secondary'] ?? '')));
+        $headerNavStyleParts = [];
+        if (preg_match('/^#[0-9A-F]{6}$/', $hp)) {
+            $headerNavStyleParts[] = '--web-nav-primary: '.$hp;
+            $headerNavStyleParts[] = '--web-nav-primary-strong: color-mix(in srgb, '.$hp.' 80%, black)';
+        }
+        if (preg_match('/^#[0-9A-F]{6}$/', $hs)) {
+            $headerNavStyleParts[] = '--web-nav-accent: '.$hs;
+        }
+        $headerNavInlineStyle = $headerNavStyleParts !== [] ? implode('; ', $headerNavStyleParts).';' : '';
+    }
 @endphp
 
 @pushOnce('styles', 'web-hajj-navbar-styles')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 @endPushOnce
 
-<nav class="web-hajj-navbar" dir="{{ $dirAttr }}">
+<nav class="web-hajj-navbar" dir="{{ $dirAttr }}" @if ($headerNavInlineStyle !== '') style="{{ $headerNavInlineStyle }}" @endif>
+    <div class="web-hajj-navbar__backdrop" aria-hidden="true"></div>
     <div class="nav-container">
         <div class="nav-brand-zone">
             <a href="{{ $homeUrl }}" class="logo">
-                <i class="{{ $brand['icon'] ?: 'fas fa-kaaba' }} logo-icon"></i>
-                <div>
-                    <span class="logo-text">{{ $brand['title'] }}</span>
-                    @if (! empty($brand['subtitle']))
-                        <span class="logo-sub">{{ $brand['subtitle'] }}</span>
-                    @endif
-                </div>
+                @if ($logoUrl !== '')
+                    <img
+                        src="{{ $logoUrl }}"
+                        alt="{{ $brand['title'] ?: __('web::app.layout.brand') }}"
+                        class="header-brand-logo max-h-10 w-auto max-w-[200px] object-contain object-left"
+                    >
+                @else
+                    <i class="{{ $brand['icon'] ?: 'fas fa-kaaba' }} logo-icon"></i>
+                    <div>
+                        <span class="logo-text">{{ $brand['title'] }}</span>
+                        @if (! empty($brand['subtitle']))
+                            <span class="logo-sub">{{ $brand['subtitle'] }}</span>
+                        @endif
+                    </div>
+                @endif
             </a>
         </div>
 
         <div class="nav-links-zone">
             <ul class="nav-links" id="webNavLinks">
+                <li class="web-nav-drawer__close-row" role="presentation">
+                    <button
+                        type="button"
+                        class="web-nav-drawer__close"
+                        id="webNavCloseBtn"
+                        aria-label="{{ __('web::app.header.close_menu') }}"
+                        title="{{ __('web::app.header.close_menu') }}"
+                    >
+                        <i class="fas fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </li>
                 @foreach ($navItems as $item)
                     @php
                         $u = (string) ($item['url'] ?? '#');
@@ -51,9 +154,6 @@
                     @endphp
                     <li>
                         <a href="{{ $u ?: '#' }}" class="{{ $isActive ? 'is-active' : '' }}">
-                            @if (! empty($item['icon']))
-                                <i class="{{ $item['icon'] }}"></i>
-                            @endif
                             {{ $item['label'] ?? '' }}
                         </a>
                     </li>

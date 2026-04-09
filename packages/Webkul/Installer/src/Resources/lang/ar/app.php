@@ -110,6 +110,63 @@ return [
             ],
         ],
 
+        'web-theme' => [
+            'header' => [
+                'lang-button' => 'اللغة',
+                'login-label' => 'تسجيل الدخول',
+                'brand' => [
+                    'title' => 'مناسك الحج',
+                    'subtitle' => '| حج مبرور',
+                ],
+                'nav' => [
+                    'home' => 'الرئيسية',
+                    'services' => 'المناسك',
+                    'schedule' => 'المواعيد',
+                    'maps' => 'الخرائط',
+                    'support' => 'الدعم',
+                ],
+            ],
+            'footer' => [
+                'brand' => [
+                    'title' => 'مناسك الحج',
+                    'description' => 'منصة رقمية لخدمات الحجاج والمعتمرين.',
+                    'trust' => 'خدمات موثوقة على مدار الساعة',
+                ],
+                'col-explore' => [
+                    'title' => 'استكشف',
+                ],
+                'col-support' => [
+                    'title' => 'الدعم',
+                    'links' => [
+                        'faq' => 'الأسئلة الشائعة',
+                        'contact' => 'تواصل معنا',
+                        'privacy' => 'سياسة الخصوصية',
+                    ],
+                ],
+                'contact' => [
+                    'title' => 'تواصل معنا',
+                    'phone' => '+966 50 000 0000',
+                    'email' => 'info@example.com',
+                    'address' => 'مكة المكرمة - المملكة العربية السعودية',
+                ],
+                'subscribe' => [
+                    'title' => 'اشترك في النشرة البريدية',
+                    'placeholder' => 'أدخل بريدك الإلكتروني',
+                    'privacy' => 'بالاشتراك أنت توافق على سياسة الخصوصية.',
+                    'success' => 'تم الاشتراك بنجاح.',
+                    'invalid' => 'يرجى إدخال بريد إلكتروني صحيح.',
+                ],
+                'bottom' => [
+                    'copyright' => 'جميع الحقوق محفوظة',
+                    'mini-nav-label' => 'روابط سريعة',
+                    'links' => [
+                        'terms' => 'الشروط والأحكام',
+                        'privacy' => 'سياسة الخصوصية',
+                    ],
+                ],
+            ],
+        ],
+
         'workflow' => [
             'email-to-participants-after-activity-updation' => 'رسائل بريد إلكتروني للمشاركين بعد تحديث النشاط',
             'email-to-participants-after-activity-creation' => 'رسائل بريد إلكتروني للمشاركين بعد إنشاء النشاط',

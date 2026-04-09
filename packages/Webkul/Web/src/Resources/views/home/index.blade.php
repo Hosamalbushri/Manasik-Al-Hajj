@@ -54,28 +54,6 @@
 
                 @break
 
-            @case (ThemeCustomization::FOOTER_LINKS)
-                <x-web::home.footer-links
-                    :options="$data"
-                    :aria-label="trans('web::app.home.index.footer-links')"
-                />
-
-                @break
-
-            @case (ThemeCustomization::SERVICES_CONTENT)
-                <x-web::home.services-strip
-                    :options="$data"
-                    :aria-label="trans('web::app.home.index.services-strip')"
-                />
-
-                @break
-
-            @case (ThemeCustomization::PRODUCT_CAROUSEL)
-                @break
-
-            @case (ThemeCustomization::PORTAL_FOOTER)
-                @break
-
             @case (ThemeCustomization::WEB_HEADER)
             @case (ThemeCustomization::WEB_FOOTER)
                 @break

@@ -15,6 +15,7 @@
 @endPushOnce
 
 <nav class="web-hajj-navbar" dir="rtl">
+    <div class="web-hajj-navbar__backdrop" aria-hidden="true"></div>
     <div class="nav-container">
         <div class="nav-brand-zone">
             <a href="{{ route('web.home.index') }}" class="logo">
@@ -28,13 +29,23 @@
 
         <div class="nav-links-zone">
             <ul class="nav-links" id="webNavLinks">
+                <li class="web-nav-drawer__close-row" role="presentation">
+                    <button
+                        type="button"
+                        class="web-nav-drawer__close"
+                        id="webNavCloseBtn"
+                        aria-label="{{ __('web::app.header.close_menu') }}"
+                        title="{{ __('web::app.header.close_menu') }}"
+                    >
+                        <i class="fas fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </li>
                 @foreach ($navItems as $item)
                     @php
                         $isActive = $item['url'] !== '#' && rtrim(request()->url(), '/') === rtrim($item['url'], '/');
                     @endphp
                     <li>
                         <a href="{{ $item['url'] }}" class="{{ $isActive ? 'is-active' : '' }}">
-                            <i class="{{ $item['icon'] }}"></i>
                             {{ $item['label'] }}
                         </a>
                     </li>

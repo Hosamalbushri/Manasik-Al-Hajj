@@ -110,6 +110,63 @@ return [
             ],
         ],
 
+        'web-theme' => [
+            'header' => [
+                'lang-button' => 'Language',
+                'login-label' => 'Login',
+                'brand' => [
+                    'title' => 'Krayin',
+                    'subtitle' => '| CRM',
+                ],
+                'nav' => [
+                    'home' => 'Home',
+                    'services' => 'Services',
+                    'schedule' => 'Schedule',
+                    'maps' => 'Maps',
+                    'support' => 'Support',
+                ],
+            ],
+            'footer' => [
+                'brand' => [
+                    'title' => 'Krayin',
+                    'description' => 'A digital platform to serve your customers better.',
+                    'trust' => 'Trusted service, 24/7 support',
+                ],
+                'col-explore' => [
+                    'title' => 'Explore',
+                ],
+                'col-support' => [
+                    'title' => 'Support',
+                    'links' => [
+                        'faq' => 'FAQ',
+                        'contact' => 'Contact Us',
+                        'privacy' => 'Privacy Policy',
+                    ],
+                ],
+                'contact' => [
+                    'title' => 'Contact',
+                    'phone' => '+966 50 000 0000',
+                    'email' => 'info@example.com',
+                    'address' => 'Makkah - Saudi Arabia',
+                ],
+                'subscribe' => [
+                    'title' => 'Subscribe to our newsletter',
+                    'placeholder' => 'Enter your email',
+                    'privacy' => 'By subscribing, you agree to the privacy policy.',
+                    'success' => 'Subscribed successfully.',
+                    'invalid' => 'Please enter a valid email address.',
+                ],
+                'bottom' => [
+                    'copyright' => 'All rights reserved',
+                    'mini-nav-label' => 'Quick Links',
+                    'links' => [
+                        'terms' => 'Terms & Conditions',
+                        'privacy' => 'Privacy Policy',
+                    ],
+                ],
+            ],
+        ],
+
         'workflow' => [
             'email-to-participants-after-activity-updation' => 'Emails to participants after activity updation',
             'email-to-participants-after-activity-creation' => 'Emails to participants after activity creation',

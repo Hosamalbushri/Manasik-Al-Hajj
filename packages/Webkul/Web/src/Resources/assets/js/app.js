@@ -33,6 +33,7 @@ function loadStylesheetOnce(href) {
 function initNavbar() {
     const burger = document.getElementById('webBurgerBtn');
     const navLinks = document.getElementById('webNavLinks');
+    const navCloseBtn = document.getElementById('webNavCloseBtn');
     const overlay = document.getElementById('webOverlay');
     const body = document.body;
     const langDropdown = document.getElementById('webLangDropdown');
@@ -64,6 +65,15 @@ function initNavbar() {
 
     burger.addEventListener('click', toggleMobileMenu);
     overlay.addEventListener('click', closeMenu);
+    if (navCloseBtn) {
+        navCloseBtn.addEventListener('click', closeMenu);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            closeMenu();
+        }
+    });
 
     navLinks.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
@@ -318,12 +328,34 @@ function initUniqueFooter() {
 
         const goTop = root.querySelector('[data-web-uf-gotop]');
         if (goTop) {
+            const scrollTop = () => {
+                const se = document.scrollingElement;
+                return (
+                    window.scrollY
+                    || window.pageYOffset
+                    || (se && se.scrollTop)
+                    || document.documentElement.scrollTop
+                    || document.body.scrollTop
+                    || 0
+                );
+            };
             const sync = () => {
-                const y = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-                goTop.classList.toggle('web-uf__gotop--visible', y > 300);
+                const y = scrollTop();
+                const docH = Math.max(
+                    document.body?.scrollHeight || 0,
+                    document.documentElement?.scrollHeight || 0,
+                    0,
+                );
+                const vh = window.innerHeight || document.documentElement.clientHeight || 0;
+                const canScroll = docH > vh + 40;
+                goTop.classList.toggle(
+                    'web-uf__gotop--visible',
+                    canScroll && y > 100,
+                );
             };
             sync();
             window.addEventListener('scroll', sync, { passive: true });
+            window.addEventListener('resize', sync, { passive: true });
             goTop.addEventListener('click', () => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });

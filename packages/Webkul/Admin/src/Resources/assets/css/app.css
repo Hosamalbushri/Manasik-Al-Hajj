@@ -13,6 +13,22 @@
   }
 
 @font-face {
+    font-family: 'bagisto-admin';
+    src: url('../fonts/bagisto-admin.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'bagisto-shop';
+    src: url('../fonts/bagisto-shop.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
     font-family: 'Cairo';
     font-style: normal;
     font-weight: 200;
@@ -78,7 +94,7 @@
 
   [class^="icon-"], [class*=" icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'icomoon' !important;
+    font-family: 'icomoon', 'bagisto-shop' !important;
     speak: never;
     font-style: normal;
     font-weight: normal;
@@ -89,6 +105,16 @@
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  .icon-language:before {
+    content: "\e921";
+    font-family: 'bagisto-admin' !important;
+  }
+
+  .icon-sort-down:before {
+    content: "\e934";
+    font-family: 'bagisto-admin' !important;
   }
 
 @layer components {

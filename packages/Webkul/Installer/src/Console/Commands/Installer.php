@@ -23,7 +23,8 @@ class Installer extends Command
      */
     protected $signature = 'krayin-crm:install
         { --skip-env-check : Skip env check. }
-        { --skip-admin-creation : Skip admin creation. }';
+        { --skip-admin-creation : Skip admin creation. }
+        { --default-store-locale= : Default storefront locale code (e.g. ar, en). }';
 
     /**
      * The console command description.
@@ -136,8 +137,15 @@ class Installer extends Command
         $this->call('migrate:fresh');
 
         $this->warn('Step: Seeding basic data for Krayin kickstart...');
+        $defaultStoreLocale = (string) ($this->option('default-store-locale') ?: ($applicationDetails['store_locale'] ?? ($applicationDetails['locale'] ?? 'en')));
+
+        if (! array_key_exists($defaultStoreLocale, $this->locales)) {
+            $defaultStoreLocale = (string) ($applicationDetails['store_locale'] ?? ($applicationDetails['locale'] ?? 'en'));
+        }
+
         $this->info(app(KrayinDatabaseSeeder::class)->run([
             'locale' => $applicationDetails['locale'] ?? 'en',
+            'default_store_locale' => $defaultStoreLocale,
             'currency' => $applicationDetails['currency'] ?? 'USD',
         ]));
 
@@ -229,6 +237,12 @@ class Installer extends Command
             $this->locales
         );
 
+        $storeLocale = select(
+            label: 'Please select the default storefront locale',
+            options: $this->locales,
+            default: $locale
+        );
+
         $currency = $this->updateEnvChoice(
             'APP_CURRENCY',
             'Please select the default currency',
@@ -237,6 +251,7 @@ class Installer extends Command
 
         return [
             'locale' => $locale,
+            'store_locale' => $storeLocale,
             'currency' => $currency,
         ];
     }

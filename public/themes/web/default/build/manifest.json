@@ -1,6 +1,6 @@
 {
   "src/Resources/assets/css/app.css": {
-    "file": "assets/app-D8IzEVbh.css",
+    "file": "assets/app-C6QB2VYG.css",
     "src": "src/Resources/assets/css/app.css",
     "isEntry": true
   },
@@ -36,13 +36,17 @@
     "file": "assets/Cairo-SemiBold-WHNjihNv.ttf",
     "src": "src/Resources/assets/fonts/Cairo-SemiBold.ttf"
   },
+  "src/Resources/assets/fonts/bagisto-shop.woff": {
+    "file": "assets/bagisto-shop-BHAKyv0r.woff",
+    "src": "src/Resources/assets/fonts/bagisto-shop.woff"
+  },
   "src/Resources/assets/js/app.js": {
-    "file": "assets/app-7fvRHz3E.js",
+    "file": "assets/app-B_mxYU8u.js",
     "name": "app",
     "src": "src/Resources/assets/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-D8IzEVbh.css"
+      "assets/app-C6QB2VYG.css"
     ],
     "assets": [
       "assets/Cairo-ExtraLight-B8LDBVyd.ttf",
@@ -52,7 +56,8 @@
       "assets/Cairo-SemiBold-WHNjihNv.ttf",
       "assets/Cairo-Bold-CRUa7UyS.ttf",
       "assets/Cairo-ExtraBold-BOrJWdUw.ttf",
-      "assets/Cairo-Black-BBBecWCb.ttf"
+      "assets/Cairo-Black-BBBecWCb.ttf",
+      "assets/bagisto-shop-BHAKyv0r.woff"
     ]
   }
 }

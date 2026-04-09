@@ -55,8 +55,7 @@ class HomeController extends Controller
     {
         return $this->webThemeCustomizationRepository
             ->getActiveForStorefront($themeCode)
-            ->filter(fn (WebThemeCustomization $row) => $row->type !== ThemeCustomization::PORTAL_FOOTER
-                && $row->type !== ThemeCustomization::WEB_HEADER
+            ->filter(fn (WebThemeCustomization $row) => $row->type !== ThemeCustomization::WEB_HEADER
                 && $row->type !== ThemeCustomization::WEB_FOOTER)
             ->values()
             ->map(function (WebThemeCustomization $row) {
@@ -80,8 +79,7 @@ class HomeController extends Controller
             ->filter(function (array $row) {
                 $type = (string) ($row['type'] ?? '');
 
-                return $type !== ThemeCustomization::PORTAL_FOOTER
-                    && $type !== ThemeCustomization::WEB_HEADER
+                return $type !== ThemeCustomization::WEB_HEADER
                     && $type !== ThemeCustomization::WEB_FOOTER;
             })
             ->sortBy(fn (array $row, int $i) => $row['sort_order'] ?? $i)

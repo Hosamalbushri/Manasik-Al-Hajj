@@ -24,21 +24,12 @@ class WebThemeCustomizationRepository extends Repository
             ->where('theme_code', $themeCode)
             ->where('status', true)
             ->orderBy('sort_order')
-            ->get();
-    }
+            ->get()
+            ->map(function (WebThemeCustomization $row) {
+                $row->options = $this->resolveLocalizedOptions($row->options, app()->getLocale());
 
-    public function getActivePortalFooter(string $themeCode): ?WebThemeCustomization
-    {
-        /** @var WebThemeCustomization|null $row */
-        $row = $this->model
-            ->newQuery()
-            ->where('theme_code', $themeCode)
-            ->where('type', 'portal_footer')
-            ->where('status', true)
-            ->orderBy('id')
-            ->first();
-
-        return $row;
+                return $row;
+            });
     }
 
     public function getActiveWebHeader(string $themeCode): ?WebThemeCustomization
@@ -51,6 +42,10 @@ class WebThemeCustomizationRepository extends Repository
             ->where('status', true)
             ->orderBy('id')
             ->first();
+
+        if ($row) {
+            $row->options = $this->resolveLocalizedOptions($row->options, app()->getLocale());
+        }
 
         return $row;
     }
@@ -66,7 +61,31 @@ class WebThemeCustomizationRepository extends Repository
             ->orderBy('id')
             ->first();
 
+        if ($row) {
+            $row->options = $this->resolveLocalizedOptions($row->options, app()->getLocale());
+        }
+
         return $row;
+    }
+
+    /**
+     * @param  array<string, mixed>|null  $options
+     * @return array<string, mixed>
+     */
+    public function resolveLocalizedOptions(?array $options, ?string $locale = null): array
+    {
+        $options = is_array($options) ? $options : [];
+        $translations = $options['translations'] ?? null;
+
+        if (! is_array($translations)) {
+            return $options;
+        }
+
+        $locale = strtolower((string) ($locale ?: app()->getLocale()));
+        $defaultLocale = strtolower((string) ($options['default_locale'] ?? config('app.locale', 'en')));
+        $resolved = $translations[$locale] ?? $translations[$defaultLocale] ?? [];
+
+        return is_array($resolved) ? $resolved : [];
     }
 
     public function sanitizeHtml(string $html): string

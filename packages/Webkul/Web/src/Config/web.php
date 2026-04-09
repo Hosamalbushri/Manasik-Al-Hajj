@@ -61,6 +61,30 @@ return [
         ],
     ],
 
+    /**
+     * Primary header tabs (fixed targets). Order in the admin is stored per locale; URLs are not editable.
+     *
+     * @var array<string, array{route: ?string, path: string}>
+     */
+    'header_primary_tabs' => [
+        'home' => [
+            'route' => 'web.home.index',
+            'path'  => '/',
+        ],
+        'services' => [
+            'route' => null,
+            'path'  => '#services',
+        ],
+        'schedule' => [
+            'route' => null,
+            'path'  => '#schedule',
+        ],
+        'maps' => [
+            'route' => null,
+            'path'  => '#maps',
+        ],
+    ],
+
     'services' => [
         [
             'service_icon' => 'icon-calendar',

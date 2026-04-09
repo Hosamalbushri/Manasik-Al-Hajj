@@ -264,7 +264,7 @@
     "isDynamicEntry": true
   },
   "src/Resources/assets/css/app.css": {
-    "file": "assets/app-YBiVDzsp.css",
+    "file": "assets/app-B12tvNeA.css",
     "src": "src/Resources/assets/css/app.css",
     "isEntry": true
   },
@@ -299,6 +299,14 @@
   "src/Resources/assets/fonts/Cairo-SemiBold.ttf": {
     "file": "assets/Cairo-SemiBold-WHNjihNv.ttf",
     "src": "src/Resources/assets/fonts/Cairo-SemiBold.ttf"
+  },
+  "src/Resources/assets/fonts/bagisto-admin.woff": {
+    "file": "assets/bagisto-admin-BzOkv6lg.woff",
+    "src": "src/Resources/assets/fonts/bagisto-admin.woff"
+  },
+  "src/Resources/assets/fonts/bagisto-shop.woff": {
+    "file": "assets/bagisto-shop-BHAKyv0r.woff",
+    "src": "src/Resources/assets/fonts/bagisto-shop.woff"
   },
   "src/Resources/assets/fonts/icomoon.woff": {
     "file": "assets/icomoon-BbY1GX-d.woff",

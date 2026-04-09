@@ -66,6 +66,7 @@ return [
     'header' => [
         'lang_button' => 'Language',
         'login' => 'Sign in',
+        'close_menu' => 'Close menu',
     ],
 
     'home' => [

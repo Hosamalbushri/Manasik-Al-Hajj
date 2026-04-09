@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CountriesSeeder::class, false, ['parameters' => $parameters]);
         $this->call(StatesSeeder::class, false, ['parameters' => $parameters]);
         $this->call(LocalesSeeder::class, false, ['parameters' => $parameters]);
+        $this->call(WebThemeDefaultsSeeder::class, false, ['parameters' => $parameters]);
     }
 }

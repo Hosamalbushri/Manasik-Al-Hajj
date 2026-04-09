@@ -17,16 +17,20 @@ class WebThemeCustomizationDataGrid extends DataGrid
                 'shop_theme_customizations.type',
                 'shop_theme_customizations.sort_order',
                 'shop_theme_customizations.status',
-                'shop_theme_customizations.theme_code',
                 'shop_theme_customizations.created_at',
-            );
+            )
+            ->whereNotIn('shop_theme_customizations.type', [
+                'footer_links',
+                'services_content',
+                'product_carousel',
+                'portal_footer',
+            ]);
 
         $this->addFilter('id', 'shop_theme_customizations.id');
         $this->addFilter('name', 'shop_theme_customizations.name');
         $this->addFilter('type', 'shop_theme_customizations.type');
         $this->addFilter('sort_order', 'shop_theme_customizations.sort_order');
         $this->addFilter('status', 'shop_theme_customizations.status');
-        $this->addFilter('theme_code', 'shop_theme_customizations.theme_code');
 
         return $queryBuilder;
     }
@@ -62,20 +66,6 @@ class WebThemeCustomizationDataGrid extends DataGrid
                 $key = 'admin::app.settings.web-theme.types.'.$row->type;
 
                 return trans($key) !== $key ? trans($key) : $row->type;
-            },
-        ]);
-
-        $this->addColumn([
-            'index'      => 'theme_code',
-            'label'      => trans('admin::app.settings.web-theme.index.datagrid.theme'),
-            'type'       => 'string',
-            'searchable' => true,
-            'sortable'   => true,
-            'filterable' => true,
-            'closure'    => function ($row) {
-                $themes = config('web.theme_definitions', []);
-
-                return $themes[$row->theme_code]['name'] ?? $row->theme_code;
             },
         ]);
 
@@ -144,7 +134,13 @@ class WebThemeCustomizationDataGrid extends DataGrid
                 'icon'   => 'icon-delete',
                 'title'  => trans('admin::app.settings.web-theme.index.datagrid.delete'),
                 'method' => 'DELETE',
-                'url'    => fn ($row) => route('admin.settings.web-theme.destroy', $row->id),
+                'url'    => function ($row) {
+                    if (in_array($row->type, ['web_header', 'web_footer'], true)) {
+                        return '';
+                    }
+
+                    return route('admin.settings.web-theme.destroy', $row->id);
+                },
             ]);
         }
     }

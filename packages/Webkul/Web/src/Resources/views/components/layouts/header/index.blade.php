@@ -8,7 +8,7 @@
             ->getActiveWebHeader(config('web.storefront_theme_code', 'web'));
     }
     $headerOpts = null;
-    if ($webHeader && is_array($webHeader->options) && ($webHeader->options['enabled'] ?? true)) {
+    if ($webHeader && is_array($webHeader->options)) {
         $headerOpts = $webHeader->options;
     }
 @endphp

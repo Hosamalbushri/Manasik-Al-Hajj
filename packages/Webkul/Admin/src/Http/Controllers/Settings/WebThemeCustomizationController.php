@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Webkul\Admin\DataGrids\Settings\WebThemeCustomizationDataGrid;
 use Webkul\Admin\Http\Controllers\Controller;
-use Webkul\Web\Models\WebThemeCustomization;
 use Webkul\Web\Models\ThemeCustomization;
+use Webkul\Web\Models\WebThemeCustomization;
 use Webkul\Web\Repositories\WebThemeCustomizationRepository;
+use Webkul\Web\Support\WebHeaderPrimaryTabs;
 
 class WebThemeCustomizationController extends Controller
 {
@@ -23,97 +24,105 @@ class WebThemeCustomizationController extends Controller
     private const TYPES_CREATABLE = [
         'image_carousel',
         'static_content',
-        'footer_links',
-        'services_content',
         'immersive_hero',
-        'portal_footer',
         ThemeCustomization::WEB_HEADER,
         ThemeCustomization::WEB_FOOTER,
     ];
 
     /**
-     * Types allowed on update (legacy rows may still be product_carousel).
+     * Types allowed on update.
      *
      * @return list<string>
      */
     private static function typesForUpdate(): array
     {
-        return array_merge(self::TYPES_CREATABLE, ['product_carousel']);
+        return self::TYPES_CREATABLE;
     }
 
     /**
      * @return array<string, mixed>
      */
-    protected function normalizeImmersiveHeroOptions(Request $request): array
+    protected function normalizeImmersiveHeroOptions(Request $request, WebThemeCustomization $theme, string $locale): array
     {
         $o = $request->input('options', []);
         $o = is_array($o) ? $o : [];
+        $existingLocale = $this->localizedOptionsForLocale($theme, $locale);
+        $existingSlides = is_array($existingLocale['slides'] ?? null) ? $existingLocale['slides'] : [];
+        $deletedSlides = $request->input('deleted_slides');
+        $deletedSlides = is_array($deletedSlides) ? $deletedSlides : [];
 
-        $wordsText = (string) data_get($o, 'typing.words_text', '');
-        $words = array_values(array_filter(array_map('trim', preg_split('/\r\n|\r|\n/', $wordsText) ?: [])));
+        foreach ($deletedSlides as $item) {
+            $path = (string) ($item['image'] ?? '');
+            if ($path === '') {
+                continue;
+            }
 
-        $cards = [];
-        foreach ([0, 1, 2] as $i) {
-            $cards[] = [
-                'icon'       => $this->sanitizeImmersiveFaClass((string) data_get($o, "cards.$i.icon", '')),
-                'date_line'  => mb_substr(trim((string) data_get($o, "cards.$i.date_line", '')), 0, 191),
-                'title'      => mb_substr(trim((string) data_get($o, "cards.$i.title", '')), 0, 191),
-                'attendees'  => mb_substr(trim((string) data_get($o, "cards.$i.attendees", '')), 0, 191),
+            $rel = ltrim(str_replace('storage/', '', $path), '/');
+            if ($rel !== '') {
+                Storage::disk('public')->delete($rel);
+            }
+        }
+
+        $slides = [];
+
+        $rawSlides = is_array($o['slides'] ?? null) ? $o['slides'] : [];
+        ksort($rawSlides);
+
+        foreach ($rawSlides as $i => $rawSlide) {
+            if (! is_array($rawSlide)) {
+                continue;
+            }
+
+            $title = mb_substr(trim((string) data_get($o, "slides.$i.title", '')), 0, 191);
+            $description = mb_substr(trim((string) data_get($o, "slides.$i.description", '')), 0, 2000);
+            $file = $request->file('options.slides.'.$i.'.image');
+            $imagePath = mb_substr(trim((string) data_get($o, "slides.$i.image_path", data_get($o, "slides.$i.image", ''))), 0, 2048);
+            $image = '';
+
+            if ($file instanceof UploadedFile) {
+                $image = $file->store("web-theme/{$theme->id}", 'public');
+            } elseif ($imagePath !== '') {
+                $image = str_replace('storage/', '', ltrim($imagePath, '/'));
+            } elseif (isset($existingSlides[$i]['image']) && is_string($existingSlides[$i]['image'])) {
+                $image = (string) $existingSlides[$i]['image'];
+            }
+
+            if ($title === '' && $description === '' && $image === '') {
+                continue;
+            }
+
+            $stats = [];
+            foreach (range(0, 2) as $j) {
+                $number = mb_substr(trim((string) data_get($o, "slides.$i.stats.$j.number", '')), 0, 80);
+                $label = mb_substr(trim((string) data_get($o, "slides.$i.stats.$j.label", '')), 0, 120);
+                if ($number === '' && $label === '') {
+                    continue;
+                }
+                $stats[] = ['number' => $number, 'label' => $label];
+            }
+
+            $slides[] = [
+                'badge_icon'  => $this->sanitizeImmersiveFaClass((string) data_get($o, "slides.$i.badge_icon", 'fas fa-kaaba')),
+                'badge'       => mb_substr(trim((string) data_get($o, "slides.$i.badge", '')), 0, 191),
+                'title'       => $title,
+                'description' => $description,
+                'image'       => $image,
+                'primary'     => [
+                    'label' => mb_substr(trim((string) data_get($o, "slides.$i.primary.label", '')), 0, 191),
+                    'icon'  => $this->sanitizeImmersiveFaClass((string) data_get($o, "slides.$i.primary.icon", '')),
+                    'url'   => $this->sanitizeImmersiveUrl((string) data_get($o, "slides.$i.primary.url", '')),
+                ],
+                'secondary'   => [
+                    'label' => mb_substr(trim((string) data_get($o, "slides.$i.secondary.label", '')), 0, 191),
+                    'icon'  => $this->sanitizeImmersiveFaClass((string) data_get($o, "slides.$i.secondary.icon", '')),
+                    'url'   => $this->sanitizeImmersiveUrl((string) data_get($o, "slides.$i.secondary.url", '')),
+                ],
+                'stats'       => $stats,
             ];
         }
 
         return [
-            'effects' => [
-                'particles'      => $request->boolean('options.effects.particles'),
-                'orbs'           => $request->boolean('options.effects.orbs'),
-                'grid'           => $request->boolean('options.effects.grid'),
-                'custom_cursor'  => $request->boolean('options.effects.custom_cursor'),
-                'visual_cards'   => $request->boolean('options.effects.visual_cards'),
-                'scroll_hint'    => $request->boolean('options.effects.scroll_hint'),
-                'font_awesome'   => $request->boolean('options.effects.font_awesome'),
-            ],
-            'particles_count' => max(20, min(200, (int) data_get($o, 'particles_count', 80))),
-            'colors'          => [
-                'bg_start'   => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.bg_start', '#0a0a2a'), '#0a0a2a', true),
-                'bg_mid'     => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.bg_mid', '#1a1a3a'), '#1a1a3a', true),
-                'bg_end'     => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.bg_end', '#0f0f2a'), '#0f0f2a', true),
-                'accent'     => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.accent', '#8b5cf6'), '#8b5cf6', true),
-                'accent_2'   => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.accent_2', '#6366f1'), '#6366f1', true),
-                'text'       => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.text', '#ffffff'), '#ffffff', false),
-                'text_muted' => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.text_muted', 'rgba(255,255,255,0.7)'), 'rgba(255,255,255,0.7)', false),
-                'orb_1'      => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.orb_1', 'rgba(139, 92, 246, 0.8)'), 'rgba(139, 92, 246, 0.8)', false),
-                'orb_2'      => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.orb_2', 'rgba(236, 72, 153, 0.6)'), 'rgba(236, 72, 153, 0.6)', false),
-                'orb_3'      => $this->sanitizeImmersiveColor((string) data_get($o, 'colors.orb_3', 'rgba(59, 130, 246, 0.7)'), 'rgba(59, 130, 246, 0.7)', false),
-            ],
-            'badge' => [
-                'enabled' => $request->boolean('options.badge.enabled'),
-                'icon'    => $this->sanitizeImmersiveFaClass((string) data_get($o, 'badge.icon', 'fas fa-calendar-star')),
-                'text'    => mb_substr(trim((string) data_get($o, 'badge.text', '')), 0, 255),
-            ],
-            'heading' => [
-                'line1'     => mb_substr(trim((string) data_get($o, 'heading.line1', '')), 0, 500),
-                'highlight' => mb_substr(trim((string) data_get($o, 'heading.highlight', '')), 0, 255),
-            ],
-            'typing' => [
-                'prefix' => mb_substr(trim((string) data_get($o, 'typing.prefix', '')), 0, 191),
-                'words'  => array_slice($words, 0, 30),
-            ],
-            'description' => mb_substr(trim((string) data_get($o, 'description', '')), 0, 2000),
-            'primary_cta' => [
-                'label' => mb_substr(trim((string) data_get($o, 'primary_cta.label', '')), 0, 191),
-                'url'   => $this->sanitizeImmersiveUrl((string) data_get($o, 'primary_cta.url', '')),
-                'icon'  => $this->sanitizeImmersiveFaClass((string) data_get($o, 'primary_cta.icon', 'fas fa-compass')),
-            ],
-            'secondary_cta' => [
-                'enabled' => $request->boolean('options.secondary_cta.enabled'),
-                'label'   => mb_substr(trim((string) data_get($o, 'secondary_cta.label', '')), 0, 191),
-                'url'     => $this->sanitizeImmersiveUrl((string) data_get($o, 'secondary_cta.url', '')),
-                'icon'    => $this->sanitizeImmersiveFaClass((string) data_get($o, 'secondary_cta.icon', 'fas fa-plus-circle')),
-            ],
-            'cards'       => $cards,
-            'scroll_hint' => [
-                'text' => mb_substr(trim((string) data_get($o, 'scroll_hint.text', '')), 0, 191),
-            ],
+            'slides' => $slides,
         ];
     }
 
@@ -193,29 +202,17 @@ class WebThemeCustomizationController extends Controller
             return $this->storeStaticEditorImage($request);
         }
 
+        $themeCode = (string) config('web.storefront_theme_code', 'web');
+
         $this->validate($request, [
             'name'       => 'required|string|max:191',
             'sort_order' => 'required|integer|min:0',
             'type'       => 'required|in:'.implode(',', self::TYPES_CREATABLE),
-            'theme_code' => 'required|string|max:64',
         ]);
-
-        if ($request->input('type') === ThemeCustomization::PORTAL_FOOTER) {
-            $exists = WebThemeCustomization::query()
-                ->where('theme_code', $request->input('theme_code'))
-                ->where('type', ThemeCustomization::PORTAL_FOOTER)
-                ->exists();
-            if ($exists) {
-                return new JsonResponse([
-                    'message' => trans('admin::app.settings.web-theme.create.portal-footer-duplicate'),
-                    'errors'  => ['type' => [trans('admin::app.settings.web-theme.create.portal-footer-duplicate')]],
-                ], 422);
-            }
-        }
 
         if ($request->input('type') === ThemeCustomization::WEB_HEADER) {
             $exists = WebThemeCustomization::query()
-                ->where('theme_code', $request->input('theme_code'))
+                ->where('theme_code', $themeCode)
                 ->where('type', ThemeCustomization::WEB_HEADER)
                 ->exists();
             if ($exists) {
@@ -228,7 +225,7 @@ class WebThemeCustomizationController extends Controller
 
         if ($request->input('type') === ThemeCustomization::WEB_FOOTER) {
             $exists = WebThemeCustomization::query()
-                ->where('theme_code', $request->input('theme_code'))
+                ->where('theme_code', $themeCode)
                 ->where('type', ThemeCustomization::WEB_FOOTER)
                 ->exists();
             if ($exists) {
@@ -239,11 +236,24 @@ class WebThemeCustomizationController extends Controller
             }
         }
 
+        if ($request->input('type') === ThemeCustomization::IMMERSIVE_HERO) {
+            $exists = WebThemeCustomization::query()
+                ->where('theme_code', $themeCode)
+                ->where('type', ThemeCustomization::IMMERSIVE_HERO)
+                ->exists();
+            if ($exists) {
+                return new JsonResponse([
+                    'message' => trans('admin::app.settings.web-theme.create.immersive-hero-duplicate'),
+                    'errors'  => ['type' => [trans('admin::app.settings.web-theme.create.immersive-hero-duplicate')]],
+                ], 422);
+            }
+        }
+
         $theme = $this->webThemeCustomizationRepository->create([
             'name'       => $request->input('name'),
             'sort_order' => (int) $request->input('sort_order'),
             'type'       => $request->input('type'),
-            'theme_code' => $request->input('theme_code'),
+            'theme_code' => $themeCode,
             'status'     => false,
             'options'    => [],
         ]);
@@ -256,39 +266,30 @@ class WebThemeCustomizationController extends Controller
     public function edit(int $id): View
     {
         $theme = $this->webThemeCustomizationRepository->findOrFail($id);
+        $storeLocaleCodes = $this->getStoreLocaleCodes();
+        $activeLocale = $this->resolveRequestedStoreLocale($storeLocaleCodes);
+        $opts = $this->localizedOptionsForLocale($theme, $activeLocale);
 
-        return view('admin::settings.web-theme.edit', compact('theme'));
+        return view('admin::settings.web-theme.edit', compact('theme', 'opts', 'activeLocale', 'storeLocaleCodes'));
     }
 
     public function update(Request $request, int $id): \Illuminate\Http\RedirectResponse
     {
+        $themeCode = (string) config('web.storefront_theme_code', 'web');
+
         $this->validate($request, [
             'name'       => 'required|string|max:191',
             'sort_order' => 'required|integer|min:0',
             'type'       => 'required|in:'.implode(',', self::typesForUpdate()),
-            'theme_code' => 'required|string|max:64',
         ]);
 
         /** @var WebThemeCustomization $theme */
         $theme = $this->webThemeCustomizationRepository->findOrFail($id);
-
-        if ($request->input('type') === ThemeCustomization::PORTAL_FOOTER) {
-            $dup = WebThemeCustomization::query()
-                ->where('theme_code', $request->input('theme_code'))
-                ->where('type', ThemeCustomization::PORTAL_FOOTER)
-                ->where('id', '!=', $id)
-                ->exists();
-            if ($dup) {
-                return redirect()
-                    ->back()
-                    ->withInput()
-                    ->withErrors(['type' => trans('admin::app.settings.web-theme.create.portal-footer-duplicate')]);
-            }
-        }
+        $isDefaultLayoutType = in_array($theme->type, [ThemeCustomization::WEB_HEADER, ThemeCustomization::WEB_FOOTER], true);
 
         if ($request->input('type') === ThemeCustomization::WEB_HEADER) {
             $dup = WebThemeCustomization::query()
-                ->where('theme_code', $request->input('theme_code'))
+                ->where('theme_code', $themeCode)
                 ->where('type', ThemeCustomization::WEB_HEADER)
                 ->where('id', '!=', $id)
                 ->exists();
@@ -302,7 +303,7 @@ class WebThemeCustomizationController extends Controller
 
         if ($request->input('type') === ThemeCustomization::WEB_FOOTER) {
             $dup = WebThemeCustomization::query()
-                ->where('theme_code', $request->input('theme_code'))
+                ->where('theme_code', $themeCode)
                 ->where('type', ThemeCustomization::WEB_FOOTER)
                 ->where('id', '!=', $id)
                 ->exists();
@@ -314,24 +315,47 @@ class WebThemeCustomizationController extends Controller
             }
         }
 
+        if ($request->input('type') === ThemeCustomization::IMMERSIVE_HERO) {
+            $dup = WebThemeCustomization::query()
+                ->where('theme_code', $themeCode)
+                ->where('type', ThemeCustomization::IMMERSIVE_HERO)
+                ->where('id', '!=', $id)
+                ->exists();
+            if ($dup) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors(['type' => trans('admin::app.settings.web-theme.create.immersive-hero-duplicate')]);
+            }
+        }
+
         $theme->update([
             'name'       => $request->input('name'),
             'sort_order' => (int) $request->input('sort_order'),
-            'type'       => $request->input('type'),
-            'theme_code' => $request->input('theme_code'),
-            'status'     => $request->boolean('status'),
+            'type'       => $isDefaultLayoutType ? $theme->type : $request->input('type'),
+            'theme_code' => $themeCode,
+            'status'     => $isDefaultLayoutType ? true : $request->boolean('status'),
         ]);
 
         $this->syncOptions($request, $theme);
 
         session()->flash('success', trans('admin::app.settings.web-theme.update-success'));
 
-        return redirect()->route('admin.settings.web-theme.index');
+        return redirect()->route('admin.settings.web-theme.edit', [
+            'id'     => $theme->id,
+            'locale' => $request->input('locale'),
+        ]);
     }
 
     public function destroy(int $id): JsonResponse
     {
         $theme = $this->webThemeCustomizationRepository->findOrFail($id);
+
+        if (in_array($theme->type, [ThemeCustomization::WEB_HEADER, ThemeCustomization::WEB_FOOTER], true)) {
+            return new JsonResponse([
+                'message' => 'Default web header/footer cannot be deleted.',
+            ], 422);
+        }
 
         Storage::disk('public')->deleteDirectory('web-theme/'.$theme->id);
 
@@ -366,59 +390,28 @@ class WebThemeCustomizationController extends Controller
     protected function syncOptions(Request $request, WebThemeCustomization $theme): void
     {
         $repo = $this->webThemeCustomizationRepository;
+        $locale = $this->resolveRequestedStoreLocale($this->getStoreLocaleCodes());
 
         switch ($theme->type) {
             case 'static_content':
                 $html = $repo->sanitizeHtml((string) $request->input('options.html', ''));
                 $css = $repo->sanitizeCss((string) $request->input('options.css', ''));
-                $theme->options = ['html' => $html, 'css' => $css];
-                $theme->save();
-
-                break;
-
-            case 'footer_links':
-                $theme->options = [
-                    'sections' => $this->normalizeFooterSections($request->input('footer.sections', [])),
-                ];
-                $theme->save();
-
-                break;
-
-            case 'services_content':
-                $theme->options = [
-                    'services' => $this->normalizeServices($request->input('services', [])),
-                ];
-                $theme->save();
-
-                break;
-
-            case 'product_carousel':
-                $theme->options = [];
-                $theme->save();
+                $this->persistLocalizedOptions($theme, $locale, ['html' => $html, 'css' => $css]);
 
                 break;
 
             case 'immersive_hero':
-                $theme->options = $this->normalizeImmersiveHeroOptions($request);
-                $theme->save();
-
-                break;
-
-            case 'portal_footer':
-                $theme->options = $this->normalizePortalFooterOptions($request, $theme);
-                $theme->save();
+                $this->persistLocalizedOptions($theme, $locale, $this->normalizeImmersiveHeroOptions($request, $theme, $locale));
 
                 break;
 
             case ThemeCustomization::WEB_HEADER:
-                $theme->options = $this->normalizeWebHeaderOptions($request);
-                $theme->save();
+                $this->persistLocalizedOptions($theme, $locale, $this->normalizeWebHeaderOptions($request, $theme, $locale));
 
                 break;
 
             case ThemeCustomization::WEB_FOOTER:
-                $theme->options = $this->normalizeWebFooterOptions($request);
-                $theme->save();
+                $this->persistLocalizedOptions($theme, $locale, $this->normalizeWebFooterOptions($request, $theme, $locale));
 
                 break;
 
@@ -446,14 +439,166 @@ class WebThemeCustomizationController extends Controller
                 }
                 $deleted = $request->input('deleted_sliders');
                 $deleted = is_array($deleted) ? $deleted : null;
-                $repo->mergeCarouselImages($theme, $merged, $deleted);
+                $localizedImageCarousel = $this->normalizeImageCarouselForLocale($theme, $locale, $merged, $deleted);
+                $this->persistLocalizedOptions($theme, $locale, $localizedImageCarousel);
 
                 break;
 
             default:
-                $theme->options = [];
-                $theme->save();
+                $this->persistLocalizedOptions($theme, $locale, []);
         }
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function getStoreLocaleCodes(): array
+    {
+        $codes = [];
+
+        foreach (core()->storeLocales() as $locale) {
+            $code = strtolower((string) ($locale['value'] ?? ''));
+            if ($code !== '') {
+                $codes[] = $code;
+            }
+        }
+
+        if ($codes === []) {
+            $codes[] = strtolower((string) config('app.locale', 'en'));
+        }
+
+        return array_values(array_unique($codes));
+    }
+
+    protected function resolveRequestedStoreLocale(array $storeLocaleCodes): string
+    {
+        $requested = strtolower((string) request()->input('locale', request()->query('locale', '')));
+        if ($requested !== '' && in_array($requested, $storeLocaleCodes, true)) {
+            return $requested;
+        }
+
+        return $storeLocaleCodes[0] ?? strtolower((string) config('app.locale', 'en'));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function localizedOptionsForLocale(WebThemeCustomization $theme, string $locale): array
+    {
+        $all = is_array($theme->options) ? $theme->options : [];
+        $translations = $all['translations'] ?? null;
+
+        if (! is_array($translations)) {
+            return $all;
+        }
+
+        $defaultLocale = strtolower((string) ($all['default_locale'] ?? $this->defaultStoreLocale()));
+        $resolved = $translations[$locale] ?? $translations[$defaultLocale] ?? [];
+
+        return is_array($resolved) ? $resolved : [];
+    }
+
+    /**
+     * @param  array<string, mixed>  $localizedPayload
+     */
+    protected function persistLocalizedOptions(WebThemeCustomization $theme, string $locale, array $localizedPayload): void
+    {
+        $existing = is_array($theme->options) ? $theme->options : [];
+        $defaultLocale = strtolower((string) ($existing['default_locale'] ?? $this->defaultStoreLocale()));
+        $translations = $existing['translations'] ?? [];
+
+        if (! is_array($translations)) {
+            $translations = [];
+        }
+
+        if ($translations === [] && $existing !== []) {
+            $translations[$defaultLocale] = $existing;
+        }
+
+        $translations[$locale] = $localizedPayload;
+
+        $theme->options = [
+            'default_locale' => $defaultLocale,
+            'translations'   => $translations,
+        ];
+        $theme->save();
+    }
+
+    protected function defaultStoreLocale(): string
+    {
+        $codes = $this->getStoreLocaleCodes();
+
+        return $codes[0] ?? strtolower((string) config('app.locale', 'en'));
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $rows
+     * @param  array<int, array{image: string}>|null  $deletedSliders
+     * @return array<string, mixed>
+     */
+    protected function normalizeImageCarouselForLocale(
+        WebThemeCustomization $theme,
+        string $locale,
+        array $rows,
+        ?array $deletedSliders
+    ): array {
+        $existingLocale = $this->localizedOptionsForLocale($theme, $locale);
+        $existingImages = is_array($existingLocale['images'] ?? null) ? $existingLocale['images'] : [];
+
+        if (is_array($deletedSliders)) {
+            foreach ($deletedSliders as $item) {
+                $path = (string) ($item['image'] ?? '');
+                if ($path === '') {
+                    continue;
+                }
+
+                $rel = ltrim(str_replace('storage/', '', $path), '/');
+                if ($rel !== '') {
+                    Storage::disk('public')->delete($rel);
+                }
+            }
+        }
+
+        $images = [];
+
+        foreach ($rows as $index => $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            $link = (string) ($row['link'] ?? '');
+            $title = (string) ($row['title'] ?? '');
+            $imageVal = $row['image'] ?? '';
+
+            if ($imageVal instanceof UploadedFile) {
+                $stored = $imageVal->store("web-theme/{$theme->id}", 'public');
+                $images[] = ['image' => $stored, 'link' => $link, 'title' => $title];
+                continue;
+            }
+
+            if (is_string($imageVal) && $imageVal !== '') {
+                $images[] = [
+                    'image' => str_replace('storage/', '', ltrim($imageVal, '/')),
+                    'link'  => $link,
+                    'title' => $title,
+                ];
+
+                continue;
+            }
+
+            $fallback = $existingImages[$index] ?? null;
+            if (is_array($fallback) && (string) ($fallback['image'] ?? '') !== '') {
+                $images[] = [
+                    'image' => (string) ($fallback['image'] ?? ''),
+                    'link'  => $link,
+                    'title' => $title,
+                ];
+            }
+        }
+
+        $existingLocale['images'] = $images;
+
+        return $existingLocale;
     }
 
     /**
@@ -553,7 +698,7 @@ class WebThemeCustomizationController extends Controller
     /**
      * @return array<string, mixed>
      */
-    protected function normalizePortalFooterOptions(Request $request, WebThemeCustomization $theme): array
+    protected function normalizePortalFooterOptions(Request $request, WebThemeCustomization $theme, string $locale): array
     {
         $o = $request->input('options', []);
         $o = is_array($o) ? $o : [];
@@ -574,7 +719,7 @@ class WebThemeCustomizationController extends Controller
             $request->boolean('options.col_quick.show_chevron')
         );
 
-        $brandLogoPath = $this->normalizePortalFooterBrandLogo($request, $theme, $o);
+        $brandLogoPath = $this->normalizePortalFooterBrandLogo($request, $theme, $o, $locale);
 
         $contactItems = [];
         foreach (range(0, 5) as $i) {
@@ -676,9 +821,10 @@ class WebThemeCustomizationController extends Controller
     /**
      * Store or keep portal footer brand logo; paths are limited to this theme's folder on the public disk.
      */
-    protected function normalizePortalFooterBrandLogo(Request $request, WebThemeCustomization $theme, array $o): string
+    protected function normalizePortalFooterBrandLogo(Request $request, WebThemeCustomization $theme, array $o, string $locale): string
     {
-        $prev = trim((string) data_get($theme->options, 'brand.logo_path', ''));
+        $prevLocalized = $this->localizedOptionsForLocale($theme, $locale);
+        $prev = trim((string) data_get($prevLocalized, 'brand.logo_path', ''));
 
         if ($request->boolean('options.brand.remove_logo')) {
             if ($prev !== '' && Storage::disk('public')->exists($prev)) {
@@ -730,60 +876,205 @@ class WebThemeCustomizationController extends Controller
     /**
      * @return array<string, mixed>
      */
-    protected function normalizeWebHeaderOptions(Request $request): array
+    protected function normalizeWebHeaderOptions(Request $request, WebThemeCustomization $theme, string $locale): array
     {
         $o = $request->input('options', []);
         $o = is_array($o) ? $o : [];
 
-        $dir = strtolower((string) data_get($o, 'dir', 'auto'));
-        if (! in_array($dir, ['auto', 'rtl', 'ltr'], true)) {
-            $dir = 'auto';
-        }
+        $navPrimary = $this->normalizeWebHeaderNavPrimaryRows($o, $theme, $locale);
 
-        $nav = [];
-        foreach (range(0, 15) as $i) {
-            $label = mb_substr(trim((string) data_get($o, "nav.$i.label", '')), 0, 191);
-            $url = $this->sanitizeImmersiveUrl((string) data_get($o, "nav.$i.url", ''));
-            $icon = $this->sanitizeImmersiveFaClass((string) data_get($o, "nav.$i.icon", ''));
+        $navSecondary = [];
+        foreach (range(0, 2) as $i) {
+            $label = mb_substr(trim((string) data_get($o, "nav_secondary.$i.label", '')), 0, 191);
+            $url = $this->sanitizeImmersiveUrl((string) data_get($o, "nav_secondary.$i.url", ''));
             if ($label === '' && $url === '') {
                 continue;
             }
-            $nav[] = [
+            $navSecondary[] = [
                 'label' => $label,
                 'url'   => $url,
-                'icon'  => $icon,
             ];
         }
 
+        $nav = [];
+        foreach ($navPrimary as $row) {
+            $nav[] = [
+                'label' => $row['label'],
+                'url'   => $this->sanitizeImmersiveUrl(WebHeaderPrimaryTabs::resolveUrl($row['page_key'])),
+                'icon'  => '',
+            ];
+        }
+        foreach ($navSecondary as $row) {
+            $nav[] = [
+                'label' => $row['label'],
+                'url'   => $row['url'],
+                'icon'  => '',
+            ];
+        }
+
+        $logoPath = $this->normalizeWebHeaderBrandLogo($request, $theme, $o, $locale);
+
+        $colorsIn = is_array(data_get($o, 'colors')) ? $o['colors'] : [];
+        $headerColorPrimary = $this->sanitizeWebThemeHexColor(data_get($colorsIn, 'primary'), '#1f6e2f');
+        $headerColorSecondary = $this->sanitizeWebThemeHexColor(data_get($colorsIn, 'secondary'), '#2c8e3c');
+
+        $prevLocalized = $this->localizedOptionsForLocale($theme, $locale);
+        $prevLang = is_array(data_get($prevLocalized, 'lang')) ? $prevLocalized['lang'] : [];
+        $prevLogin = is_array(data_get($prevLocalized, 'login')) ? $prevLocalized['login'] : [];
+
         return [
-            'enabled' => $request->boolean('options.enabled'),
-            'dir'     => $dir,
-            'brand'   => [
-                'icon'     => $this->sanitizeImmersiveFaClass((string) data_get($o, 'brand.icon', 'fas fa-kaaba')),
-                'title'    => mb_substr(trim((string) data_get($o, 'brand.title', '')), 0, 191),
-                'subtitle' => mb_substr(trim((string) data_get($o, 'brand.subtitle', '')), 0, 191),
-                'home_url' => $this->sanitizeImmersiveUrl((string) data_get($o, 'brand.home_url', '')),
+            'colors' => [
+                'primary'   => $headerColorPrimary,
+                'secondary' => $headerColorSecondary,
             ],
-            'nav' => $nav,
+            'brand' => [
+                'icon'       => $this->sanitizeImmersiveFaClass((string) data_get($o, 'brand.icon', 'fas fa-kaaba')),
+                'title'      => mb_substr(trim((string) data_get($o, 'brand.title', '')), 0, 191),
+                'subtitle'   => mb_substr(trim((string) data_get($o, 'brand.subtitle', '')), 0, 191),
+                'logo_path'  => $logoPath,
+            ],
+            'nav_primary'   => $navPrimary,
+            'nav_secondary' => $navSecondary,
+            'nav'           => $nav,
             'lang' => [
-                'show_switcher' => $request->boolean('options.lang.show_switcher'),
-                'button_label'  => mb_substr(trim((string) data_get($o, 'lang.button_label', '')), 0, 191),
+                'show_switcher' => (bool) data_get($prevLang, 'show_switcher', true),
+                'button_label'  => '',
             ],
             'login' => [
-                'show'  => $request->boolean('options.login.show'),
-                'label' => mb_substr(trim((string) data_get($o, 'login.label', '')), 0, 191),
-                'url'   => $this->sanitizeImmersiveUrl((string) data_get($o, 'login.url', '')),
+                'show'  => (bool) data_get($prevLogin, 'show', true),
+                'label' => '',
+                'url'   => $this->sanitizeImmersiveUrl((string) data_get($prevLogin, 'url', '')),
             ],
         ];
     }
 
     /**
+     * @return list<array{page_key: string, label: string}>
+     */
+    protected function normalizeWebHeaderNavPrimaryRows(array $o, WebThemeCustomization $theme, string $locale): array
+    {
+        $allowedOrder = WebHeaderPrimaryTabs::defaultKeyOrder();
+        if ($allowedOrder === []) {
+            return [];
+        }
+
+        $rows = [];
+        foreach (range(0, 3) as $i) {
+            $rows[] = [
+                'page_key' => (string) data_get($o, "nav_primary.$i.page_key", ''),
+                'label'    => mb_substr(trim((string) data_get($o, "nav_primary.$i.label", '')), 0, 191),
+            ];
+        }
+
+        if ($this->webHeaderNavPrimaryRowsAreValidPermutation($rows, $allowedOrder)) {
+            return $rows;
+        }
+
+        return $this->webHeaderNavPrimaryFallbackFromStored($theme, $locale, $allowedOrder);
+    }
+
+    /**
+     * @param  list<array{page_key: string, label: string}>  $rows
+     * @param  list<string>  $allowedOrder
+     */
+    protected function webHeaderNavPrimaryRowsAreValidPermutation(array $rows, array $allowedOrder): bool
+    {
+        if (count($rows) !== count($allowedOrder)) {
+            return false;
+        }
+
+        $seen = [];
+        foreach ($rows as $r) {
+            $k = $r['page_key'] ?? '';
+            if ($k === '' || ! in_array($k, $allowedOrder, true) || isset($seen[$k])) {
+                return false;
+            }
+            $seen[$k] = true;
+        }
+
+        return count($seen) === count($allowedOrder);
+    }
+
+    /**
+     * @param  list<string>  $allowedOrder
+     * @return list<array{page_key: string, label: string}>
+     */
+    protected function webHeaderNavPrimaryFallbackFromStored(WebThemeCustomization $theme, string $locale, array $allowedOrder): array
+    {
+        $prev = $this->localizedOptionsForLocale($theme, $locale);
+        $legacyNav = is_array($prev['nav'] ?? null) ? $prev['nav'] : [];
+        $editorRows = WebHeaderPrimaryTabs::editorRowsFromOptions($prev, $legacyNav);
+
+        $out = [];
+        foreach ($editorRows as $r) {
+            $out[] = [
+                'page_key' => (string) ($r['pageKey'] ?? ''),
+                'label'    => mb_substr(trim((string) ($r['label'] ?? '')), 0, 191),
+            ];
+        }
+
+        if ($this->webHeaderNavPrimaryRowsAreValidPermutation($out, $allowedOrder)) {
+            return $out;
+        }
+
+        $default = [];
+        foreach ($allowedOrder as $k) {
+            $default[] = ['page_key' => $k, 'label' => ''];
+        }
+
+        return $default;
+    }
+
+    /**
+     * Store or remove header brand logo; paths are limited to this theme's folder on the public disk.
+     */
+    protected function normalizeWebHeaderBrandLogo(Request $request, WebThemeCustomization $theme, array $o, string $locale): string
+    {
+        $prevLocalized = $this->localizedOptionsForLocale($theme, $locale);
+        $prev = trim((string) data_get($prevLocalized, 'brand.logo_path', ''));
+
+        if ($request->boolean('options.brand.remove_logo')) {
+            if ($prev !== '' && Storage::disk('public')->exists($prev)) {
+                Storage::disk('public')->delete($prev);
+            }
+
+            return '';
+        }
+
+        $file = $request->file('options.brand.logo_image');
+        if ($file instanceof UploadedFile && $file->isValid()) {
+            $mime = (string) $file->getMimeType();
+            $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
+            if (! in_array($mime, $allowed, true)) {
+                return $this->assertPortalFooterLogoPathOwnedByTheme($prev, $theme);
+            }
+
+            if ($prev !== '' && Storage::disk('public')->exists($prev)) {
+                Storage::disk('public')->delete($prev);
+            }
+
+            return $file->store('web-theme/'.$theme->id.'/header', 'public');
+        }
+
+        $fromForm = trim((string) data_get($o, 'brand.logo_path', ''));
+
+        return $this->assertPortalFooterLogoPathOwnedByTheme($fromForm !== '' ? $fromForm : $prev, $theme);
+    }
+
+    /**
      * @return array<string, mixed>
      */
-    protected function normalizeWebFooterOptions(Request $request): array
+    protected function normalizeWebFooterOptions(Request $request, WebThemeCustomization $theme, string $locale): array
     {
         $o = $request->input('options', []);
         $o = is_array($o) ? $o : [];
+
+        $prevLocalized = $this->localizedOptionsForLocale($theme, $locale);
+        $logoPath = $this->normalizePortalFooterBrandLogo($request, $theme, $o, $locale);
+
+        $footerColorsIn = is_array(data_get($o, 'colors')) ? $o['colors'] : [];
+        $footerColorPrimary = $this->sanitizeWebThemeHexColor(data_get($footerColorsIn, 'primary'), '#d4af37');
+        $footerColorSecondary = $this->sanitizeWebThemeHexColor(data_get($footerColorsIn, 'secondary'), '#0d2a1a');
 
         $social = [];
         foreach (range(0, 7) as $i) {
@@ -829,11 +1120,26 @@ class WebThemeCustomizationController extends Controller
         }
 
         return [
-            'enabled' => $request->boolean('options.enabled'),
+            'enabled' => (bool) data_get($prevLocalized, 'enabled', true),
+            'visibility' => [
+                'brand'       => $request->boolean('options.visibility.brand'),
+                'social'      => $request->boolean('options.visibility.social'),
+                'explore'     => $request->boolean('options.visibility.explore'),
+                'support'     => $request->boolean('options.visibility.support'),
+                'contact'     => $request->boolean('options.visibility.contact'),
+                'subscribe'   => $request->boolean('options.visibility.subscribe'),
+                'bottom'      => $request->boolean('options.visibility.bottom'),
+                'bottom_mini' => $request->boolean('options.visibility.bottom_mini'),
+            ],
             'effects' => [
                 'back_to_top' => $request->boolean('options.effects.back_to_top'),
             ],
+            'colors' => [
+                'primary'   => $footerColorPrimary,
+                'secondary' => $footerColorSecondary,
+            ],
             'brand' => [
+                'logo_path'   => $logoPath,
                 'icon'        => $this->sanitizeImmersiveFaClass((string) data_get($o, 'brand.icon', 'fas fa-kaaba')),
                 'title'       => mb_substr(trim((string) data_get($o, 'brand.title', '')), 0, 191),
                 'description' => mb_substr(trim((string) data_get($o, 'brand.description', '')), 0, 2000),
@@ -859,5 +1165,28 @@ class WebThemeCustomizationController extends Controller
                 'links'          => $bottomLinks,
             ],
         ];
+    }
+
+    /**
+     * Normalize a hex color for web header/footer theme options (#RGB or #RRGGBB).
+     */
+    protected function sanitizeWebThemeHexColor(mixed $value, string $default): string
+    {
+        $s = trim((string) $value);
+        if (preg_match('/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/', $s, $m)) {
+            $h = $m[1];
+            if (strlen($h) === 3) {
+                $h = $h[0].$h[0].$h[1].$h[1].$h[2].$h[2];
+            }
+
+            return '#'.strtoupper($h);
+        }
+
+        $d = trim($default);
+        if (preg_match('/^#([0-9a-fA-F]{6})$/', $d, $dm)) {
+            return '#'.strtoupper($dm[1]);
+        }
+
+        return '#1F6E2F';
     }
 }
