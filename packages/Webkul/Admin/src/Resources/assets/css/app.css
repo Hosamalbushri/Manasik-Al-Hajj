@@ -1,0 +1,1196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------------------------------- new css -------------------------------- */
+
+@font-face {
+    font-family: 'icomoon';
+    src: url('../fonts/icomoon.woff?w2trdd') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+  }
+
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 200;
+    font-display: swap;
+    src: url('../fonts/Cairo-ExtraLight.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('../fonts/Cairo-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('../fonts/Cairo-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('../fonts/Cairo-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('../fonts/Cairo-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('../fonts/Cairo-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 800;
+    font-display: swap;
+    src: url('../fonts/Cairo-ExtraBold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Cairo';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url('../fonts/Cairo-Black.ttf') format('truetype');
+}
+
+  [class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+@layer components {
+    .icon-image:before {
+        content: "\e956";
+    }
+      
+    .icon-bookmark:before {
+        content: "\e92c";
+    }
+
+    .icon-bookmark-active:before {
+        content: "\e92d";
+    }
+
+    .icon-stats-down:before {
+        content: "\e94d";
+    }
+
+    .icon-error:before {
+        content: "\e951";
+    }
+
+    .icon-info:before {
+        content: "\e952";
+    }
+
+    .icon-success:before {
+        content: "\e953";
+    }
+
+    .icon-warning:before {
+        content: "\e954";
+    }
+
+    .icon-stats-down:before {
+        content: "\e94d";
+    }
+
+    .icon-stats-up:before {
+        content: "\e94f";
+    }
+
+    .icon-attribute:before {
+        content: "\e947";
+    }
+
+    .icon-download:before {
+        content: "\e948";
+    }
+
+    .icon-settings-warehouse:before {
+        content: "\e94e";
+    }
+
+    .icon-move:before {
+        content: "\e949";
+    }
+
+    .icon-organization:before {
+        content: "\e94a";
+    }
+
+    .icon-role:before {
+        content: "\e94b";
+    }
+
+    .icon-user:before {
+        content: "\e94c";
+    }
+
+    .icon-system-generate:before {
+        content: "\e950";
+    }
+
+    .icon-settings-attributes:before {
+        content: "\e93b";
+    }
+
+    .icon-settings-flow:before {
+        content: "\e93c";
+    }
+
+    .icon-settings-group:before {
+        content: "\e93d";
+    }
+
+    .icon-settings-mail:before {
+        content: "\e93e";
+    }
+
+    .icon-settings-pipeline:before {
+        content: "\e93f";
+    }
+
+    .icon-settings-roles:before {
+        content: "\e940";
+    }
+
+    .icon-settings-sources:before {
+        content: "\e941";
+    }
+
+    .icon-settings-tag:before {
+        content: "\e942";
+    }
+
+    .icon-settings-type:before {
+        content: "\e943";
+    }
+
+    .icon-settings-user:before {
+        content: "\e944";
+    }
+
+    .icon-settings-webforms:before {
+        content: "\e945";
+    }
+
+    .icon-settings-webhooks:before {
+        content: "\e946";
+    }
+
+    .icon-attached-file:before {
+        content: "\e932";
+    }
+
+    .icon-forward:before {
+        content: "\e933";
+    }
+
+    .icon-location:before {
+        content: "\e934";
+    }
+
+    .icon-pin:before {
+        content: "\e935";
+    }
+
+    .icon-print:before {
+        content: "\e936";
+    }
+
+    .icon-reply-all:before {
+        content: "\e937";
+    }
+
+    .icon-reply:before {
+        content: "\e938";
+    }
+
+    .icon-rotten:before {
+        content: "\e939";
+    }
+
+    .icon-tag:before {
+        content: "\e93a";
+    }
+
+    .icon-list:before {
+        content: "\e92e";
+    }
+
+    .icon-enter:before {
+        content: "\e92f";
+    }
+
+    .icon-kanban:before {
+        content: "\e930";
+    }
+
+    .icon-tick:before {
+        content: "\e931";
+    }
+
+    .icon-eye-hide:before {
+        content: "\e929";
+    }
+
+    .icon-percentage:before {
+        content: "\e92a";
+    }
+
+    .icon-dollar:before {
+        content: "\e92b";
+    }
+
+    .icon-radio-selected:before {
+        content: "\e924";
+    }
+
+    .icon-radio-normal:before {
+        content: "\e925";
+    }
+
+    .icon-folder:before {
+        content: "\e926";
+    }
+
+    .icon-file:before {
+        content: "\e927";
+    }
+
+    .icon-eye:before {
+        content: "\e928";
+    }
+
+    .icon-notification:before {
+        content: "\e900";
+    }
+
+    .icon-configuration:before {
+        content: "\e901";
+    }
+
+    .icon-note:before {
+        content: "\e902";
+    }
+
+    .icon-edit:before {
+        content: "\e903";
+    }
+
+    .icon-menu:before {
+        content: "\e955";
+    }
+
+    .icon-calendar:before {
+        content: "\e904";
+    }
+
+    .icon-delete:before {
+        content: "\e905";
+    }
+
+    .icon-more:before {
+        content: "\e906";
+    }
+
+    .icon-checkbox-multiple:before {
+        content: "\e907";
+    }
+
+    .icon-checkbox-select:before {
+        content: "\e908";
+    }
+
+    .icon-checkbox-outline:before {
+        content: "\e909";
+    }
+
+    .icon-message:before {
+        content: "\e90a";
+    }
+
+    .icon-video:before {
+        content: "\e90b";
+    }
+
+    .icon-attachment:before {
+        content: "\e90c";
+    }
+
+    .icon-sent:before {
+        content: "\e90d";
+    }
+
+    .icon-call:before {
+        content: "\e90e";
+    }
+
+    .icon-meeting:before {
+        content: "\e90f";
+    }
+
+    .icon-light:before {
+        content: "\e910";
+    }
+
+    .icon-dark:before {
+        content: "\e911";
+    }
+
+    .icon-mail:before {
+        content: "\e912";
+    }
+
+    .icon-leads:before {
+        content: "\e913";
+    }
+
+    .icon-filter:before {
+        content: "\e914";
+    }
+
+    .icon-setting:before {
+        content: "\e915";
+    }
+
+    .icon-product:before {
+        content: "\e916";
+    }
+
+    .icon-contact:before {
+        content: "\e917";
+    }
+
+    .icon-activity:before {
+        content: "\e918";
+    }
+
+    .icon-perosnal:before {
+        content: "\e919";
+    }
+
+    .icon-quote:before {
+        content: "\e91a";
+    }
+
+    .icon-dashboard:before {
+        content: "\e91b";
+    }
+
+    .icon-cross-large:before {
+        content: "\e91c";
+    }
+
+    .icon-left-arrow:before {
+        content: "\e91d";
+    }
+
+    .icon-right-arrow:before {
+        content: "\e91e";
+    }
+
+    .icon-up-arrow:before {
+        content: "\e91f";
+    }
+
+    .icon-down-arrow:before {
+        content: "\e920";
+    }
+
+    .icon-search:before {
+        content: "\e921";
+    }
+
+    .icon-add:before {
+        content: "\e922";
+    }
+
+    .icon-add-2:before {
+        content: "\e923";
+    }
+
+    .label-active {
+        @apply max-w-max rounded-md bg-emerald-200 px-3 py-1.5 text-xs font-medium text-emerald-900;
+    }
+
+    .label-inactive {
+        @apply max-w-max rounded-md bg-red-200 px-3 py-1.5 text-xs font-medium text-red-800;
+    }
+
+    [dir="ltr"] .sidebar-rounded::after {
+        @apply content-[''] w-[30px] h-[30px] top-0 right-[-30px] absolute bg-no-repeat pointer-events-none bg-[url("../images/corner-clip.svg")] transition-all;
+    }
+
+    [dir="rtl"] .sidebar-rounded::before {
+        @apply content-[''] w-[30px] h-[30px] top-0 left-[-30px] absolute bg-no-repeat pointer-events-none bg-[url("../images/corner-clip.svg")] transition-all rotate-90;
+    }
+
+    .dark .sidebar-rounded::after {
+        @apply bg-[url("../images/dark-corner-clip.svg")]
+    }
+
+    .dark .sidebar-rounded::before {
+        @apply bg-[url("../images/dark-corner-clip.svg")]
+    }
+
+    .tox.tox-silver-sink.tox-tinymce-aux {
+        z-index: 99999;
+    }
+
+    .stage::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -10px;
+        width: 24px;
+        height: 24px;
+        z-index: 1;
+        border-radius: 0 0 0 25px;
+        transform: translateY(-50%) rotate(45deg);
+        border-right: 4px solid #f3f4f6;
+        border-top: 4px solid #f3f4f6;
+    }
+
+    .dark .stage::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -10px;
+        width: 24px;
+        height: 24px;
+        z-index: 1;
+        border-radius: 0 0 0 25px;
+        transform: translateY(-50%) rotate(45deg);
+        border-right: 4px solid #030712;
+        border-top: 4px solid #030712;
+    }
+
+    [dir="rtl"] .stage::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: -10px;
+        width: 24px;
+        height: 24px;
+        z-index: 1;
+        border-radius: 0 0 0 25px;
+        transform: translateY(-50%) rotate(225deg);
+        border-right: 4px solid #f3f4f6;
+        border-top: 4px solid #f3f4f6;
+    }
+
+    [dir="rtl"] .stage::after {
+        display: none;
+    }
+
+    .dark\:bg-gray-400:is(.dark *) {
+       --tw-bg-opacity: 1 !important;
+        background-color: #1f2937 !important;
+        border: #111827 solid !important;
+        color: #e5e7eb !important;
+    }
+
+    .dark\:bg-gray-800:is(.dark *) {
+        --tw-bg-opacity: 1;
+        background-color: rgb(16 24 39);
+    }
+
+    .shimmer {
+        animation-duration: 2.2s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-name: skeleton;
+        animation-timing-function: linear;
+        background: linear-gradient(
+            to right,
+            #f6f6f6 8%,
+            #f0f0f0 18%,
+            #f6f6f6 33%
+        );
+        background-size: 1250px 100%;
+    }
+
+    .light-shimmer-bg {
+        background: linear-gradient(
+            to right,
+            #fafafa 8%,
+            #f5f5f5 18%,
+            #fafafa 33%
+        );
+        background-size: 1250px 100%;
+    }
+
+    .dark .shimmer {
+        background: linear-gradient(
+            to right,
+            #1f2937 8%,
+            #1a2232 18%,
+            #1f2937 33%
+        );
+    }
+
+    .primary-button {
+        @apply bg-brandColor border border-brandColor cursor-pointer flex focus:opacity-[0.9] font-semibold gap-x-1 hover:opacity-[0.9] items-center place-content-center px-3 py-1.5 rounded-md text-gray-50 transition-all;
+    }
+
+    .secondary-button {
+        @apply flex cursor-pointer place-content-center items-center gap-x-1 whitespace-nowrap rounded-md border-2 border-brandColor bg-white px-3 py-1.5 font-semibold text-brandColor transition-all hover:bg-[#eff6ff61] focus:bg-[#eff6ff61] dark:border-gray-400 dark:bg-gray-800 dark:text-white dark:hover:opacity-80;
+    }
+
+    .transparent-button {
+        @apply flex cursor-pointer appearance-none place-content-center items-center gap-x-1 whitespace-nowrap rounded-md border-2 border-transparent px-3 py-1.5 font-semibold text-gray-600 transition-all marker:shadow hover:bg-gray-100 focus:bg-gray-100 dark:hover:bg-gray-950 dark:focus:bg-gray-950;
+    }
+
+    ::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* Firefox */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #888 #f1f1f1;
+    }
+
+    ::selection {
+        background-color: rgba(0, 68, 242, .2);
+    }
+
+    body {
+        @apply bg-gray-100 text-sm text-gray-800;
+    }
+
+    button:disabled {
+        @apply cursor-not-allowed opacity-50;
+    }
+
+    button:disabled:hover {
+        @apply cursor-not-allowed opacity-50;
+    }
+
+    .draggable-ghost {
+        opacity: 0.5;
+        background: #e0e7ff;
+    }
+
+    html.dark [class^="icon-"],
+    html.dark [class*=" icon-"]{
+        color: #d1d5db;
+    }
+
+    p {
+        @apply text-[14px] !leading-[17px];
+    }
+
+    input,
+    textarea,
+    select {
+        @apply outline-none;
+    }
+
+    .journal-scroll::-webkit-scrollbar {
+        width: 14px;
+        cursor: pointer;
+        display: none;
+    }
+
+    .journal-scroll::-webkit-scrollbar-track {
+        background-color: #fff;
+        cursor: pointer;
+        border-radius: 12px;
+        border: 1px solid #e9e9e9;
+    }
+
+    .journal-scroll::-webkit-scrollbar-thumb {
+        cursor: pointer;
+        background-color: #e9e9e9;
+        border-radius: 12px;
+        border: 3px solid transparent;
+        background-clip: content-box;
+    }
+
+    .custom-select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: transparent;
+        background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+        background-repeat: no-repeat;
+        background-position-x: calc(100% - 10px);
+        background-position-y: 50%;
+    }
+
+    .dark .custom-select{
+        background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    }
+
+    [dir="rtl"] .custom-select {
+        background-position-x: calc(100% - (100% - 10px));
+    }
+
+    .draggable-ghost {
+        @apply border border-dashed !border-gray-300;
+    }
+
+    @keyframes skeleton {
+        0% {
+            @apply bg-[-1250px_0];
+        }
+
+        100% {
+            @apply bg-[1250px_0];
+        }
+    }
+
+    .required:after {
+        @apply content-['*'];
+    }
+}
+
+.tox .tox-toolbar__group:last-child button {
+    padding: 6px 8px;
+    background: #eff6ff;
+    color: #2563EB;
+}
+
+.tox .tox-toolbar__group:last-child button:hover {
+    background: #dbeafe;
+}
+
+.tox .tox-toolbar__group:last-child button[aria-disabled="true"] {
+    @apply cursor-not-allowed opacity-50;
+}
+
+.tox .tox-toolbar__group:last-child button {
+    @apply !bg-transparent;
+}
+
+.tox .tox-toolbar__group:last-child button:hover {
+    @apply border-0 !bg-[#3389ec] text-white shadow-none;
+}
+
+.tox.tox-silver-sink.tox-tinymce-aux {
+    z-index: 99999;
+}
+
+/* —— Admin login (Hajj-style shell), bundled with app —— */
+body:has(.admin-login-page-hajj) .flash-group {
+    display: none !important;
+}
+
+.admin-login-page-hajj {
+    font-family: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--login-bg-accent) 42%, #0b1020) 0%,
+        color-mix(in srgb, var(--login-bg-accent) 22%, #020617) 50%,
+        color-mix(in srgb, var(--login-bg-accent) 14%, #020617) 100%
+    );
+    position: relative;
+    overflow-x: hidden;
+}
+
+.admin-login-page-hajj::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+        color-mix(in srgb, var(--login-bg-accent) 16%, transparent) 2px,
+        transparent 2px
+    );
+    background-size: 50px 50px;
+    pointer-events: none;
+    animation: adminLoginSubtleMove 20s linear infinite;
+}
+
+@keyframes adminLoginSubtleMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
+}
+
+.admin-login-page-hajj .login-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3.5rem;
+    padding: 1.5rem 1.5rem 2.25rem;
+    position: relative;
+    z-index: 2;
+}
+
+.admin-login-page-hajj .login-page-footer {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    text-wrap: balance;
+}
+
+.admin-login-page-hajj .login-page-footer a {
+    color: color-mix(in srgb, var(--brand-color) 72%, #fff);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05em;
+}
+
+.admin-login-page-hajj .login-page-footer a:hover {
+    text-decoration: underline;
+}
+
+.admin-login-page-hajj .login-card {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(10px);
+    border-radius: 48px;
+    max-width: min(96vw, 560px);
+    width: 100%;
+    padding: 3rem 2.5rem;
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.35),
+        0 0 0 1px color-mix(in srgb, var(--brand-color) 30%, transparent);
+    animation: adminLoginFadeInUp 0.6s ease;
+}
+
+@keyframes adminLoginFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.admin-login-page-hajj .login-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.admin-login-page-hajj .login-form-intro {
+    margin: -0.5rem 0 1.25rem;
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: #64748b;
+    padding-inline: 0.25rem;
+}
+
+.admin-login-page-hajj .login-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    min-height: 132px;
+}
+
+.admin-login-page-hajj .login-logo img {
+    max-height: 140px;
+    max-width: min(100%, 400px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.admin-login-page-hajj .alert-message {
+    padding: 1rem 1.15rem;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: adminLoginShake 0.4s ease;
+}
+
+.admin-login-page-hajj .alert-message [class^="icon-"] {
+    flex-shrink: 0;
+    margin-top: 0.15em;
+    font-size: 1.05rem;
+}
+
+@keyframes adminLoginShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.admin-login-page-hajj .alert-error {
+    background: #fee2e2;
+    border-inline-end: 4px solid #dc2626;
+    color: #991b1b;
+}
+
+.admin-login-page-hajj .alert-warning {
+    background: #fef9c3;
+    border-inline-end: 4px solid #ca8a04;
+    color: #854d0e;
+}
+
+.admin-login-page-hajj .input-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: start;
+}
+
+/* VeeValidate errors: align with field/label in RTL/LTR (no left drift) */
+.admin-login-page-hajj .login-field-error-msg {
+    display: block;
+    text-align: start !important;
+    margin-top: 0.4rem !important;
+    margin-bottom: 0;
+    margin-inline-start: 0.5rem;
+    margin-inline-end: 0.5rem;
+    font-size: 0.8125rem !important;
+    line-height: 1.45;
+    font-style: normal !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-login-page-hajj .input-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--brand-color) 55%, #334155);
+    margin-bottom: 0.5rem;
+    margin-inline-start: 0.5rem;
+}
+
+.admin-login-page-hajj .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.admin-login-page-hajj .input-wrapper > .field-icon {
+    position: absolute;
+    inset-inline-end: 1rem;
+    color: var(--brand-color);
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.admin-login-page-hajj .field-icon--svg svg {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    color: var(--brand-color);
+}
+
+.admin-login-page-hajj .input-wrapper input[type="email"],
+.admin-login-page-hajj .input-wrapper input[type="password"],
+.admin-login-page-hajj .input-wrapper input[type="text"] {
+    width: 100% !important;
+    padding-block: 1rem !important;
+    padding-inline: 2.8rem !important;
+    border: 2px solid #e8e2d8 !important;
+    border-radius: 28px !important;
+    font-family: 'Cairo', sans-serif !important;
+    font-size: 0.9rem !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fefcf8 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.admin-login-page-hajj .input-wrapper input:focus {
+    border-color: var(--brand-color) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-color) 22%, transparent) !important;
+}
+
+.admin-login-page-hajj .input-wrapper input.border-red-600,
+.admin-login-page-hajj .input-wrapper input.\!border-red-600 {
+    border-color: #dc2626 !important;
+}
+
+.admin-login-page-hajj .toggle-password {
+    position: absolute;
+    inset-inline-start: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: color-mix(in srgb, var(--brand-color) 45%, #94a3b8);
+    font-size: 1rem;
+    padding: 0.25rem;
+    z-index: 2;
+    line-height: 1;
+}
+
+.admin-login-page-hajj .toggle-password .icon-eye,
+.admin-login-page-hajj .toggle-password .icon-eye-hide {
+    display: block;
+}
+
+.admin-login-page-hajj .login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.8rem;
+    flex-wrap: wrap;
+    gap: 0.65rem 1rem;
+}
+
+.admin-login-page-hajj .checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0;
+    cursor: pointer;
+    color: #475569;
+    font-size: 0.875rem;
+    line-height: 1.35;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.admin-login-page-hajj .checkbox input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    flex-shrink: 0;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--brand-color);
+    vertical-align: middle;
+}
+
+.admin-login-page-hajj .checkbox span {
+    padding-top: 0.05em;
+}
+
+.admin-login-page-hajj .forgot-link {
+    color: var(--brand-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.admin-login-page-hajj .forgot-link:hover {
+    text-decoration: underline;
+}
+
+.admin-login-page-hajj .login-btn {
+    width: 100%;
+    background: var(--brand-color);
+    border: none;
+    padding: 1rem;
+    border-radius: 40px;
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cairo', sans-serif;
+    margin-bottom: 0;
+}
+
+.admin-login-page-hajj .login-btn:hover {
+    background: color-mix(in srgb, var(--brand-color) 88%, #000);
+}
+
+.admin-login-page-hajj .login-footer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-top: 0.25rem;
+}
+
+.admin-login-page-hajj .login-footer-actions .login-btn {
+    width: auto;
+    min-width: min(100%, 8.5rem);
+    padding-inline: 1.35rem;
+    flex-shrink: 0;
+}
+
+.admin-login-page-hajj .back-to-site {
+    position: fixed;
+    top: 1.5rem;
+    inset-inline-start: 1.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    padding: 0.6rem 1.2rem;
+    border-radius: 40px;
+    color: white;
+    text-decoration: none;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+    border: 1px solid color-mix(in srgb, var(--brand-color) 45%, rgba(255, 255, 255, 0.6));
+}
+
+.admin-login-page-hajj .back-to-site:hover {
+    background: color-mix(in srgb, var(--brand-color) 38%, rgba(255, 255, 255, 0.12));
+}
+
+.admin-login-page-hajj .back-to-site [class^="icon-"] {
+    font-size: 0.75rem;
+}
+
+@media (max-width: 550px) {
+    .admin-login-page-hajj .login-card {
+        padding: 2rem 1.35rem;
+        border-radius: 32px;
+        max-width: 100%;
+    }
+
+    .admin-login-page-hajj .login-logo {
+        min-height: 104px;
+    }
+
+    .admin-login-page-hajj .login-logo img {
+        max-height: 104px;
+    }
+
+    .admin-login-page-hajj .alert-message {
+        font-size: 0.85rem;
+        padding: 0.9rem 1rem;
+    }
+
+    .admin-login-page-hajj .login-options {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        row-gap: 1rem;
+    }
+
+    .admin-login-page-hajj .checkbox {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        gap: 0.75rem;
+        min-height: 2.75rem;
+        padding-block: 0.25rem;
+        box-sizing: border-box;
+    }
+
+    .admin-login-page-hajj .checkbox input[type="checkbox"] {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    .admin-login-page-hajj .checkbox span {
+        padding-top: 0;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .admin-login-page-hajj .forgot-link {
+        align-self: stretch;
+        text-align: start;
+        padding-block: 0.35rem;
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+
+    /* Back link in document flow so it does not overlay the login card */
+    .admin-login-page-hajj {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .admin-login-page-hajj .back-to-site {
+        position: static;
+        z-index: auto;
+        align-self: flex-start;
+        width: fit-content;
+        max-width: calc(100% - 2rem);
+        margin-top: max(0.75rem, env(safe-area-inset-top, 0px));
+        margin-inline: 1rem;
+        margin-bottom: 0.35rem;
+        padding: 0.45rem 1rem;
+        font-size: 0.75rem;
+        flex-shrink: 0;
+    }
+
+    .admin-login-page-hajj .login-container {
+        flex: 1 1 auto;
+        min-height: 0;
+        gap: 3rem;
+        padding: 0.35rem 1.5rem 2rem;
+    }
+
+    .admin-login-page-hajj .login-page-footer {
+        font-size: 1rem;
+        margin-top: 0.25rem;
+        padding-top: 0.5rem;
+    }
+
+    .admin-login-page-hajj .login-footer-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 0.85rem;
+    }
+
+    .admin-login-page-hajj .login-footer-actions .login-btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .admin-login-page-hajj .login-footer-actions .forgot-link {
+        align-self: center;
+        text-align: center;
+    }
+}

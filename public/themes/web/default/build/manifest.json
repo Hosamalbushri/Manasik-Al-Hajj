@@ -1,0 +1,58 @@
+{
+  "src/Resources/assets/css/app.css": {
+    "file": "assets/app-D8IzEVbh.css",
+    "src": "src/Resources/assets/css/app.css",
+    "isEntry": true
+  },
+  "src/Resources/assets/fonts/Cairo-Black.ttf": {
+    "file": "assets/Cairo-Black-BBBecWCb.ttf",
+    "src": "src/Resources/assets/fonts/Cairo-Black.ttf"
+  },
+  "src/Resources/assets/fonts/Cairo-Bold.ttf": {
+    "file": "assets/Cairo-Bold-CRUa7UyS.ttf",
+    "src": "src/Resources/assets/fonts/Cairo-Bold.ttf"
+  },
+  "src/Resources/assets/fonts/Cairo-ExtraBold.ttf": {
+    "file": "assets/Cairo-ExtraBold-BOrJWdUw.ttf",
+    "src": "src/Resources/assets/fonts/Cairo-ExtraBold.ttf"
+  },
+  "src/Resources/assets/fonts/Cairo-ExtraLight.ttf": {
+    "file": "assets/Cairo-ExtraLight-B8LDBVyd.ttf",
+    "src": "src/Resources/assets/fonts/Cairo-ExtraLight.ttf"
+  },
+  "src/Resources/assets/fonts/Cairo-Light.ttf": {
+    "file": "assets/Cairo-Light-DijhTkuQ.ttf",
+    "src": "src/Resources/assets/fonts/Cairo-Light.ttf"
+  },
+  "src/Resources/assets/fonts/Cairo-Medium.ttf": {
+    "file": "assets/Cairo-Medium-BVfnydw0.ttf",
+    "src": "src/Resources/assets/fonts/Cairo-Medium.ttf"
+  },
+  "src/Resources/assets/fonts/Cairo-Regular.ttf": {
+    "file": "assets/Cairo-Regular-CvRCENXA.ttf",
+    "src": "src/Resources/assets/fonts/Cairo-Regular.ttf"
+  },
+  "src/Resources/assets/fonts/Cairo-SemiBold.ttf": {
+    "file": "assets/Cairo-SemiBold-WHNjihNv.ttf",
+    "src": "src/Resources/assets/fonts/Cairo-SemiBold.ttf"
+  },
+  "src/Resources/assets/js/app.js": {
+    "file": "assets/app-7fvRHz3E.js",
+    "name": "app",
+    "src": "src/Resources/assets/js/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app-D8IzEVbh.css"
+    ],
+    "assets": [
+      "assets/Cairo-ExtraLight-B8LDBVyd.ttf",
+      "assets/Cairo-Light-DijhTkuQ.ttf",
+      "assets/Cairo-Regular-CvRCENXA.ttf",
+      "assets/Cairo-Medium-BVfnydw0.ttf",
+      "assets/Cairo-SemiBold-WHNjihNv.ttf",
+      "assets/Cairo-Bold-CRUa7UyS.ttf",
+      "assets/Cairo-ExtraBold-BOrJWdUw.ttf",
+      "assets/Cairo-Black-BBBecWCb.ttf"
+    ]
+  }
+}
