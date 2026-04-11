@@ -113,6 +113,61 @@ class User extends Authenticatable implements UserContract
             return true;
         }
 
+        if ($permission === 'map_locations' && (
+            in_array('map_locations', $permissions, true)
+            || in_array('settings.map_locations', $permissions, true)
+            || in_array('settings.web_theme.homepage', $permissions, true)
+            || in_array('settings.web_theme', $permissions, true)
+        )) {
+            return true;
+        }
+
+        if ($permission === 'settings.map_locations' && (
+            in_array('map_locations', $permissions, true)
+            || in_array('settings.map_locations', $permissions, true)
+            || in_array('settings.web_theme.homepage', $permissions, true)
+            || in_array('settings.web_theme', $permissions, true)
+        )) {
+            return true;
+        }
+
+        $mapLegacy = [
+            'map_locations.create' => 'settings.map_locations.create',
+            'map_locations.edit' => 'settings.map_locations.edit',
+            'map_locations.delete' => 'settings.map_locations.delete',
+        ];
+        if (isset($mapLegacy[$permission]) && in_array($mapLegacy[$permission], $permissions, true)) {
+            return true;
+        }
+
+        $mapLegacyReverse = array_flip($mapLegacy);
+        if (isset($mapLegacyReverse[$permission]) && in_array($mapLegacyReverse[$permission], $permissions, true)) {
+            return true;
+        }
+
+        if ($permission === 'adhkar_duas' && (
+            in_array('adhkar_duas.dua_sections', $permissions, true)
+            || in_array('adhkar_duas.duas', $permissions, true)
+            || in_array('settings.dua_sections', $permissions, true)
+            || in_array('settings.duas', $permissions, true)
+        )) {
+            return true;
+        }
+
+        $adhkarLegacy = [
+            'adhkar_duas.dua_sections' => 'settings.dua_sections',
+            'adhkar_duas.dua_sections.create' => 'settings.dua_sections.create',
+            'adhkar_duas.dua_sections.edit' => 'settings.dua_sections.edit',
+            'adhkar_duas.dua_sections.delete' => 'settings.dua_sections.delete',
+            'adhkar_duas.duas' => 'settings.duas',
+            'adhkar_duas.duas.create' => 'settings.duas.create',
+            'adhkar_duas.duas.edit' => 'settings.duas.edit',
+            'adhkar_duas.duas.delete' => 'settings.duas.delete',
+        ];
+        if (isset($adhkarLegacy[$permission]) && in_array($adhkarLegacy[$permission], $permissions, true)) {
+            return true;
+        }
+
         return false;
     }
 }

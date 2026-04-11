@@ -497,23 +497,23 @@ img.lazy {
 
     .primary-button {
         @apply flex gap-x-1.5 items-center place-content-center font-medium rounded-xl text-white px-8 py-4 max-w-max cursor-pointer transition-all;
-        background-color: var(--shop-primary, #0284c7);
-        border: 1px solid var(--shop-primary, #0284c7);
+        background-color: var(--shop-primary, #165022);
+        border: 1px solid var(--shop-primary, #165022);
     }
 
     .primary-button:hover {
-        background-color: var(--shop-primary-hover, #0369a1);
-        border-color: var(--shop-primary-hover, #0369a1);
+        background-color: var(--shop-primary-hover, #0f3a18);
+        border-color: var(--shop-primary-hover, #0f3a18);
     }
 
     .secondary-button {
         @apply flex gap-x-1.5 items-center place-content-center font-medium rounded-xl bg-white px-8 py-4 max-w-max cursor-pointer transition-all;
-        color: var(--shop-accent, #0369a1);
-        border: 1px solid var(--shop-accent, #0369a1);
+        color: var(--shop-accent, #2e8b3a);
+        border: 1px solid var(--shop-accent, #2e8b3a);
     }
 
     .secondary-button:hover {
-        background-color: color-mix(in srgb, var(--shop-accent, #0369a1) 8%, white);
+        background-color: color-mix(in srgb, var(--shop-accent, #2e8b3a) 8%, white);
     }
 
     .shimmer {
@@ -610,21 +610,21 @@ img.lazy {
     :root {
         /* Navbar colors are driven by admin-configurable shop colors.
            If user doesn't customize, these fallbacks are used. */
-        --web-nav-primary: var(--shop-primary, #1f6e2f);
-        --web-nav-primary-strong: var(--shop-primary-hover, #155a24);
-        --web-nav-accent: var(--shop-accent, #2c8e3c);
+        --web-nav-primary: var(--shop-primary, #165022);
+        --web-nav-primary-strong: var(--shop-primary-hover, #0f3a18);
+        --web-nav-accent: var(--shop-accent, #2e8b3a);
         --web-nav-soft: color-mix(in srgb, var(--web-nav-primary) 12%, white);
         --web-nav-text: #1f2937;
         --web-nav-muted: #6b7280;
         --web-nav-border: color-mix(in srgb, var(--web-nav-primary) 28%, white);
-        --web-nav-icon: color-mix(in srgb, var(--web-nav-primary) 80%, #1f5e2a);
+        --web-nav-icon: color-mix(in srgb, var(--web-nav-primary) 72%, #2d4a38);
     }
     .web-hajj-navbar, .web-hajj-navbar * { box-sizing: border-box; }
     .web-hajj-navbar {
         /* Resolve from this element’s --web-nav-primary (including inline theme colors) */
         --web-nav-soft: color-mix(in srgb, var(--web-nav-primary) 12%, white);
         --web-nav-border: color-mix(in srgb, var(--web-nav-primary) 28%, white);
-        --web-nav-icon: color-mix(in srgb, var(--web-nav-primary) 80%, #1f5e2a);
+        --web-nav-icon: color-mix(in srgb, var(--web-nav-primary) 72%, #2d4a38);
         background: transparent;
         box-shadow: 0 10px 34px rgba(15,23,42,.08);
         padding: .82rem clamp(10px, 1.8vw, 24px);
@@ -641,7 +641,7 @@ img.lazy {
         position: absolute;
         inset: 0;
         z-index: 0;
-        background: rgba(255,255,255,.86);
+        background: rgba(255, 255, 255, 0.94);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
         pointer-events: none;
@@ -849,6 +849,642 @@ img.lazy {
         .web-hajj-navbar .logo-sub { font-size: 0.65rem; }
     }
 
+    /* —— Inner pages hero (admin theme type inner_page_hero) —— */
+    .web-inner-hero {
+        position: relative;
+        box-sizing: border-box;
+        font-family: var(--shop-font-sans, 'Cairo', ui-sans-serif, sans-serif);
+        background: linear-gradient(
+            135deg,
+            var(--web-inner-hero-from, #0d2a1a) 0%,
+            var(--web-inner-hero-mid, #1a3a2a) 50%,
+            var(--web-inner-hero-to, #0d2a1a) 100%
+        );
+        min-height: 350px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .web-inner-hero *,
+    .web-inner-hero *::before,
+    .web-inner-hero *::after {
+        box-sizing: border-box;
+    }
+
+    .web-inner-hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 1000' opacity='0.05'%3E%3Cpath fill='white' d='M500,100 L620,300 L500,500 L380,300 Z M500,500 L620,700 L500,900 L380,700 Z M700,300 L820,500 L700,700 L580,500 Z M300,300 L420,500 L300,700 L180,500 Z'/%3E%3Ccircle cx='500' cy='500' r='100' fill='white'/%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 60px;
+        pointer-events: none;
+    }
+
+    .web-inner-hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+        pointer-events: none;
+    }
+
+    .web-inner-hero__container {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 4rem 2rem;
+    }
+
+    .web-inner-hero__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: color-mix(in srgb, var(--web-inner-hero-gold, #d4af37) 15%, transparent);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1.2rem;
+        border-radius: 60px;
+        color: var(--web-inner-hero-gold, #d4af37);
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        border: 1px solid color-mix(in srgb, var(--web-inner-hero-gold, #d4af37) 30%, transparent);
+    }
+
+    .web-inner-hero__badge i {
+        font-size: 0.9rem;
+    }
+
+    .web-inner-hero__title {
+        font-size: 3.2rem;
+        font-weight: 800;
+        color: #fff;
+        margin: 0 0 1rem;
+        letter-spacing: -0.5px;
+        line-height: 1.3;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .web-inner-hero__description {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.8;
+        margin: 0 auto 2rem;
+        max-width: 700px;
+    }
+
+    .web-inner-hero__breadcrumb {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin: 0 0 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .web-inner-hero__breadcrumb a {
+        color: var(--web-inner-hero-gold, #d4af37);
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .web-inner-hero__breadcrumb a:hover {
+        color: color-mix(in srgb, var(--web-inner-hero-gold, #d4af37) 75%, white);
+        text-decoration: underline;
+    }
+
+    .web-inner-hero__breadcrumb span {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .web-inner-hero__breadcrumb-sep {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .web-inner-hero__buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .web-inner-hero__btn {
+        appearance: none;
+        font: inherit;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .web-inner-hero__btn--primary {
+        border: none;
+        padding: 0.9rem 2rem;
+        color: #1a3a2a;
+        background: linear-gradient(
+            95deg,
+            var(--web-inner-hero-gold, #d4af37),
+            color-mix(in srgb, var(--web-inner-hero-gold, #d4af37) 72%, white)
+        );
+    }
+
+    .web-inner-hero__btn--primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px color-mix(in srgb, var(--web-inner-hero-gold, #d4af37) 35%, transparent);
+        background: linear-gradient(
+            95deg,
+            color-mix(in srgb, var(--web-inner-hero-gold, #d4af37) 92%, white),
+            color-mix(in srgb, var(--web-inner-hero-gold, #d4af37) 55%, white)
+        );
+    }
+
+    .web-inner-hero__btn--outline {
+        background: transparent;
+        border: 2px solid color-mix(in srgb, var(--web-inner-hero-gold, #d4af37) 80%, transparent);
+        padding: 0.85rem 2rem;
+        color: #fff;
+    }
+
+    .web-inner-hero__btn--outline:hover {
+        background: color-mix(in srgb, var(--web-inner-hero-gold, #d4af37) 15%, transparent);
+        border-color: var(--web-inner-hero-gold, #d4af37);
+        transform: translateY(-3px);
+    }
+
+    .web-inner-hero__wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+        z-index: 1;
+    }
+
+    .web-inner-hero__wave svg {
+        position: relative;
+        display: block;
+        width: calc(100% + 1.3px);
+        height: 50px;
+    }
+
+    @media (max-width: 768px) {
+        .web-inner-hero {
+            min-height: 300px;
+        }
+
+        .web-inner-hero__container {
+            padding: 3rem 1.5rem;
+        }
+
+        .web-inner-hero__title {
+            font-size: 2rem;
+        }
+
+        .web-inner-hero__description {
+            font-size: 0.95rem;
+        }
+
+        .web-inner-hero__btn {
+            font-size: 0.9rem;
+        }
+
+        .web-inner-hero__btn--primary {
+            padding: 0.7rem 1.5rem;
+        }
+
+        .web-inner-hero__btn--outline {
+            padding: 0.7rem 1.5rem;
+        }
+
+        .web-inner-hero__breadcrumb {
+            font-size: 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .web-inner-hero__title {
+            font-size: 1.6rem;
+        }
+
+        .web-inner-hero__buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .web-inner-hero__btn--primary,
+        .web-inner-hero__btn--outline {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Maps / empty state: shared ink + gold derived from --shop-* (override via config web.identity + html vars) */
+    :where(.web-page-empty, .web-maps-locations-page, .web-adhkar-page) {
+        --portal-ink: var(--web-card-ink, color-mix(in srgb, var(--shop-primary) 44%, #050806));
+        --portal-muted: var(--web-card-muted, color-mix(in srgb, var(--shop-primary) 14%, #6b7c6b));
+        --portal-gold: var(--web-accent-gold, var(--shop-badge-color));
+        --portal-gold-bright: var(--web-accent-gold-bright, color-mix(in srgb, var(--portal-gold) 72%, white));
+    }
+
+    /* —— Maps page: location cards (scoped; matches provided design) —— */
+    .web-maps-locations-page {
+        font-family: var(--shop-font-sans, 'Cairo', ui-sans-serif, sans-serif);
+        box-sizing: border-box;
+        background: transparent;
+        padding: clamp(2rem, 5vw, 4rem) clamp(1.2rem, 3vw, 2rem);
+        width: 100%;
+        margin: 0;
+    }
+    .web-maps-locations-page *,
+    .web-maps-locations-page *::before,
+    .web-maps-locations-page *::after {
+        box-sizing: border-box;
+    }
+    .web-maps-locations-page__container {
+        max-width: 1500px;
+        margin: 0 auto;
+    }
+
+    /* Shared empty state (maps, adhkar, …): uses shop identity + optional web.identity overrides */
+    .web-page-empty {
+        position: relative;
+        max-width: 34rem;
+        margin: 0 auto;
+        text-align: center;
+        padding: clamp(2.5rem, 6vw, 3.25rem) clamp(1.5rem, 4vw, 2.25rem);
+        background: linear-gradient(
+            165deg,
+            var(--web-parchment-start, #ffffff) 0%,
+            var(--web-parchment-mid, #faf8f3) 42%,
+            var(--web-parchment-end, #f2ebe0) 100%
+        );
+        border-radius: 28px;
+        box-shadow:
+            0 22px 48px color-mix(in srgb, var(--shop-primary) 18%, transparent),
+            0 0 0 1px color-mix(in srgb, var(--portal-gold) 28%, transparent);
+        overflow: hidden;
+    }
+    .web-page-empty::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            ellipse 90% 55% at 50% -25%,
+            color-mix(in srgb, var(--portal-gold) 22%, transparent),
+            transparent 58%
+        );
+        pointer-events: none;
+    }
+    .web-page-empty::after {
+        content: '';
+        position: absolute;
+        inset-inline-end: -3rem;
+        bottom: -2.5rem;
+        width: 11rem;
+        height: 11rem;
+        border-radius: 50%;
+        background: radial-gradient(circle, color-mix(in srgb, var(--shop-primary) 12%, transparent) 0%, transparent 70%);
+        pointer-events: none;
+    }
+    .web-page-empty__title {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+        font-weight: 800;
+        color: var(--portal-ink);
+        letter-spacing: -0.02em;
+        line-height: 1.35;
+    }
+    .web-page-empty__gold-line {
+        position: relative;
+        z-index: 1;
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--portal-gold), var(--portal-gold-bright));
+        margin: 1rem auto 0;
+        border-radius: 4px;
+    }
+    .web-page-empty__text {
+        position: relative;
+        z-index: 1;
+        margin: 1.15rem 0 0;
+        font-size: 0.98rem;
+        line-height: 1.75;
+        color: var(--portal-muted);
+        font-weight: 400;
+        max-width: 26rem;
+        margin-inline: auto;
+    }
+    .web-page-empty__btn {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1.75rem;
+        padding: 0.85rem 1.65rem;
+        border-radius: 999px;
+        background: var(--shop-primary);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.92rem;
+        text-decoration: none;
+        font-family: inherit;
+        letter-spacing: 0.02em;
+        box-shadow: 0 10px 26px color-mix(in srgb, var(--shop-primary) 38%, transparent);
+        transition:
+            background 0.25s ease,
+            color 0.25s ease,
+            transform 0.2s ease,
+            box-shadow 0.25s ease;
+    }
+    .web-page-empty__btn:hover {
+        background: linear-gradient(90deg, var(--portal-gold), var(--portal-gold-bright));
+        color: var(--portal-ink);
+        transform: translateY(-2px);
+        box-shadow: 0 14px 32px color-mix(in srgb, var(--portal-gold) 35%, transparent);
+    }
+    .web-page-empty__btn:focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--portal-gold) 55%, transparent);
+        outline-offset: 3px;
+    }
+    .dark .web-page-empty {
+        background: linear-gradient(165deg, #111c17 0%, #16261f 50%, #1a2e24 100%);
+        box-shadow:
+            0 22px 48px rgba(0, 0, 0, 0.35),
+            0 0 0 1px color-mix(in srgb, var(--portal-gold) 22%, transparent);
+    }
+    .dark .web-page-empty__title {
+        color: #e8f0eb;
+    }
+    .dark .web-page-empty__text {
+        color: #9cb0a4;
+    }
+    .dark .web-page-empty__btn {
+        background: color-mix(in srgb, var(--shop-primary) 55%, #0a0f0c);
+        color: #f5f0e6;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+    }
+    .dark .web-page-empty__btn:hover {
+        background: linear-gradient(90deg, var(--portal-gold), var(--portal-gold-bright));
+        color: var(--portal-ink);
+    }
+
+    .web-maps-locations-page__section-header {
+        text-align: center;
+        margin-bottom: 3.5rem;
+    }
+    .web-maps-locations-page__heading {
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        color: var(--portal-ink);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
+    .web-maps-locations-page__subheading {
+        color: var(--portal-muted);
+        font-size: 1.1rem;
+        margin: 0.8rem 0 0;
+        font-weight: 400;
+        line-height: 1.6;
+    }
+    .web-maps-locations-page__gold-line {
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--portal-gold), var(--portal-gold-bright));
+        margin: 1rem auto 0;
+        border-radius: 4px;
+    }
+    .web-maps-locations-page__cards-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2.5rem;
+        justify-content: center;
+        align-items: stretch;
+    }
+    .web-maps-locations-page__card {
+        --web-maps-card-width: 460px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        flex: 0 0 var(--web-maps-card-width);
+        width: var(--web-maps-card-width);
+        max-width: min(var(--web-maps-card-width), 100%);
+        background: #fff;
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.4s ease;
+        position: relative;
+    }
+    .web-maps-locations-page__card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 30px 50px rgba(0, 0, 0, 0.15);
+    }
+    .web-maps-locations-page__card-image {
+        flex-shrink: 0;
+        height: 240px;
+        overflow: hidden;
+        position: relative;
+    }
+    .web-maps-locations-page__card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+        display: block;
+    }
+    .web-maps-locations-page__card:hover .web-maps-locations-page__card-image img {
+        transform: scale(1.05);
+    }
+    .web-maps-locations-page__card-badge {
+        position: absolute;
+        bottom: 0;
+        inset-inline-end: 0;
+        background: linear-gradient(90deg, var(--portal-gold), var(--portal-gold-bright));
+        padding: 0.5rem 1.2rem;
+        border-start-start-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--portal-ink);
+        max-width: 85%;
+        line-height: 1.3;
+    }
+    .web-maps-locations-page__card-content {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+        padding: 1.8rem;
+    }
+    .web-maps-locations-page__location-name {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--portal-ink);
+        margin: 0 0 0.8rem;
+        letter-spacing: -0.3px;
+        line-height: 1.25;
+    }
+    .web-maps-locations-page__location-description {
+        color: var(--portal-muted);
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin: 0 0 1.2rem;
+        font-weight: 400;
+    }
+    .web-maps-locations-page__features {
+        background: color-mix(in srgb, var(--shop-primary) 6%, #f9f6f0);
+        padding: 1rem 1.2rem;
+        border-radius: 20px;
+        margin-bottom: 1.2rem;
+    }
+    .web-maps-locations-page__features-title {
+        font-size: 0.85rem;
+        color: var(--portal-gold);
+        font-weight: 700;
+        margin-bottom: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+    .web-maps-locations-page__features-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+    .web-maps-locations-page__features-list li {
+        background: #fff;
+        padding: 0.4rem 1rem;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        color: var(--portal-ink);
+        font-weight: 500;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+    }
+    .web-maps-locations-page__map {
+        flex-shrink: 0;
+        margin-top: 1rem;
+        border-radius: 18px;
+        overflow: hidden;
+        height: 0;
+        transition: height 0.4s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .web-maps-locations-page__map--open {
+        height: 260px;
+    }
+    .web-maps-locations-page__map-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+    }
+    .web-maps-locations-page__card-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: auto;
+        padding-top: 1.25rem;
+        flex-shrink: 0;
+        flex-wrap: nowrap;
+        align-items: stretch;
+    }
+    .web-maps-locations-page__btn-details {
+        flex: 1 1 0;
+        min-width: 0;
+        background: var(--shop-primary);
+        border: none;
+        padding: 0.9rem;
+        border-radius: 50px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+        letter-spacing: 0.3px;
+    }
+    .web-maps-locations-page__btn-details:hover {
+        background: var(--portal-gold);
+        color: var(--portal-ink);
+        transform: scale(0.98);
+    }
+    .web-maps-locations-page__btn-map {
+        flex: 1 1 0;
+        min-width: 0;
+        background: transparent;
+        border: 2px solid var(--portal-gold);
+        padding: 0.9rem;
+        border-radius: 50px;
+        color: var(--portal-ink);
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    }
+    .web-maps-locations-page__btn-map:hover {
+        background: var(--portal-gold);
+        border-color: var(--portal-gold);
+        transform: scale(0.98);
+    }
+    @media (max-width: 900px) {
+        .web-maps-locations-page {
+            padding: 2rem 1.2rem;
+        }
+        .web-maps-locations-page__cards-grid {
+            gap: 2rem;
+        }
+        .web-maps-locations-page__card {
+            flex: 1 1 100%;
+            width: 100%;
+            max-width: min(var(--web-maps-card-width), 100%);
+        }
+        .web-maps-locations-page__location-name {
+            font-size: 1.4rem;
+        }
+        .web-maps-locations-page__map--open {
+            height: 220px;
+        }
+    }
+    @media (max-width: 480px) {
+        .web-maps-locations-page__card-content {
+            padding: 1.2rem;
+        }
+        .web-maps-locations-page__card-image {
+            height: 200px;
+        }
+        .web-maps-locations-page__features-list li {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.8rem;
+        }
+        .web-maps-locations-page__card-buttons {
+            flex-wrap: wrap;
+        }
+        .web-maps-locations-page__btn-details,
+        .web-maps-locations-page__btn-map {
+            flex: 1 1 10rem;
+            min-width: min(100%, 8rem);
+            padding: 0.7rem;
+            font-size: 0.85rem;
+        }
+    }
+
     .shop-home-events-section { position: relative; overflow: hidden; border-bottom: 1px solid color-mix(in srgb, var(--shop-primary) 16%, white); background: radial-gradient(1200px 420px at 20% -10%, color-mix(in srgb, var(--shop-primary) 18%, transparent), transparent 60%), radial-gradient(900px 360px at 90% 10%, color-mix(in srgb, var(--shop-accent) 16%, transparent), transparent 55%), linear-gradient(180deg, #fff 0%, #f8faff 100%); padding: 2.5rem 0 3rem; }
     .shop-home-events-grid-overlay { position: absolute; inset: 0; opacity: .3; pointer-events: none; background-image: linear-gradient(color-mix(in srgb, var(--shop-primary) 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--shop-primary) 8%, transparent) 1px, transparent 1px); background-size: 30px 30px; }
     .shop-home-events-glow-primary, .shop-home-events-glow-accent { position: absolute; width: 16rem; height: 16rem; border-radius: 999px; pointer-events: none; filter: blur(48px); }
@@ -927,7 +1563,7 @@ img.lazy {
     .pf-back-top:hover, .pf-back-top.pf-back-top--visible:hover { transform: translateY(-4px); box-shadow: 0 12px 28px color-mix(in srgb, var(--pf-accent) 55%, transparent); }
 
     /* Hajj-style portal footer (background follows --hajj-footer-bg, default site primary) */
-    .web-hajj-footer { background: var(--hajj-footer-bg, var(--shop-primary, #0284c7)); border-top: 4px solid var(--hajj-border-top, var(--hajj-gold, #d4af37)); box-shadow: 0 -12px 32px color-mix(in srgb, var(--hajj-footer-bg, var(--shop-primary, #0284c7)) 24%, transparent); font-family: var(--shop-font-sans); }
+    .web-hajj-footer { background: var(--hajj-footer-bg, var(--shop-primary, #165022)); border-top: 4px solid var(--hajj-border-top, var(--hajj-gold, #d4af37)); box-shadow: 0 -12px 32px color-mix(in srgb, var(--hajj-footer-bg, var(--shop-primary, #165022)) 24%, transparent); font-family: var(--shop-font-sans); }
     .web-hajj-footer__container { max-width: 1300px; margin: 0 auto; padding: 3rem 2rem 1.5rem; }
     .web-hajj-footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr minmax(220px, 1.4fr); gap: 2rem; margin-bottom: 2.5rem; }
     .web-hajj-footer__logo-area { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
@@ -954,7 +1590,7 @@ img.lazy {
     .web-hajj-footer__nl-input { flex: 1; min-width: 0; padding: 0.65rem 1rem; border: 1px solid var(--hajj-input-border, #e0dbd1); background: var(--hajj-input-bg, #faf8f5); font-size: 0.875rem; outline: none; color: #0f172a; border-inline-end-width: 0; border-start-start-radius: 999px; border-end-start-radius: 999px; border-start-end-radius: 0; border-end-end-radius: 0; transition: border-color 0.2s, box-shadow 0.2s; }
     .web-hajj-footer__nl-input::placeholder { color: #64748b; }
     .web-hajj-footer__nl-input:focus { border-color: var(--hajj-gold, #d4af37); box-shadow: 0 0 0 2px color-mix(in srgb, var(--hajj-gold, #d4af37) 28%, transparent); }
-    .web-hajj-footer__nl-btn { flex-shrink: 0; background: color-mix(in srgb, var(--hajj-footer-bg, var(--shop-primary, #0284c7)) 38%, #0f172a); border: 1px solid color-mix(in srgb, var(--hajj-footer-bg, var(--shop-primary, #0284c7)) 32%, #0f172a); padding: 0 1.1rem; color: #fff; cursor: pointer; transition: background 0.2s, border-color 0.2s, color 0.2s; font-size: 0.875rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-start-start-radius: 0; border-end-start-radius: 0; border-start-end-radius: 999px; border-end-end-radius: 999px; min-height: 44px; }
+    .web-hajj-footer__nl-btn { flex-shrink: 0; background: color-mix(in srgb, var(--hajj-footer-bg, var(--shop-primary, #165022)) 38%, #0f172a); border: 1px solid color-mix(in srgb, var(--hajj-footer-bg, var(--shop-primary, #165022)) 32%, #0f172a); padding: 0 1.1rem; color: #fff; cursor: pointer; transition: background 0.2s, border-color 0.2s, color 0.2s; font-size: 0.875rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border-start-start-radius: 0; border-end-start-radius: 0; border-start-end-radius: 999px; border-end-end-radius: 999px; min-height: 44px; }
     .web-hajj-footer__nl-btn:hover { background: var(--hajj-gold, #d4af37); border-color: var(--hajj-gold, #d4af37); color: #0f172a; }
     .web-hajj-footer__nl-btn-text { white-space: nowrap; }
     .web-hajj-footer__contact { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.35rem; }

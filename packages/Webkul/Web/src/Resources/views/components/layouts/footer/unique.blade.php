@@ -4,13 +4,14 @@
     $chev = $isRtl ? 'fa-chevron-left' : 'fa-chevron-right';
 
     $homeUrl = \Illuminate\Support\Facades\Route::has('web.home.index') ? route('web.home.index') : '#';
+    $mapsUrl = \Illuminate\Support\Facades\Route::has('web.maps.index') ? route('web.maps.index') : '/maps';
 
     $exploreLinks = [
         ['label' => __('web::app.manasik_footer.links.home'), 'url' => $homeUrl],
         ['label' => __('web::app.manasik_footer.links.hajj'), 'url' => '#'],
         ['label' => __('web::app.manasik_footer.links.umrah'), 'url' => '#'],
         ['label' => __('web::app.manasik_footer.links.calendar'), 'url' => '#'],
-        ['label' => __('web::app.manasik_footer.links.maps'), 'url' => '#'],
+        ['label' => __('web::app.manasik_footer.links.maps'), 'url' => $mapsUrl],
     ];
 
     $supportLinks = [

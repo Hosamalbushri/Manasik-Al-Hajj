@@ -111,6 +111,7 @@ return [
         ],
 
         'web-theme' => [
+            'admin-footer-rights' => 'جميع الحقوق محفوظة.',
             'header' => [
                 'lang-button' => 'اللغة',
                 'login-label' => 'تسجيل الدخول',
@@ -123,6 +124,7 @@ return [
                     'services' => 'المناسك',
                     'schedule' => 'المواعيد',
                     'maps' => 'الخرائط',
+                    'adhkar' => 'الأذكار والأدعية',
                     'support' => 'الدعم',
                 ],
             ],
@@ -163,6 +165,51 @@ return [
                         'terms' => 'الشروط والأحكام',
                         'privacy' => 'سياسة الخصوصية',
                     ],
+                ],
+            ],
+            'inner-page-hero' => [
+                'services' => [
+                    'badge' => 'مناسك الحج',
+                    'title' => 'دليل المناسك',
+                    'description' => 'من الإحرام إلى طواف الوداع.',
+                    'primary_label' => 'ابدأ',
+                    'secondary_label' => 'فيديو',
+                ],
+                'schedule' => [
+                    'badge' => 'المواعيد',
+                    'title' => 'جدول الحج والعمرة',
+                    'description' => 'التواريخ والتذكيرات.',
+                    'primary_label' => 'الجدول',
+                    'secondary_label' => 'التقويم',
+                ],
+                'maps' => [
+                    'badge' => 'المشاعر',
+                    'title' => 'خرائط المشاعر',
+                    'description' => 'أهم المواقع في الحج والعمرة.',
+                    'primary_label' => 'التفاصيل',
+                    'secondary_label' => 'الخريطة',
+                ],
+                'adhkar' => [
+                    'badge' => 'الأذكار والأدعية',
+                    'title' => 'أدعية الحاج',
+                    'description' => 'أدعية للسفر والمناسك.',
+                    'primary_label' => 'نسخ',
+                    'secondary_label' => 'حفظ',
+                ],
+            ],
+            'immersive' => [
+                'slide1' => [
+                    'badge' => 'الحج والعمرة',
+                    'title' => 'رحلتك تبدأ من هنا',
+                    'description' => 'خرائط وأدعية وأدلة في مكان واحد.',
+                    'primary_label' => 'الخرائط',
+                    'secondary_label' => 'الأذكار والأدعية',
+                    'stat1_number' => '3',
+                    'stat1_label' => 'أركان الحج',
+                    'stat2_number' => '5',
+                    'stat2_label' => 'الصلوات',
+                    'stat3_number' => '1',
+                    'stat3_label' => 'القبلة',
                 ],
             ],
         ],

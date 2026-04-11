@@ -74,6 +74,61 @@ Breadcrumbs::for('settings.web_theme.edit', function (BreadcrumbTrail $trail, $t
     $trail->push(trans('admin::app.settings.web-theme.edit.title'), route('admin.settings.web-theme.edit', $id));
 });
 
+// Map locations (top-level area)
+Breadcrumbs::for('map_locations', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push(trans('admin::app.settings.map-locations.index.title'), route('admin.map-locations.index'));
+});
+
+Breadcrumbs::for('map_locations.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('map_locations');
+    $trail->push(trans('admin::app.settings.map-locations.create.title'), route('admin.map-locations.create'));
+});
+
+Breadcrumbs::for('map_locations.edit', function (BreadcrumbTrail $trail, $location) {
+    $trail->parent('map_locations');
+    $id = is_object($location) ? $location->id : $location;
+    $trail->push(trans('admin::app.settings.map-locations.edit.title'), route('admin.map-locations.edit', $id));
+});
+
+// Dhikr & duas (top-level area)
+Breadcrumbs::for('adhkar_duas', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push(trans('admin::app.settings.adhkar-duas.menu-title'), route('admin.adhkar-duas.dua-sections.index'));
+});
+
+Breadcrumbs::for('adhkar_duas.dua_sections', function (BreadcrumbTrail $trail) {
+    $trail->parent('adhkar_duas');
+    $trail->push(trans('admin::app.settings.adhkar-duas.menu-sections'), route('admin.adhkar-duas.dua-sections.index'));
+});
+
+Breadcrumbs::for('adhkar_duas.dua_sections.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('adhkar_duas.dua_sections');
+    $trail->push(trans('admin::app.settings.dua-sections.create.title'), route('admin.adhkar-duas.dua-sections.create'));
+});
+
+Breadcrumbs::for('adhkar_duas.dua_sections.edit', function (BreadcrumbTrail $trail, $section) {
+    $trail->parent('adhkar_duas.dua_sections');
+    $id = is_object($section) ? $section->id : $section;
+    $trail->push(trans('admin::app.settings.dua-sections.edit.title'), route('admin.adhkar-duas.dua-sections.edit', $id));
+});
+
+Breadcrumbs::for('adhkar_duas.duas', function (BreadcrumbTrail $trail) {
+    $trail->parent('adhkar_duas');
+    $trail->push(trans('admin::app.settings.adhkar-duas.menu-duas'), route('admin.adhkar-duas.duas.index'));
+});
+
+Breadcrumbs::for('adhkar_duas.duas.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('adhkar_duas.duas');
+    $trail->push(trans('admin::app.settings.duas.create.title'), route('admin.adhkar-duas.duas.create'));
+});
+
+Breadcrumbs::for('adhkar_duas.duas.edit', function (BreadcrumbTrail $trail, $dua) {
+    $trail->parent('adhkar_duas.duas');
+    $id = is_object($dua) ? $dua->id : $dua;
+    $trail->push(trans('admin::app.settings.duas.edit.title'), route('admin.adhkar-duas.duas.edit', $id));
+});
+
 // Configuration
 Breadcrumbs::for('configuration', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

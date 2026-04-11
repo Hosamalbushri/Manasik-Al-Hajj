@@ -23,8 +23,9 @@
     $primary = is_array($o['nav_primary'] ?? null) ? $o['nav_primary'] : [];
     $hasPageKeys = isset($primary[0]['page_key']) && (string) $primary[0]['page_key'] !== '';
     $headerNavFromStructured = false;
+    $primaryTabCount = count(WebHeaderPrimaryTabs::defaultKeyOrder());
 
-    if ($hasPageKeys && count($primary) >= 4) {
+    if ($hasPageKeys && count($primary) >= $primaryTabCount) {
         foreach ($primary as $row) {
             if (! is_array($row)) {
                 continue;
@@ -41,19 +42,19 @@
         $headerNavFromStructured = true;
     } elseif (
         is_array($o['nav_pages'] ?? null)
-        && count($o['nav_pages']) >= 4
-        && count($primary) >= 4
+        && count($o['nav_pages']) >= $primaryTabCount
+        && count($primary) >= $primaryTabCount
     ) {
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < $primaryTabCount; $i++) {
             $navItems[] = [
                 'label' => (string) ($primary[$i]['label'] ?? ''),
                 'url'   => (string) ($o['nav_pages'][$i]['url'] ?? ''),
             ];
         }
         $headerNavFromStructured = true;
-    } elseif (count($primary) >= 4) {
+    } elseif (count($primary) >= $primaryTabCount) {
         $order = WebHeaderPrimaryTabs::defaultKeyOrder();
-        foreach (range(0, 3) as $i) {
+        foreach (range(0, $primaryTabCount - 1) as $i) {
             $k = $order[$i] ?? null;
             if ($k === null) {
                 break;
@@ -61,6 +62,21 @@
             $navItems[] = [
                 'label' => (string) ($primary[$i]['label'] ?? ''),
                 'url'   => WebHeaderPrimaryTabs::resolveUrl($k),
+            ];
+        }
+        $headerNavFromStructured = true;
+    } elseif ($hasPageKeys) {
+        foreach ($primary as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            $key = (string) ($row['page_key'] ?? '');
+            if ($key === '') {
+                continue;
+            }
+            $navItems[] = [
+                'label' => (string) ($row['label'] ?? ''),
+                'url'   => WebHeaderPrimaryTabs::resolveUrl($key),
             ];
         }
         $headerNavFromStructured = true;
@@ -82,6 +98,14 @@
     $login = array_merge(['show' => true, 'label' => '', 'url' => ''], $o['login'] ?? []);
     $loginUrl = trim((string) ($login['url'] ?? ''));
     $loginLabel = trim((string) ($login['label'] ?? '')) ?: __('web::app.header.login');
+    if (auth()->guard('hajj')->check()) {
+        if (\Illuminate\Support\Facades\Route::has('hajj.account.index')) {
+            $loginUrl = route('hajj.account.index');
+        }
+        $loginLabel = trans('hajj::account.nav');
+    } elseif ($loginUrl === '' && \Illuminate\Support\Facades\Route::has('hajj.session.create')) {
+        $loginUrl = route('hajj.session.create');
+    }
     $langLabel = trim((string) ($lang['button_label'] ?? '')) ?: __('web::app.header.lang_button');
     $currentLocaleDisplay = strtoupper(app()->getLocale());
     $storeLocalesList = core()->storeLocales();
@@ -90,7 +114,7 @@
     $headerNavInlineStyle = '';
     if (is_array($o['colors'] ?? null)) {
         $headerThemeColors = array_merge(
-            ['primary' => '#1F6E2F', 'secondary' => '#2C8E3C'],
+            ['primary' => '#165022', 'secondary' => '#2E8B3A'],
             $o['colors']
         );
         $hp = strtoupper(trim((string) ($headerThemeColors['primary'] ?? '')));

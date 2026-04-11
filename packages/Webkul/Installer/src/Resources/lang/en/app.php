@@ -111,26 +111,28 @@ return [
         ],
 
         'web-theme' => [
+            'admin-footer-rights' => 'All rights reserved.',
             'header' => [
                 'lang-button' => 'Language',
                 'login-label' => 'Login',
                 'brand' => [
-                    'title' => 'Krayin',
-                    'subtitle' => '| CRM',
+                    'title' => 'Manasik Al-Hajj',
+                    'subtitle' => '| Blessed journey',
                 ],
                 'nav' => [
                     'home' => 'Home',
                     'services' => 'Services',
                     'schedule' => 'Schedule',
                     'maps' => 'Maps',
+                    'adhkar' => 'Dhikr & duas',
                     'support' => 'Support',
                 ],
             ],
             'footer' => [
                 'brand' => [
-                    'title' => 'Krayin',
-                    'description' => 'A digital platform to serve your customers better.',
-                    'trust' => 'Trusted service, 24/7 support',
+                    'title' => 'Manasik Al-Hajj',
+                    'description' => 'A digital platform for Hajj and Umrah pilgrims.',
+                    'trust' => 'Trusted guidance, 24/7 support',
                 ],
                 'col-explore' => [
                     'title' => 'Explore',
@@ -157,12 +159,57 @@ return [
                     'invalid' => 'Please enter a valid email address.',
                 ],
                 'bottom' => [
-                    'copyright' => 'All rights reserved',
+                    'copyright' => 'All rights reserved.',
                     'mini-nav-label' => 'Quick Links',
                     'links' => [
                         'terms' => 'Terms & Conditions',
                         'privacy' => 'Privacy Policy',
                     ],
+                ],
+            ],
+            'inner-page-hero' => [
+                'services' => [
+                    'badge' => 'Hajj rites',
+                    'title' => 'Hajj rites guide',
+                    'description' => 'Steps from ihram to farewell tawaf.',
+                    'primary_label' => 'Start',
+                    'secondary_label' => 'Video',
+                ],
+                'schedule' => [
+                    'badge' => 'Schedule',
+                    'title' => 'Hajj & Umrah schedule',
+                    'description' => 'Dates and reminders.',
+                    'primary_label' => 'Timeline',
+                    'secondary_label' => 'Calendar',
+                ],
+                'maps' => [
+                    'badge' => 'Holy sites',
+                    'title' => 'Holy sites map',
+                    'description' => 'Key places for Hajj and Umrah.',
+                    'primary_label' => 'Details',
+                    'secondary_label' => 'Map',
+                ],
+                'adhkar' => [
+                    'badge' => 'Dhikr & duas',
+                    'title' => 'Duas for pilgrims',
+                    'description' => 'Supplications for travel and rites.',
+                    'primary_label' => 'Copy',
+                    'secondary_label' => 'Save',
+                ],
+            ],
+            'immersive' => [
+                'slide1' => [
+                    'badge' => 'Hajj & Umrah',
+                    'title' => 'Your journey starts here',
+                    'description' => 'Maps, duas, and guides in one place.',
+                    'primary_label' => 'Maps',
+                    'secondary_label' => 'Dhikr & duas',
+                    'stat1_number' => '3',
+                    'stat1_label' => 'Hajj pillars',
+                    'stat2_number' => '5',
+                    'stat2_label' => 'Daily prayers',
+                    'stat3_number' => '1',
+                    'stat3_label' => 'Qiblah',
                 ],
             ],
         ],

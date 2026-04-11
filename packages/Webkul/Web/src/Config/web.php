@@ -27,6 +27,34 @@ return [
     'logo_url' => null,
 
     /**
+     * Brand colors when admin / core_config has no store palette yet (also .env overrides).
+     * When configured in admin (General → Store → Web), those values drive --shop-* on the layout.
+     */
+    'identity' => [
+        'fallback_shop_colors' => [
+            'primary' => env('WEB_FALLBACK_PRIMARY', '#165022'),
+            'accent'  => env('WEB_FALLBACK_ACCENT', '#2E8B3A'),
+            'icon'    => env('WEB_FALLBACK_ICON', '#A67C2A'),
+            'badge'   => env('WEB_FALLBACK_BADGE', '#D4AF37'),
+        ],
+
+        /**
+         * Optional hex overrides for maps / adhkar / shared empty state (must be #RGB or #RRGGBB).
+         * Leave null to derive from --shop-primary and --shop-badge-color in CSS.
+         *
+         * WEB_IDENTITY_CARD_INK, WEB_IDENTITY_CARD_MUTED, WEB_IDENTITY_ACCENT_GOLD,
+         * WEB_IDENTITY_ACCENT_GOLD_BRIGHT, WEB_IDENTITY_PARCHMENT_{START|MID|END}
+         */
+        'card_ink'             => env('WEB_IDENTITY_CARD_INK'),
+        'card_muted'           => env('WEB_IDENTITY_CARD_MUTED'),
+        'accent_gold'          => env('WEB_IDENTITY_ACCENT_GOLD'),
+        'accent_gold_bright'   => env('WEB_IDENTITY_ACCENT_GOLD_BRIGHT'),
+        'parchment_start'      => env('WEB_IDENTITY_PARCHMENT_START'),
+        'parchment_mid'        => env('WEB_IDENTITY_PARCHMENT_MID'),
+        'parchment_end'        => env('WEB_IDENTITY_PARCHMENT_END'),
+    ],
+
+    /**
      * Home page SEO. Null values fall back to lang files.
      */
     'home_seo' => [
@@ -80,8 +108,81 @@ return [
             'path'  => '#schedule',
         ],
         'maps' => [
-            'route' => null,
-            'path'  => '#maps',
+            'route' => 'web.maps.index',
+            'path'  => '/maps',
+        ],
+        'adhkar' => [
+            'route' => 'web.adhkar.index',
+            'path'  => '/adhkar',
+        ],
+    ],
+
+    /**
+     * Maps page: location cards. Copy matches web::app.maps.cards.{slug}.* lang keys; embed/src URLs live here.
+     *
+     * google_maps_embed_api_key: optional. If set, location iframes use Google Maps Embed API (recommended).
+     * Create a key in Google Cloud Console and enable "Maps Embed API".
+     *
+     * @var array{google_maps_embed_api_key: string, cards: list<array{slug: string, map_id: string, image: string, embed: string, latitude?: float, longitude?: float, zoom?: int}>}
+     */
+    'maps' => [
+        'google_maps_embed_api_key' => env('GOOGLE_MAPS_EMBED_API_KEY', ''),
+
+        'cards' => [
+            [
+                'slug'      => 'makkah',
+                'map_id'    => 'web-map-makkah',
+                'image'     => 'https://images.pexels.com/photos/3773645/pexels-photo-3773645.jpeg?auto=compress&cs=tinysrgb&w=1200',
+                'embed'     => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3705.210322245466!2d39.8245123!3d21.4225102!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15c21b4e4c1e4b1d%3A0x1e5c4e2b6e2e4b1d!2sMasjid%20Al-Haram!5e0!3m2!1sar!2ssa!4v1700000000000!5m2!1sar!2ssa',
+                'latitude'  => 21.4224779,
+                'longitude' => 39.8261417,
+                'zoom'      => 17,
+            ],
+            [
+                'slug'      => 'mina',
+                'map_id'    => 'web-map-mina',
+                'image'     => 'https://images.pexels.com/photos/4741199/pexels-photo-4741199.jpeg?auto=compress&cs=tinysrgb&w=1200',
+                'embed'     => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3705.5!2d39.8833!3d21.4167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15c21b4e6e2e4b1d%3A0x2e5c4e2b6e2e4b1e!2sMina!5e0!3m2!1sar!2ssa!4v1700000000000!5m2!1sar!2ssa',
+                'latitude'  => 21.4138,
+                'longitude' => 39.8945,
+                'zoom'      => 14,
+            ],
+            [
+                'slug'      => 'arafat',
+                'map_id'    => 'web-map-arafat',
+                'image'     => 'https://images.pexels.com/photos/5409232/pexels-photo-5409232.jpeg?auto=compress&cs=tinysrgb&w=1200',
+                'embed'     => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3704.8!2d39.8667!3d21.355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15c21b2e2e2e4b1d%3A0x3e5c4e2b6e2e4b1f!2sMount%20Arafat!5e0!3m2!1sar!2ssa!4v1700000000000!5m2!1sar!2ssa',
+                'latitude'  => 21.3555,
+                'longitude' => 39.9838,
+                'zoom'      => 14,
+            ],
+            [
+                'slug'      => 'muzdalifah',
+                'map_id'    => 'web-map-muzdalifah',
+                'image'     => 'https://images.pexels.com/photos/3773645/pexels-photo-3773645.jpeg?auto=compress&cs=tinysrgb&w=1200',
+                'embed'     => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3705.1!2d39.9!3d21.3833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15c21b4e4e4e4b1d%3A0x4e5c4e2b6e2e4b20!2sMuzdalifah!5e0!3m2!1sar!2ssa!4v1700000000000!5m2!1sar!2ssa',
+                'latitude'  => 21.3900,
+                'longitude' => 39.9380,
+                'zoom'      => 14,
+            ],
+            [
+                'slug'      => 'jamarat',
+                'map_id'    => 'web-map-jamarat',
+                'image'     => 'https://images.pexels.com/photos/4239186/pexels-photo-4239186.jpeg?auto=compress&cs=tinysrgb&w=1200',
+                'embed'     => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3705.3!2d39.8833!3d21.4167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15c21b4e5e5e4b1d%3A0x5e5c4e2b6e2e4b21!2sJamarat!5e0!3m2!1sar!2ssa!4v1700000000000!5m2!1sar!2ssa',
+                'latitude'  => 21.4175,
+                'longitude' => 39.8762,
+                'zoom'      => 15,
+            ],
+            [
+                'slug'      => 'madinah',
+                'map_id'    => 'web-map-madinah',
+                'image'     => 'https://images.pexels.com/photos/3773645/pexels-photo-3773645.jpeg?auto=compress&cs=tinysrgb&w=1200',
+                'embed'     => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3700.5!2d39.6!3d24.4667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x15c21b4f4f4f4b1d%3A0x6e5c4e2b6e2e4b22!2sAl-Masjid%20an-Nabawi!5e0!3m2!1sar!2ssa!4v1700000000000!5m2!1sar!2ssa',
+                'latitude'  => 24.4672131,
+                'longitude' => 39.6115719,
+                'zoom'      => 17,
+            ],
         ],
     ],
 

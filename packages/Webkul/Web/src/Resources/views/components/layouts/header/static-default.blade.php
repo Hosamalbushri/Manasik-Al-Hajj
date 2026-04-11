@@ -1,9 +1,18 @@
 @php
+    $hajjLoginUrl = '';
+    $hajjLoginLabel = __('web::app.header.login');
+    if (auth()->guard('hajj')->check() && \Illuminate\Support\Facades\Route::has('hajj.account.index')) {
+        $hajjLoginUrl = route('hajj.account.index');
+        $hajjLoginLabel = trans('hajj::account.nav');
+    } elseif (\Illuminate\Support\Facades\Route::has('hajj.session.create')) {
+        $hajjLoginUrl = route('hajj.session.create');
+    }
     $navItems = [
         ['label' => 'الرئيسية', 'icon' => 'fas fa-home', 'url' => route('web.home.index')],
         ['label' => 'المناسك', 'icon' => 'fas fa-hands-praying', 'url' => '#'],
         ['label' => 'المواعيد', 'icon' => 'fas fa-calendar-alt', 'url' => '#'],
-        ['label' => 'الخرائط', 'icon' => 'fas fa-map-marked-alt', 'url' => '#'],
+        ['label' => 'الخرائط', 'icon' => 'fas fa-map-marked-alt', 'url' => \Illuminate\Support\Facades\Route::has('web.maps.index') ? route('web.maps.index') : '/maps'],
+        ['label' => 'الأذكار والأدعية', 'icon' => 'fas fa-hands-praying', 'url' => \Illuminate\Support\Facades\Route::has('web.adhkar.index') ? route('web.adhkar.index') : '/adhkar'],
         ['label' => 'الدعم', 'icon' => 'fas fa-phone-alt', 'url' => '#'],
     ];
     $storeLocalesList = core()->storeLocales();
@@ -85,8 +94,8 @@
                     </div>
                 @endif
 
-                <button class="login-btn" id="webLoginBtn" type="button">
-                    <i class="fas fa-user-circle"></i><span>{{ __('web::app.header.login') }}</span>
+                <button class="login-btn" id="webLoginBtn" type="button" @if($hajjLoginUrl !== '') data-login-url="{{ e($hajjLoginUrl) }}" @endif>
+                    <i class="fas fa-user-circle"></i><span>{{ $hajjLoginLabel }}</span>
                 </button>
 
                 <button class="burger" id="webBurgerBtn" type="button">

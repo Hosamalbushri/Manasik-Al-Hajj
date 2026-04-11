@@ -16,4 +16,7 @@ class ThemeCustomization
     public const WEB_HEADER = 'web_header';
 
     public const WEB_FOOTER = 'web_footer';
+
+    /** Inner pages hero (not home). Single row per theme; configurable per locale in admin. */
+    public const INNER_PAGE_HERO = 'inner_page_hero';
 }

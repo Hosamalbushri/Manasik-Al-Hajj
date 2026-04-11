@@ -1479,6 +1479,199 @@ return [
             ],
         ],
 
+        'map-locations' => [
+            'acl' => [
+                'title' => 'Maps page locations',
+            ],
+
+            'menu-title' => 'Maps locations',
+            'menu-info' => 'Manage location cards on the public maps page.',
+
+            'index' => [
+                'title' => 'Maps locations',
+                'info' => 'Manage cards shown on the public /maps page: images, embeds, and translated text.',
+                'create-btn' => 'Add location',
+            ],
+
+            'create' => [
+                'title' => 'Add map location',
+            ],
+
+            'edit' => [
+                'title' => 'Edit map location',
+                'back' => 'Back',
+                'save-btn' => 'Save',
+            ],
+
+            'create-success' => 'Location created successfully.',
+            'update-success' => 'Location updated successfully.',
+            'delete-success' => 'Location deleted successfully.',
+
+            'datagrid' => [
+                'id' => 'ID',
+                'location-name' => 'Location name',
+                'map-id' => 'Map block ID',
+                'sort-order' => 'Sort order',
+                'status' => 'Status',
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+                'updated-at' => 'Updated at',
+                'edit' => 'Edit',
+                'delete' => 'Delete',
+            ],
+
+            'form' => [
+                'back' => 'Back',
+                'save' => 'Save',
+                'section-general' => 'Technical & map',
+                'section-coordinates' => 'Map position',
+                'slug' => 'Slug (URL key)',
+                'slug-hint' => 'Lowercase letters, numbers, and hyphens only. Used internally; cannot be changed later.',
+                'map-id' => 'HTML anchor ID',
+                'latitude' => 'Latitude',
+                'longitude' => 'Longitude',
+                'zoom' => 'Zoom level (1–21)',
+                'embed' => 'Google Maps embed URL (iframe src)',
+                'embed-optional' => 'Custom map iframe URL (optional)',
+                'embed-hint' => 'Map iframe is built with Google Maps from latitude and longitude. Set GOOGLE_MAPS_EMBED_API_KEY in .env for the official Embed API.',
+                'sort-order' => 'Sort order',
+                'status-active' => 'Visible on site',
+                'image' => 'Cover image',
+                'image-replace' => 'Replace cover image',
+                'current-image' => 'Current image',
+                'remove-image' => 'Remove current image',
+                'default-locale' => 'Default locale (fallback text)',
+                'locale-heading' => 'Content (:code)',
+                'title' => 'Title',
+                'badge' => 'Badge',
+                'description' => 'Description',
+                'image-alt' => 'Image alt text',
+                'features' => 'Places list',
+                'features-hint' => 'One line per place.',
+            ],
+        ],
+
+        'adhkar-duas' => [
+            'menu-title' => 'Dhikr & duas',
+            'menu-sections' => 'Sections',
+            'menu-duas' => 'Duas',
+
+            'acl' => [
+                'parent' => 'Dhikr & duas',
+                'sections' => 'Sections',
+                'duas-tab' => 'Duas',
+            ],
+        ],
+
+        'dua-sections' => [
+            'acl' => [
+                'title' => 'Dhikr & duas — sections',
+            ],
+
+            'menu-title' => 'Dua sections',
+            'menu-info' => 'Categories shown as tabs on the public Dhikr & duas page.',
+
+            'index' => [
+                'title' => 'Dua sections',
+                'info' => 'Create sections first; each section becomes a tab on /adhkar when it has active duas.',
+                'create-btn' => 'Add section',
+            ],
+
+            'create' => [
+                'title' => 'Add dua section',
+            ],
+
+            'edit' => [
+                'title' => 'Edit dua section',
+                'back' => 'Back',
+                'save-btn' => 'Save',
+            ],
+
+            'create-success' => 'Section created successfully.',
+            'update-success' => 'Section updated successfully.',
+            'delete-success' => 'Section deleted successfully.',
+
+            'datagrid' => [
+                'id' => 'ID',
+                'title' => 'Title',
+                'slug' => 'Slug',
+                'sort-order' => 'Sort order',
+                'status' => 'Status',
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+                'updated-at' => 'Updated at',
+                'edit' => 'Edit',
+                'delete' => 'Delete',
+            ],
+
+            'form' => [
+                'back' => 'Back',
+                'save' => 'Save',
+                'locale-heading' => 'Content (:code)',
+                'title' => 'Section title',
+                'slug-readonly' => 'Internal slug',
+                'sort-order' => 'Sort order',
+                'status-active' => 'Visible on site',
+                'add-new-section' => 'Add new section',
+            ],
+        ],
+
+        'duas' => [
+            'acl' => [
+                'title' => 'Dhikr & duas — supplications',
+            ],
+
+            'menu-title' => 'Duas',
+            'menu-info' => 'Individual duas shown under each section on /adhkar.',
+
+            'index' => [
+                'title' => 'Duas',
+                'info' => 'Add duas under a section. Only active duas with text appear on the storefront.',
+                'create-btn' => 'Add dua',
+            ],
+
+            'create' => [
+                'title' => 'Add dua',
+            ],
+
+            'edit' => [
+                'title' => 'Edit dua',
+                'back' => 'Back',
+                'save-btn' => 'Save',
+            ],
+
+            'create-success' => 'Dua created successfully.',
+            'update-success' => 'Dua updated successfully.',
+            'delete-success' => 'Dua deleted successfully.',
+
+            'datagrid' => [
+                'id' => 'ID',
+                'section' => 'Section',
+                'title' => 'Title',
+                'sort-order' => 'Sort order',
+                'status' => 'Status',
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+                'updated-at' => 'Updated at',
+                'edit' => 'Edit',
+                'delete' => 'Delete',
+            ],
+
+            'form' => [
+                'back' => 'Back',
+                'save' => 'Save',
+                'locale-heading' => 'Content (:code)',
+                'section' => 'Section',
+                'section-placeholder' => 'Select a section',
+                'title' => 'Short title (optional)',
+                'text' => 'Dua text',
+                'reference' => 'Source / reference (optional)',
+                'sort-order' => 'Sort order',
+                'status-active' => 'Visible on site',
+                'add-new-dua' => 'Add new dua',
+            ],
+        ],
+
         'web-theme' => [
             'acl' => [
                 'title' => 'Web portal theme',
@@ -1527,12 +1720,14 @@ return [
                     'portal-footer' => 'Portal footer (all pages)',
                     'web-header' => 'Site header (global)',
                     'web-footer' => 'Site footer (global)',
+                    'inner-page-hero' => 'Inner pages hero (global, not home)',
                     'product-carousel-legacy' => 'Product carousel (legacy — not shown on portal)',
                 ],
 
                 'web-header-duplicate' => 'Only one Web header is allowed per theme code. Edit the existing row or pick another type.',
                 'web-footer-duplicate' => 'Only one Web footer is allowed per theme code. Edit the existing row or pick another type.',
                 'immersive-hero-duplicate' => 'Only one Hero section is allowed. Edit the existing hero instead of creating a new one.',
+                'inner-page-hero-duplicate' => 'Only one inner pages hero is allowed per theme. Edit the existing row instead of creating a new one.',
             ],
 
             'types' => [
@@ -1541,6 +1736,7 @@ return [
                 'immersive_hero' => 'Hero section',
                 'web_header' => 'Site header',
                 'web_footer' => 'Site footer',
+                'inner_page_hero' => 'Inner pages hero',
             ],
 
             'edit' => [
@@ -1555,6 +1751,35 @@ return [
                 'type' => 'Type',
                 'status-active' => 'Active on site',
                 'status-active-locked-hint' => 'Global header and footer use fixed visibility rules; this switch cannot be changed from this screen.',
+
+                'inner-page-hero' => [
+                    'intro' => 'Used on internal pages (maps, guides, etc.), not the homepage. Per-storefront locale tabs apply. Pages may override title, description, and breadcrumb only.',
+                    'intro-tabs' => 'Configure defaults (colours, visibility) in the first tab. Each primary site tab (same keys as the web header) has its own hero text and buttons. Breadcrumb is built automatically from the header labels and routes.',
+                    'breadcrumb-auto-hint' => 'Breadcrumb always shows: Home (from header) → current section. Labels match the Web header for this language; URLs use the same targets as in Settings → Web theme → Header (primary tabs).',
+                    'tab-default' => 'Defaults',
+                    'section-page-content' => 'Hero content for',
+                    'section-visibility' => 'Visibility',
+                    'visible' => 'Show inner hero on pages that include it',
+                    'section-badge' => 'Top badge',
+                    'badge-show' => 'Show badge',
+                    'badge-icon' => 'Badge icon (Font Awesome class)',
+                    'badge-text' => 'Badge text',
+                    'section-heading' => 'Heading',
+                    'title' => 'Title',
+                    'description' => 'Description',
+                    'section-primary-btn' => 'Primary button (gold)',
+                    'section-secondary-btn' => 'Secondary button (outline)',
+                    'btn-show' => 'Show button',
+                    'btn-label' => 'Label',
+                    'btn-url' => 'URL',
+                    'btn-icon' => 'Icon (Font Awesome class)',
+                    'section-colors' => 'Colours (hex #RRGGBB)',
+                    'color-gradient_from' => 'Gradient start',
+                    'color-gradient_mid' => 'Gradient middle',
+                    'color-gradient_to' => 'Gradient end',
+                    'color-gold' => 'Gold accent',
+                    'color-wave_fill' => 'Wave / page background below hero',
+                ],
 
                 'static-heading' => 'Static content',
                 'static-help' => 'HTML and custom CSS for this locale. Scripts are stripped on save.',
@@ -1764,6 +1989,7 @@ return [
                 'web-nav-primary-slot-services' => 'Services section',
                 'web-nav-primary-slot-schedule' => 'Schedule section',
                 'web-nav-primary-slot-maps' => 'Maps section',
+                'web-nav-primary-slot-adhkar' => 'Dhikr & duas page',
                 'web-nav-pages' => 'Pages (main tab links)',
                 'web-nav-pages-help' => 'Destination URL for each of the four primary tabs (same order as Main tabs). Use paths like / or /services or full URLs.',
                 'web-nav-page-url' => 'Tab :n — URL',

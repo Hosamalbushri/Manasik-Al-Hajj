@@ -27,6 +27,7 @@ class WebThemeCustomizationController extends Controller
         'immersive_hero',
         ThemeCustomization::WEB_HEADER,
         ThemeCustomization::WEB_FOOTER,
+        ThemeCustomization::INNER_PAGE_HERO,
     ];
 
     /**
@@ -249,6 +250,19 @@ class WebThemeCustomizationController extends Controller
             }
         }
 
+        if ($request->input('type') === ThemeCustomization::INNER_PAGE_HERO) {
+            $exists = WebThemeCustomization::query()
+                ->where('theme_code', $themeCode)
+                ->where('type', ThemeCustomization::INNER_PAGE_HERO)
+                ->exists();
+            if ($exists) {
+                return new JsonResponse([
+                    'message' => trans('admin::app.settings.web-theme.create.inner-page-hero-duplicate'),
+                    'errors'  => ['type' => [trans('admin::app.settings.web-theme.create.inner-page-hero-duplicate')]],
+                ], 422);
+            }
+        }
+
         $theme = $this->webThemeCustomizationRepository->create([
             'name'       => $request->input('name'),
             'sort_order' => (int) $request->input('sort_order'),
@@ -270,7 +284,26 @@ class WebThemeCustomizationController extends Controller
         $activeLocale = $this->resolveRequestedStoreLocale($storeLocaleCodes);
         $opts = $this->localizedOptionsForLocale($theme, $activeLocale);
 
-        return view('admin::settings.web-theme.edit', compact('theme', 'opts', 'activeLocale', 'storeLocaleCodes'));
+        $innerHeroHeaderOpts = [];
+        if ($theme->type === ThemeCustomization::INNER_PAGE_HERO) {
+            $themeCode = (string) config('web.storefront_theme_code', 'web');
+            $headerTheme = WebThemeCustomization::query()
+                ->where('theme_code', $themeCode)
+                ->where('type', ThemeCustomization::WEB_HEADER)
+                ->orderBy('id')
+                ->first();
+            if ($headerTheme) {
+                $innerHeroHeaderOpts = $this->localizedOptionsForLocale($headerTheme, $activeLocale);
+            }
+        }
+
+        return view('admin::settings.web-theme.edit', compact(
+            'theme',
+            'opts',
+            'activeLocale',
+            'storeLocaleCodes',
+            'innerHeroHeaderOpts'
+        ));
     }
 
     public function update(Request $request, int $id): \Illuminate\Http\RedirectResponse
@@ -326,6 +359,20 @@ class WebThemeCustomizationController extends Controller
                     ->back()
                     ->withInput()
                     ->withErrors(['type' => trans('admin::app.settings.web-theme.create.immersive-hero-duplicate')]);
+            }
+        }
+
+        if ($request->input('type') === ThemeCustomization::INNER_PAGE_HERO) {
+            $dup = WebThemeCustomization::query()
+                ->where('theme_code', $themeCode)
+                ->where('type', ThemeCustomization::INNER_PAGE_HERO)
+                ->where('id', '!=', $id)
+                ->exists();
+            if ($dup) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors(['type' => trans('admin::app.settings.web-theme.create.inner-page-hero-duplicate')]);
             }
         }
 
@@ -412,6 +459,11 @@ class WebThemeCustomizationController extends Controller
 
             case ThemeCustomization::WEB_FOOTER:
                 $this->persistLocalizedOptions($theme, $locale, $this->normalizeWebFooterOptions($request, $theme, $locale));
+
+                break;
+
+            case ThemeCustomization::INNER_PAGE_HERO:
+                $this->persistLocalizedOptions($theme, $locale, $this->normalizeInnerPageHeroOptions($request, $theme, $locale));
 
                 break;
 
@@ -959,7 +1011,7 @@ class WebThemeCustomizationController extends Controller
         }
 
         $rows = [];
-        foreach (range(0, 3) as $i) {
+        foreach (range(0, max(0, count($allowedOrder) - 1)) as $i) {
             $rows[] = [
                 'page_key' => (string) data_get($o, "nav_primary.$i.page_key", ''),
                 'label'    => mb_substr(trim((string) data_get($o, "nav_primary.$i.label", '')), 0, 191),
@@ -1188,5 +1240,69 @@ class WebThemeCustomizationController extends Controller
         }
 
         return '#1F6E2F';
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function normalizeInnerPageHeroOptions(Request $request, WebThemeCustomization $theme, string $locale): array
+    {
+        $o = $request->input('options', []);
+        $o = is_array($o) ? $o : [];
+
+        $out = [
+            'visible'       => filter_var($o['visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'gradient_from' => $this->sanitizeInnerPageHeroHex((string) ($o['gradient_from'] ?? ''), '#0D2A1A'),
+            'gradient_mid'  => $this->sanitizeInnerPageHeroHex((string) ($o['gradient_mid'] ?? ''), '#1A3A2A'),
+            'gradient_to'   => $this->sanitizeInnerPageHeroHex((string) ($o['gradient_to'] ?? ''), '#0D2A1A'),
+            'gold'          => $this->sanitizeInnerPageHeroHex((string) ($o['gold'] ?? ''), '#D4AF37'),
+            'wave_fill'     => $this->sanitizeInnerPageHeroHex((string) ($o['wave_fill'] ?? ''), '#FEFAF5'),
+            'pages'         => [],
+        ];
+
+        $rawPages = $o['pages'] ?? [];
+        $rawPages = is_array($rawPages) ? $rawPages : [];
+
+        foreach (WebHeaderPrimaryTabs::innerHeroPageKeys() as $pageKey) {
+            $slice = $rawPages[$pageKey] ?? [];
+            $slice = is_array($slice) ? $slice : [];
+            $out['pages'][$pageKey] = $this->normalizeInnerPageHeroPageSlice($slice);
+        }
+
+        return $out;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function normalizeInnerPageHeroPageSlice(array $p): array
+    {
+        return [
+            'badge_show'      => filter_var($p['badge_show'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'badge_icon'      => $this->sanitizeImmersiveFaClass((string) ($p['badge_icon'] ?? '')),
+            'badge_text'      => mb_substr(trim((string) ($p['badge_text'] ?? '')), 0, 191),
+            'title'           => mb_substr(trim((string) ($p['title'] ?? '')), 0, 191),
+            'description'     => mb_substr(trim((string) ($p['description'] ?? '')), 0, 2000),
+            'primary_show'    => filter_var($p['primary_show'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'primary_label'   => mb_substr(trim((string) ($p['primary_label'] ?? '')), 0, 191),
+            'primary_url'     => $this->sanitizeImmersiveUrl((string) ($p['primary_url'] ?? '')),
+            'primary_icon'    => $this->sanitizeImmersiveFaClass((string) ($p['primary_icon'] ?? '')),
+            'secondary_show'  => filter_var($p['secondary_show'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'secondary_label' => mb_substr(trim((string) ($p['secondary_label'] ?? '')), 0, 191),
+            'secondary_url'   => $this->sanitizeImmersiveUrl((string) ($p['secondary_url'] ?? '')),
+            'secondary_icon'  => $this->sanitizeImmersiveFaClass((string) ($p['secondary_icon'] ?? '')),
+        ];
+    }
+
+    protected function sanitizeInnerPageHeroHex(string $value, string $fallback): string
+    {
+        $value = strtoupper(trim($value));
+        if (preg_match('/^#[0-9A-F]{6}$/', $value)) {
+            return $value;
+        }
+
+        $fb = strtoupper(trim($fallback));
+
+        return preg_match('/^#[0-9A-F]{6}$/', $fb) ? $fb : '#0D2A1A';
     }
 }

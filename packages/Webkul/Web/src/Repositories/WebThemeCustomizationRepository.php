@@ -68,6 +68,24 @@ class WebThemeCustomizationRepository extends Repository
         return $row;
     }
 
+    public function getActiveInnerPageHero(string $themeCode): ?WebThemeCustomization
+    {
+        /** @var WebThemeCustomization|null $row */
+        $row = $this->model
+            ->newQuery()
+            ->where('theme_code', $themeCode)
+            ->where('type', ThemeCustomization::INNER_PAGE_HERO)
+            ->where('status', true)
+            ->orderBy('id')
+            ->first();
+
+        if ($row) {
+            $row->options = $this->resolveLocalizedOptions($row->options, app()->getLocale());
+        }
+
+        return $row;
+    }
+
     /**
      * @param  array<string, mixed>|null  $options
      * @return array<string, mixed>

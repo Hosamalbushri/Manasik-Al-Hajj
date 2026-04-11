@@ -41,6 +41,41 @@ final class WebHeaderPrimaryTabs
     }
 
     /**
+     * Map a Laravel route name to a primary tab key (e.g. web.maps.index → maps).
+     */
+    public static function pageKeyForRouteName(?string $routeName): ?string
+    {
+        if ($routeName === null || $routeName === '') {
+            return null;
+        }
+
+        foreach (self::definitions() as $key => $tab) {
+            if (! is_array($tab)) {
+                continue;
+            }
+            $r = $tab['route'] ?? null;
+            if (is_string($r) && $r !== '' && $r === $routeName) {
+                return (string) $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Primary tab keys that may use the inner-page hero (excludes home).
+     *
+     * @return list<string>
+     */
+    public static function innerHeroPageKeys(): array
+    {
+        return array_values(array_filter(
+            self::defaultKeyOrder(),
+            static fn (string $k): bool => $k !== 'home'
+        ));
+    }
+
+    /**
      * @param  array<string, mixed>  $o  Localized header options
      * @param  list<array{label?: string, url?: string, icon?: string}>  $legacyNav
      * @return list<array{pageKey: string, label: string, slotTitle: string}>
@@ -84,8 +119,9 @@ final class WebHeaderPrimaryTabs
 
         if (count($orderedKeys) !== count($allowedOrder)) {
             $orderedKeys = $allowedOrder;
+            $n = count($allowedOrder);
             if ($hasLegacyLabelsOnly) {
-                foreach (range(0, 3) as $i) {
+                foreach (range(0, max(0, $n - 1)) as $i) {
                     if (! isset($allowedOrder[$i])) {
                         break;
                     }
@@ -93,7 +129,7 @@ final class WebHeaderPrimaryTabs
                     $labelsByKey[$k] = (string) ($navPrimary[$i]['label'] ?? '');
                 }
             } elseif ($navPrimary === []) {
-                foreach (range(0, 3) as $i) {
+                foreach (range(0, max(0, $n - 1)) as $i) {
                     if (! isset($allowedOrder[$i])) {
                         break;
                     }

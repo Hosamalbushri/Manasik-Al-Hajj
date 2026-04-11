@@ -9,6 +9,7 @@ use Webkul\Core\Providers\CoreServiceProvider;
 use Webkul\DataGrid\Providers\DataGridServiceProvider;
 use Webkul\Installer\Providers\InstallerServiceProvider;
 use Webkul\User\Providers\UserServiceProvider;
+use Webkul\Hajj\Providers\HajjServiceProvider;
 use Webkul\Web\Providers\WebServiceProvider;
 
 return [
@@ -33,4 +34,5 @@ return [
     InstallerServiceProvider::class,
     UserServiceProvider::class,
     WebServiceProvider::class,
+    HajjServiceProvider::class,
 ];

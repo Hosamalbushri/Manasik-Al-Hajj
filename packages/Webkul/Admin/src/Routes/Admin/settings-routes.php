@@ -94,6 +94,24 @@ Route::prefix('settings')->group(function () {
     });
 
     /**
+     * Legacy GET URLs (bookmarks): map locations moved to /map-locations/*.
+     */
+    Route::get('map-locations', fn () => redirect()->route('admin.map-locations.index'));
+    Route::get('map-locations/create', fn () => redirect()->route('admin.map-locations.create'));
+    Route::get('map-locations/edit/{id}', fn ($id) => redirect()->route('admin.map-locations.edit', $id));
+
+    /**
+     * Legacy GET URLs (bookmarks): dua routes moved to /adhkar-duas/*.
+     */
+    Route::get('dua-sections', fn () => redirect()->route('admin.adhkar-duas.dua-sections.index'));
+    Route::get('dua-sections/create', fn () => redirect()->route('admin.adhkar-duas.dua-sections.create'));
+    Route::get('dua-sections/edit/{id}', fn ($id) => redirect()->route('admin.adhkar-duas.dua-sections.edit', $id));
+
+    Route::get('duas', fn () => redirect()->route('admin.adhkar-duas.duas.index'));
+    Route::get('duas/create', fn () => redirect()->route('admin.adhkar-duas.duas.create'));
+    Route::get('duas/edit/{id}', fn ($id) => redirect()->route('admin.adhkar-duas.duas.edit', $id));
+
+    /**
      * Users Routes.
      */
     Route::controller(UserController::class)->prefix('users')->group(function () {

@@ -11,7 +11,31 @@ use Illuminate\Support\Facades\Schema;
 class WebThemeDefaultsSeeder extends Seeder
 {
     /**
-     * Seed default web header/footer customizations.
+     * Brand greens for header + shop CSS variables (seeded on install).
+     */
+    private const SHOP_PRIMARY = '#165022';
+
+    private const SHOP_ACCENT = '#2E8B3A';
+
+    private const SHOP_ICON = '#A67C2A';
+
+    private const GOLD = '#D4AF37';
+
+    private const GOLD_SOFT = '#C9A227';
+
+    /** Inner hero band + footer contrast (aligned with brand primary). */
+    private const DEEP_FOREST = '#165022';
+
+    private const INNER_HERO_MID = '#1f6b2c';
+
+    /** Hero background image (Masjid al-Haram area — stable Unsplash CDN). */
+    private const HERO_IMAGE_URL = 'https://images.unsplash.com/photo-1590076219834-43e223d1a3bf?auto=format&fit=crop&w=1920&q=82';
+
+    /** Locales always seeded for web theme (bilingual content). */
+    private const THEME_LOCALES = ['ar', 'en'];
+
+    /**
+     * Seed default web theme: core colors, home hero, header, inner hero, footer.
      *
      * @param  array  $parameters
      */
@@ -23,129 +47,332 @@ class WebThemeDefaultsSeeder extends Seeder
 
         $themeCode = (string) config('web.storefront_theme_code', 'web');
         $defaultLocale = strtolower((string) ($parameters['default_store_locale'] ?? $parameters['locale'] ?? config('app.locale', 'en')));
+        if (! in_array($defaultLocale, self::THEME_LOCALES, true)) {
+            $defaultLocale = 'en';
+        }
+
         $now = now();
 
-        $headerOptions = [
+        $this->seedCoreWebColors($now);
+        $this->seedAdminPanelFooterLabel($now, $defaultLocale);
+        $this->upsertByType(
+            'immersive_hero',
+            'Home hero',
+            5,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->immersiveHeroOptionsForLocale('ar'),
+                'en' => $this->immersiveHeroOptionsForLocale('en'),
+            ]),
+            $now
+        );
+        $this->upsertByType(
+            'web_header',
+            'Web Header',
+            10,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->headerOptionsForLocale('ar'),
+                'en' => $this->headerOptionsForLocale('en'),
+            ]),
+            $now
+        );
+        $this->upsertByType(
+            'inner_page_hero',
+            'Inner pages hero',
+            15,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->innerPageHeroOptionsForLocale('ar'),
+                'en' => $this->innerPageHeroOptionsForLocale('en'),
+            ]),
+            $now
+        );
+        $this->upsertByType(
+            'web_footer',
+            'Web Footer',
+            20,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->footerOptionsForLocale('ar'),
+                'en' => $this->footerOptionsForLocale('en'),
+            ]),
+            $now
+        );
+    }
+
+    protected function seedCoreWebColors(Carbon $now): void
+    {
+        if (! Schema::hasTable('core_config')) {
+            return;
+        }
+
+        $map = [
+            'general.store.web.primary_color'   => self::SHOP_PRIMARY,
+            'general.store.web.accent_color'    => self::SHOP_ACCENT,
+            'general.store.web.icon_color'      => self::SHOP_ICON,
+            'general.store.web.badge_color'     => self::GOLD,
+        ];
+
+        foreach ($map as $code => $value) {
+            $existing = DB::table('core_config')->where('code', $code)->first();
+            if ($existing) {
+                continue;
+            }
+
+            DB::table('core_config')->insert([
+                'code'       => $code,
+                'value'      => $value,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
+    }
+
+    /**
+     * Admin layout / login footer (general.settings.footer.label). Skips if already set.
+     */
+    protected function seedAdminPanelFooterLabel(Carbon $now, string $installerLocale): void
+    {
+        if (! Schema::hasTable('core_config')) {
+            return;
+        }
+
+        $code = 'general.settings.footer.label';
+        if (DB::table('core_config')->where('code', $code)->exists()) {
+            return;
+        }
+
+        $value = '&copy; :year <strong>Manasik Al-Hajj</strong>. '
+            .$this->t('seeders.web-theme.admin-footer-rights', $installerLocale, 'All rights reserved.');
+
+        DB::table('core_config')->insert([
+            'code'       => $code,
+            'value'      => $value,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+    }
+
+    /**
+     * @param  array<string, array<string, mixed>>  $translations
+     * @return array<string, mixed>
+     */
+    protected function buildLocalizableOptions(string $defaultLocale, array $translations): array
+    {
+        $defaultLocale = strtolower($defaultLocale);
+        if (! isset($translations[$defaultLocale])) {
+            $defaultLocale = 'en';
+        }
+
+        return [
             'default_locale' => $defaultLocale,
-            'translations'   => [
-                $defaultLocale => [
-                    'colors' => [
-                        'primary'   => '#1F6E2F',
-                        'secondary' => '#2C8E3C',
+            'translations'   => $translations,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function immersiveHeroOptionsForLocale(string $locale): array
+    {
+        $p = 'seeders.web-theme.immersive.slide1';
+
+        return [
+            'slides' => [
+                [
+                    'badge_icon'  => '',
+                    'badge'       => $this->t($p.'.badge', $locale, ''),
+                    'title'       => $this->t($p.'.title', $locale, ''),
+                    'description' => $this->t($p.'.description', $locale, ''),
+                    'image'       => self::HERO_IMAGE_URL,
+                    'primary'     => [
+                        'label' => $this->t($p.'.primary_label', $locale, ''),
+                        'icon'  => '',
+                        'url'   => '/maps',
                     ],
-                    'brand'   => [
-                        'icon'      => 'fas fa-kaaba',
-                        'title'     => $this->t('seeders.web-theme.header.brand.title', $defaultLocale, 'Krayin'),
-                        'subtitle'  => $this->t('seeders.web-theme.header.brand.subtitle', $defaultLocale, '| CRM'),
-                        'logo_path' => '',
+                    'secondary'   => [
+                        'label' => $this->t($p.'.secondary_label', $locale, ''),
+                        'icon'  => '',
+                        'url'   => '/adhkar',
                     ],
-                    'nav_primary' => [
-                        ['page_key' => 'home', 'label' => $this->t('seeders.web-theme.header.nav.home', $defaultLocale, 'Home')],
-                        ['page_key' => 'services', 'label' => $this->t('seeders.web-theme.header.nav.services', $defaultLocale, 'Services')],
-                        ['page_key' => 'schedule', 'label' => $this->t('seeders.web-theme.header.nav.schedule', $defaultLocale, 'Schedule')],
-                        ['page_key' => 'maps', 'label' => $this->t('seeders.web-theme.header.nav.maps', $defaultLocale, 'Maps')],
-                    ],
-                    'nav_secondary' => [],
-                    'nav'           => [
-                        ['label' => $this->t('seeders.web-theme.header.nav.home', $defaultLocale, 'Home'), 'url' => '/', 'icon' => ''],
-                        ['label' => $this->t('seeders.web-theme.header.nav.services', $defaultLocale, 'Services'), 'url' => '#services', 'icon' => ''],
-                        ['label' => $this->t('seeders.web-theme.header.nav.schedule', $defaultLocale, 'Schedule'), 'url' => '#schedule', 'icon' => ''],
-                        ['label' => $this->t('seeders.web-theme.header.nav.maps', $defaultLocale, 'Maps'), 'url' => '#maps', 'icon' => ''],
-                    ],
-                    'lang'  => [
-                        'show_switcher' => true,
-                        'button_label'  => $this->t('seeders.web-theme.header.lang-button', $defaultLocale, 'Language'),
-                    ],
-                    'login' => [
-                        'show'  => true,
-                        'label' => $this->t('seeders.web-theme.header.login-label', $defaultLocale, 'Login'),
-                        'url'   => '/login',
+                    'stats'       => [
+                        ['number' => $this->t($p.'.stat1_number', $locale, ''), 'label' => $this->t($p.'.stat1_label', $locale, '')],
+                        ['number' => $this->t($p.'.stat2_number', $locale, ''), 'label' => $this->t($p.'.stat2_label', $locale, '')],
+                        ['number' => $this->t($p.'.stat3_number', $locale, ''), 'label' => $this->t($p.'.stat3_label', $locale, '')],
                     ],
                 ],
             ],
         ];
+    }
 
-        $footerOptions = [
-            'default_locale' => $defaultLocale,
-            'translations'   => [
-                $defaultLocale => [
-                    'enabled' => true,
-                    'visibility' => [
-                        'brand' => true,
-                        'social' => true,
-                        'explore' => true,
-                        'support' => true,
-                        'contact' => true,
-                        'subscribe' => true,
-                        'bottom' => true,
-                        'bottom_mini' => true,
-                    ],
-                    'effects' => [
-                        'back_to_top' => true,
-                    ],
-                    'colors' => [
-                        'primary'   => '#D4AF37',
-                        'secondary' => '#0D2A1A',
-                    ],
-                    'brand'   => [
-                        'icon'        => 'fas fa-kaaba',
-                        'title'       => $this->t('seeders.web-theme.footer.brand.title', $defaultLocale, 'Krayin'),
-                        'description' => $this->t('seeders.web-theme.footer.brand.description', $defaultLocale, 'A digital platform to serve your customers better.'),
-                        'trust'       => $this->t('seeders.web-theme.footer.brand.trust', $defaultLocale, 'Trusted service, 24/7 support'),
-                    ],
-                    'social'      => [
-                        ['icon' => 'fab fa-facebook-f', 'url' => '#', 'aria_label' => 'Facebook'],
-                        ['icon' => 'fab fa-x-twitter', 'url' => '#', 'aria_label' => 'X'],
-                        ['icon' => 'fab fa-instagram', 'url' => '#', 'aria_label' => 'Instagram'],
-                    ],
-                    'col_explore' => [
-                        'title'        => $this->t('seeders.web-theme.footer.col-explore.title', $defaultLocale, 'Explore'),
-                        'show_chevron' => true,
-                        'links'        => [
-                            ['label' => $this->t('seeders.web-theme.header.nav.home', $defaultLocale, 'Home'), 'url' => '/'],
-                            ['label' => $this->t('seeders.web-theme.header.nav.services', $defaultLocale, 'Services'), 'url' => '#'],
-                            ['label' => $this->t('seeders.web-theme.header.nav.maps', $defaultLocale, 'Maps'), 'url' => '#'],
-                        ],
-                    ],
-                    'col_support' => [
-                        'title'        => $this->t('seeders.web-theme.footer.col-support.title', $defaultLocale, 'Support'),
-                        'show_chevron' => true,
-                        'links'        => [
-                            ['label' => $this->t('seeders.web-theme.footer.col-support.links.faq', $defaultLocale, 'FAQ'), 'url' => '#'],
-                            ['label' => $this->t('seeders.web-theme.footer.col-support.links.contact', $defaultLocale, 'Contact Us'), 'url' => '#'],
-                            ['label' => $this->t('seeders.web-theme.footer.col-support.links.privacy', $defaultLocale, 'Privacy Policy'), 'url' => '#'],
-                        ],
-                    ],
-                    'contact' => [
-                        'title' => $this->t('seeders.web-theme.footer.contact.title', $defaultLocale, 'Contact'),
-                        'items' => [
-                            ['icon' => 'fas fa-phone-alt', 'text' => $this->t('seeders.web-theme.footer.contact.phone', $defaultLocale, '+966 50 000 0000')],
-                            ['icon' => 'fas fa-envelope', 'text' => $this->t('seeders.web-theme.footer.contact.email', $defaultLocale, 'info@example.com')],
-                            ['icon' => 'fas fa-map-marker-alt', 'text' => $this->t('seeders.web-theme.footer.contact.address', $defaultLocale, 'Makkah - Saudi Arabia')],
-                        ],
-                    ],
-                    'subscribe' => [
-                        'title'       => $this->t('seeders.web-theme.footer.subscribe.title', $defaultLocale, 'Subscribe to our newsletter'),
-                        'placeholder' => $this->t('seeders.web-theme.footer.subscribe.placeholder', $defaultLocale, 'Enter your email'),
-                        'privacy'     => $this->t('seeders.web-theme.footer.subscribe.privacy', $defaultLocale, 'By subscribing, you agree to the privacy policy.'),
-                        'success_msg' => $this->t('seeders.web-theme.footer.subscribe.success', $defaultLocale, 'Subscribed successfully.'),
-                        'invalid_msg' => $this->t('seeders.web-theme.footer.subscribe.invalid', $defaultLocale, 'Please enter a valid email address.'),
-                    ],
-                    'bottom' => [
-                        'copyright'      => $this->t('seeders.web-theme.footer.bottom.copyright', $defaultLocale, 'All rights reserved')
-                            .' © '.date('Y').' '.$this->t('seeders.web-theme.footer.brand.title', $defaultLocale, 'Krayin'),
-                        'mini_nav_label' => $this->t('seeders.web-theme.footer.bottom.mini-nav-label', $defaultLocale, 'Quick Links'),
-                        'links'          => [
-                            ['label' => $this->t('seeders.web-theme.footer.bottom.links.terms', $defaultLocale, 'Terms & Conditions'), 'url' => '#'],
-                            ['label' => $this->t('seeders.web-theme.footer.bottom.links.privacy', $defaultLocale, 'Privacy Policy'), 'url' => '#'],
-                        ],
-                    ],
+    /**
+     * @return array<string, mixed>
+     */
+    protected function headerOptionsForLocale(string $locale): array
+    {
+        return [
+            'colors' => [
+                'primary'   => self::SHOP_PRIMARY,
+                'secondary' => self::SHOP_ACCENT,
+            ],
+            'brand'   => [
+                'icon'      => 'fas fa-kaaba',
+                'title'     => $this->t('seeders.web-theme.header.brand.title', $locale, 'Hajj rites'),
+                'subtitle'  => $this->t('seeders.web-theme.header.brand.subtitle', $locale, ''),
+                'logo_path' => '',
+            ],
+            'nav_primary' => [
+                ['page_key' => 'home', 'label' => $this->t('seeders.web-theme.header.nav.home', $locale, 'Home')],
+                ['page_key' => 'services', 'label' => $this->t('seeders.web-theme.header.nav.services', $locale, 'Services')],
+                ['page_key' => 'schedule', 'label' => $this->t('seeders.web-theme.header.nav.schedule', $locale, 'Schedule')],
+                ['page_key' => 'maps', 'label' => $this->t('seeders.web-theme.header.nav.maps', $locale, 'Maps')],
+                ['page_key' => 'adhkar', 'label' => $this->t('seeders.web-theme.header.nav.adhkar', $locale, 'Dhikr & duas')],
+            ],
+            'nav_secondary' => [],
+            'nav'           => [
+                ['label' => $this->t('seeders.web-theme.header.nav.home', $locale, 'Home'), 'url' => '/', 'icon' => ''],
+                ['label' => $this->t('seeders.web-theme.header.nav.services', $locale, 'Services'), 'url' => '#services', 'icon' => ''],
+                ['label' => $this->t('seeders.web-theme.header.nav.schedule', $locale, 'Schedule'), 'url' => '#schedule', 'icon' => ''],
+                ['label' => $this->t('seeders.web-theme.header.nav.maps', $locale, 'Maps'), 'url' => '/maps', 'icon' => ''],
+                ['label' => $this->t('seeders.web-theme.header.nav.adhkar', $locale, 'Dhikr & duas'), 'url' => '/adhkar', 'icon' => ''],
+            ],
+            'lang'  => [
+                'show_switcher' => true,
+                'button_label'  => $this->t('seeders.web-theme.header.lang-button', $locale, 'Language'),
+            ],
+            'login' => [
+                'show'  => true,
+                'label' => $this->t('seeders.web-theme.header.login-label', $locale, 'Login'),
+                'url'   => '/hajj/login',
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function footerOptionsForLocale(string $locale): array
+    {
+        return [
+            'enabled' => true,
+            'visibility' => [
+                'brand' => true,
+                'social' => true,
+                'explore' => true,
+                'support' => true,
+                'contact' => true,
+                'subscribe' => true,
+                'bottom' => true,
+                'bottom_mini' => true,
+            ],
+            'effects' => [
+                'back_to_top' => true,
+            ],
+            'colors' => [
+                'primary'   => self::GOLD,
+                'secondary' => self::DEEP_FOREST,
+            ],
+            'brand'   => [
+                'icon'        => 'fas fa-kaaba',
+                'title'       => $this->t('seeders.web-theme.footer.brand.title', $locale, ''),
+                'description' => $this->t('seeders.web-theme.footer.brand.description', $locale, ''),
+                'trust'       => $this->t('seeders.web-theme.footer.brand.trust', $locale, ''),
+            ],
+            'social'      => [
+                ['icon' => 'fab fa-facebook-f', 'url' => '#', 'aria_label' => 'Facebook'],
+                ['icon' => 'fab fa-x-twitter', 'url' => '#', 'aria_label' => 'X'],
+                ['icon' => 'fab fa-instagram', 'url' => '#', 'aria_label' => 'Instagram'],
+            ],
+            'col_explore' => [
+                'title'        => $this->t('seeders.web-theme.footer.col-explore.title', $locale, 'Explore'),
+                'show_chevron' => true,
+                'links'        => [
+                    ['label' => $this->t('seeders.web-theme.header.nav.home', $locale, 'Home'), 'url' => '/'],
+                    ['label' => $this->t('seeders.web-theme.header.nav.services', $locale, 'Services'), 'url' => '#'],
+                    ['label' => $this->t('seeders.web-theme.header.nav.maps', $locale, 'Maps'), 'url' => '/maps'],
+                    ['label' => $this->t('seeders.web-theme.header.nav.adhkar', $locale, 'Dhikr & duas'), 'url' => '/adhkar'],
+                ],
+            ],
+            'col_support' => [
+                'title'        => $this->t('seeders.web-theme.footer.col-support.title', $locale, 'Support'),
+                'show_chevron' => true,
+                'links'        => [
+                    ['label' => $this->t('seeders.web-theme.footer.col-support.links.faq', $locale, 'FAQ'), 'url' => '#'],
+                    ['label' => $this->t('seeders.web-theme.footer.col-support.links.contact', $locale, 'Contact'), 'url' => '#'],
+                    ['label' => $this->t('seeders.web-theme.footer.col-support.links.privacy', $locale, 'Privacy'), 'url' => '#'],
+                ],
+            ],
+            'contact' => [
+                'title' => $this->t('seeders.web-theme.footer.contact.title', $locale, 'Contact'),
+                'items' => [
+                    ['icon' => 'fas fa-phone-alt', 'text' => $this->t('seeders.web-theme.footer.contact.phone', $locale, '')],
+                    ['icon' => 'fas fa-envelope', 'text' => $this->t('seeders.web-theme.footer.contact.email', $locale, '')],
+                    ['icon' => 'fas fa-map-marker-alt', 'text' => $this->t('seeders.web-theme.footer.contact.address', $locale, '')],
+                ],
+            ],
+            'subscribe' => [
+                'title'       => $this->t('seeders.web-theme.footer.subscribe.title', $locale, ''),
+                'placeholder' => $this->t('seeders.web-theme.footer.subscribe.placeholder', $locale, ''),
+                'privacy'     => $this->t('seeders.web-theme.footer.subscribe.privacy', $locale, ''),
+                'success_msg' => $this->t('seeders.web-theme.footer.subscribe.success', $locale, ''),
+                'invalid_msg' => $this->t('seeders.web-theme.footer.subscribe.invalid', $locale, ''),
+            ],
+            'bottom' => [
+                'copyright'      => $this->t('seeders.web-theme.footer.bottom.copyright', $locale, '')
+                    .' © '.date('Y').' '.$this->t('seeders.web-theme.footer.brand.title', $locale, ''),
+                'mini_nav_label' => $this->t('seeders.web-theme.footer.bottom.mini-nav-label', $locale, ''),
+                'links'          => [
+                    ['label' => $this->t('seeders.web-theme.footer.bottom.links.terms', $locale, ''), 'url' => '#'],
+                    ['label' => $this->t('seeders.web-theme.footer.bottom.links.privacy', $locale, ''), 'url' => '#'],
                 ],
             ],
         ];
+    }
 
-        $this->upsertByType('web_header', 'Web Header', 10, $themeCode, $headerOptions, $now);
-        $this->upsertByType('web_footer', 'Web Footer', 20, $themeCode, $footerOptions, $now);
+    /**
+     * @return array<string, mixed>
+     */
+    protected function innerPageHeroOptionsForLocale(string $locale): array
+    {
+        return [
+            'visible'       => true,
+            'gradient_from' => self::DEEP_FOREST,
+            'gradient_mid'  => self::INNER_HERO_MID,
+            'gradient_to'   => self::DEEP_FOREST,
+            'gold'          => self::GOLD,
+            'wave_fill'     => '#FEFAF5',
+            'pages'         => [
+                'services' => $this->innerHeroPageSeed('services', $locale),
+                'schedule' => $this->innerHeroPageSeed('schedule', $locale),
+                'maps'     => $this->innerHeroPageSeed('maps', $locale),
+                'adhkar'   => $this->innerHeroPageSeed('adhkar', $locale),
+            ],
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function innerHeroPageSeed(string $page, string $locale): array
+    {
+        $p = 'seeders.web-theme.inner-page-hero.'.$page;
+
+        return [
+            'badge_show'      => true,
+            'badge_icon'      => '',
+            'badge_text'      => $this->t($p.'.badge', $locale, ''),
+            'title'           => $this->t($p.'.title', $locale, ''),
+            'description'     => $this->t($p.'.description', $locale, ''),
+            'primary_show'    => true,
+            'primary_label'   => $this->t($p.'.primary_label', $locale, ''),
+            'primary_url'     => '',
+            'primary_icon'    => '',
+            'secondary_show'  => true,
+            'secondary_label' => $this->t($p.'.secondary_label', $locale, ''),
+            'secondary_url'   => '',
+            'secondary_icon'  => '',
+        ];
     }
 
     protected function t(string $key, string $locale, string $fallback): string
@@ -188,7 +415,6 @@ class WebThemeDefaultsSeeder extends Seeder
                 ->update([
                     'status'     => true,
                     'updated_at' => $now,
-                    // Keep existing user customizations intact if already present.
                     'options'    => ($existing->options !== null && $existing->options !== '')
                         ? $existing->options
                         : json_encode($options),
@@ -209,4 +435,3 @@ class WebThemeDefaultsSeeder extends Seeder
         ]);
     }
 }
-

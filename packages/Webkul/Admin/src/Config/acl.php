@@ -144,6 +144,74 @@ return [
         'route' => 'admin.settings.web-theme.destroy',
         'sort' => 3,
     ], [
+        'key' => 'map_locations',
+        'name' => 'admin::app.settings.map-locations.acl.title',
+        'route' => 'admin.map-locations.index',
+        'sort' => 3,
+    ], [
+        'key' => 'map_locations.create',
+        'name' => 'admin::app.acl.create',
+        'route' => 'admin.map-locations.store',
+        'sort' => 1,
+    ], [
+        'key' => 'map_locations.edit',
+        'name' => 'admin::app.acl.edit',
+        'route' => ['admin.map-locations.edit', 'admin.map-locations.update'],
+        'sort' => 2,
+    ], [
+        'key' => 'map_locations.delete',
+        'name' => 'admin::app.acl.delete',
+        'route' => 'admin.map-locations.destroy',
+        'sort' => 3,
+    ], [
+        'key' => 'adhkar_duas',
+        'name' => 'admin::app.settings.adhkar-duas.acl.parent',
+        'route' => [
+            'admin.adhkar-duas.dua-sections.index',
+            'admin.adhkar-duas.duas.index',
+        ],
+        'sort' => 5,
+    ], [
+        'key' => 'adhkar_duas.dua_sections',
+        'name' => 'admin::app.settings.adhkar-duas.acl.sections',
+        'route' => 'admin.adhkar-duas.dua-sections.index',
+        'sort' => 0,
+    ], [
+        'key' => 'adhkar_duas.dua_sections.create',
+        'name' => 'admin::app.acl.create',
+        'route' => 'admin.adhkar-duas.dua-sections.store',
+        'sort' => 1,
+    ], [
+        'key' => 'adhkar_duas.dua_sections.edit',
+        'name' => 'admin::app.acl.edit',
+        'route' => ['admin.adhkar-duas.dua-sections.edit', 'admin.adhkar-duas.dua-sections.update'],
+        'sort' => 2,
+    ], [
+        'key' => 'adhkar_duas.dua_sections.delete',
+        'name' => 'admin::app.acl.delete',
+        'route' => 'admin.adhkar-duas.dua-sections.destroy',
+        'sort' => 3,
+    ], [
+        'key' => 'adhkar_duas.duas',
+        'name' => 'admin::app.settings.adhkar-duas.acl.duas-tab',
+        'route' => 'admin.adhkar-duas.duas.index',
+        'sort' => 1,
+    ], [
+        'key' => 'adhkar_duas.duas.create',
+        'name' => 'admin::app.acl.create',
+        'route' => 'admin.adhkar-duas.duas.store',
+        'sort' => 1,
+    ], [
+        'key' => 'adhkar_duas.duas.edit',
+        'name' => 'admin::app.acl.edit',
+        'route' => ['admin.adhkar-duas.duas.edit', 'admin.adhkar-duas.duas.update'],
+        'sort' => 2,
+    ], [
+        'key' => 'adhkar_duas.duas.delete',
+        'name' => 'admin::app.acl.delete',
+        'route' => 'admin.adhkar-duas.duas.destroy',
+        'sort' => 3,
+    ], [
         'key' => 'configuration',
         'name' => 'admin::app.acl.configuration',
         'route' => [
@@ -152,6 +220,6 @@ return [
             'admin.configuration.search',
             'admin.configuration.download',
         ],
-        'sort' => 5,
+        'sort' => 7,
     ],
 ];

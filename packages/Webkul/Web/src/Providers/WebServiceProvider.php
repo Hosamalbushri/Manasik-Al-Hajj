@@ -20,6 +20,10 @@ class WebServiceProvider extends ServiceProvider
         $this->app->singleton(\Webkul\Web\Repositories\WebThemeCustomizationRepository::class, function ($app) {
             return new \Webkul\Web\Repositories\WebThemeCustomizationRepository($app);
         });
+
+        $this->app->singleton(\Webkul\Web\Repositories\WebMapLocationRepository::class, function ($app) {
+            return new \Webkul\Web\Repositories\WebMapLocationRepository($app);
+        });
     }
 
     /**

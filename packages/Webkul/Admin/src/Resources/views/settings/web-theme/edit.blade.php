@@ -140,6 +140,12 @@
                                     'opts' => $opts,
                                 ])
 
+                                @includeWhen($theme->type === 'inner_page_hero', 'admin::settings.web-theme.edit.inner-page-hero', [
+                                    'theme' => $theme,
+                                    'opts' => $opts,
+                                    'innerHeroHeaderOpts' => $innerHeroHeaderOpts ?? [],
+                                ])
+
                             </div>
                         </x-slot>
                     </x-admin::accordion>
@@ -212,6 +218,7 @@
                                     <option value="immersive_hero">@lang('admin::app.settings.web-theme.create.type.immersive-hero')</option>
                                     <option value="web_header">@lang('admin::app.settings.web-theme.create.type.web-header')</option>
                                     <option value="web_footer">@lang('admin::app.settings.web-theme.create.type.web-footer')</option>
+                                    <option value="inner_page_hero">@lang('admin::app.settings.web-theme.create.type.inner-page-hero')</option>
                                 </x-admin::form.control-group.control>
 
                                 <x-admin::form.control-group.error control-name="type" />

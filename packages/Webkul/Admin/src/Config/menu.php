@@ -13,6 +13,40 @@ return [
     ],
 
     /**
+     * Map locations (top-level sidebar; permissions map_locations.*).
+     */
+    [
+        'key' => 'map_locations',
+        'name' => 'admin::app.settings.map-locations.menu-title',
+        'route' => 'admin.map-locations.index',
+        'sort' => 2,
+        'icon-class' => 'icon-location',
+    ],
+
+    /**
+     * Dhikr & duas: one parent menu with sections + duas children.
+     */
+    [
+        'key' => 'adhkar_duas',
+        'name' => 'admin::app.settings.adhkar-duas.menu-title',
+        'route' => 'admin.adhkar-duas.dua-sections.index',
+        'sort' => 3,
+        'icon-class' => 'icon-configuration',
+    ], [
+        'key' => 'adhkar_duas.dua_sections',
+        'name' => 'admin::app.settings.adhkar-duas.menu-sections',
+        'route' => 'admin.adhkar-duas.dua-sections.index',
+        'sort' => 0,
+        'icon-class' => 'icon-settings-group',
+    ], [
+        'key' => 'adhkar_duas.duas',
+        'name' => 'admin::app.settings.adhkar-duas.menu-duas',
+        'route' => 'admin.adhkar-duas.duas.index',
+        'sort' => 1,
+        'icon-class' => 'icon-note',
+    ],
+
+    /**
      * Settings.
      */
     [

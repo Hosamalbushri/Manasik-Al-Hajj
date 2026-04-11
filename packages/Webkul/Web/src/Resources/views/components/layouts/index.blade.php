@@ -5,33 +5,58 @@
 ])
 
 @php
+    $fb = config('web.identity.fallback_shop_colors', []);
+    $fbPrimary = $fb['primary'] ?? '#165022';
+    $fbAccent = $fb['accent'] ?? '#2E8B3A';
+    $fbIcon = $fb['icon'] ?? '#A67C2A';
+    $fbBadge = $fb['badge'] ?? '#D4AF37';
+
     $shopPrimary = core()->getConfigData('general.store.web.primary_color')
         ?: core()->getConfigData('general.store.shop.primary_color')
         ?: core()->getConfigData('general.design.shop.primary_color')
-        ?: '#0284c7';
+        ?: $fbPrimary;
     $shopAccent = core()->getConfigData('general.store.web.accent_color')
         ?: core()->getConfigData('general.store.shop.accent_color')
         ?: core()->getConfigData('general.design.shop.accent_color')
-        ?: '#0369a1';
+        ?: $fbAccent;
     $shopIconColor = core()->getConfigData('general.store.web.icon_color')
         ?: core()->getConfigData('general.store.shop.icon_color')
         ?: core()->getConfigData('general.design.shop.icon_color')
-        ?: $shopAccent;
+        ?: $fbIcon;
     $shopBadgeColor = core()->getConfigData('general.store.web.badge_color')
         ?: core()->getConfigData('general.store.shop.badge_color')
         ?: core()->getConfigData('general.design.shop.badge_color')
-        ?: $shopPrimary;
+        ?: $fbBadge;
     if (! preg_match('/^#[0-9A-Fa-f]{6}$/', $shopPrimary)) {
-        $shopPrimary = '#0284c7';
+        $shopPrimary = $fbPrimary;
     }
     if (! preg_match('/^#[0-9A-Fa-f]{6}$/', $shopAccent)) {
-        $shopAccent = '#0369a1';
+        $shopAccent = $fbAccent;
     }
     if (! preg_match('/^#[0-9A-Fa-f]{6}$/', $shopIconColor)) {
         $shopIconColor = $shopAccent;
     }
     if (! preg_match('/^#[0-9A-Fa-f]{6}$/', $shopBadgeColor)) {
         $shopBadgeColor = $shopPrimary;
+    }
+
+    $identityOv = config('web.identity', []);
+    $hexOk = static fn ($v): bool => is_string($v) && $v !== '' && preg_match('/^#[0-9A-Fa-f]{3,8}$/', trim($v));
+    $identityCss = '';
+    $mapOv = [
+        'card_ink' => '--web-card-ink',
+        'card_muted' => '--web-card-muted',
+        'accent_gold' => '--web-accent-gold',
+        'accent_gold_bright' => '--web-accent-gold-bright',
+        'parchment_start' => '--web-parchment-start',
+        'parchment_mid' => '--web-parchment-mid',
+        'parchment_end' => '--web-parchment-end',
+    ];
+    foreach ($mapOv as $cfgKey => $cssName) {
+        $val = $identityOv[$cfgKey] ?? null;
+        if ($hexOk($val)) {
+            $identityCss .= $cssName.': '.trim((string) $val).';';
+        }
     }
 @endphp
 
@@ -57,6 +82,7 @@
         --shop-gradient-mid: color-mix(in srgb, var(--shop-primary) 6%, white);
         --shop-placeholder: color-mix(in srgb, var(--shop-primary) 42%, #64748b);
         --shop-badge-ring: color-mix(in srgb, var(--shop-primary) 14%, transparent);
+        {{ $identityCss }}
     "
 >
     <head>
