@@ -173,8 +173,8 @@
                 </div>
 
                 <div class="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-100">
-                    @lang('admin::app.settings.web-theme.edit.web-footer-info')
-                </div>
+        @lang('admin::app.settings.web-theme.edit.web-footer-info')
+    </div>
 
                 <div class="pt-4 text-sm font-medium text-gray-500">
                     <div class="mb-4 flex flex-wrap gap-4 border-b-2 pt-2">
@@ -243,7 +243,7 @@
                             @lang('admin::app.settings.web-theme.edit.web-footer-bottom')
                         </button>
                     </div>
-                </div>
+    </div>
 
                 <div v-show="activeTab === 'general'" class="pt-2">
                     <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
@@ -260,17 +260,17 @@
                             </x-admin::form.control-group>
                         </div>
                         <p class="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">@lang('admin::app.settings.web-theme.edit.web-footer-effects')</p>
-                        <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
-                            <input type="hidden" name="options[effects][back_to_top]" value="0">
-                            <input type="checkbox" name="options[effects][back_to_top]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.effects.back_to_top', $fx['back_to_top'] ?? true))>
-                            @lang('admin::app.settings.web-theme.edit.web-footer-back-top')
-                        </label>
+        <label class="flex cursor-pointer items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
+            <input type="hidden" name="options[effects][back_to_top]" value="0">
+            <input type="checkbox" name="options[effects][back_to_top]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.effects.back_to_top', $fx['back_to_top'] ?? true))>
+            @lang('admin::app.settings.web-theme.edit.web-footer-back-top')
+        </label>
                     </div>
-                </div>
+    </div>
 
                 <div v-show="activeTab === 'brand'" class="pt-2">
                     <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-                        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-brand')</p>
+        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-brand')</p>
                         <label class="mb-4 flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200">
                             <input type="hidden" name="options[visibility][brand]" value="0">
                             <input type="checkbox" name="options[visibility][brand]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.visibility.brand', $visibility['brand'] ?? true))>
@@ -311,32 +311,32 @@
                             @lang('admin::app.settings.web-theme.edit.web-header-remove-logo')
                         </label>
 
-                        <div class="grid gap-4 sm:grid-cols-2">
+        <div class="grid gap-4 sm:grid-cols-2">
                             <div v-show="showBrandIconTitle" class="contents">
-                                <x-admin::form.control-group class="!mb-0">
-                                    <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-brand-icon')</x-admin::form.control-group.label>
-                                    <x-admin::form.control-group.control type="text" name="options[brand][icon]" :value="old('options.brand.icon', $brand['icon'])" />
-                                </x-admin::form.control-group>
-                                <x-admin::form.control-group class="!mb-0 sm:col-span-2">
-                                    <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-brand-title')</x-admin::form.control-group.label>
-                                    <x-admin::form.control-group.control type="text" name="options[brand][title]" :value="old('options.brand.title', $brand['title'])" />
-                                </x-admin::form.control-group>
+            <x-admin::form.control-group class="!mb-0">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-brand-icon')</x-admin::form.control-group.label>
+                <x-admin::form.control-group.control type="text" name="options[brand][icon]" :value="old('options.brand.icon', $brand['icon'])" />
+            </x-admin::form.control-group>
+            <x-admin::form.control-group class="!mb-0 sm:col-span-2">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-brand-title')</x-admin::form.control-group.label>
+                <x-admin::form.control-group.control type="text" name="options[brand][title]" :value="old('options.brand.title', $brand['title'])" />
+            </x-admin::form.control-group>
                             </div>
-                            <x-admin::form.control-group class="!mb-0 sm:col-span-2">
-                                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-desc')</x-admin::form.control-group.label>
-                                <textarea name="options[brand][description]" rows="3" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white">{{ old('options.brand.description', $brand['description']) }}</textarea>
-                            </x-admin::form.control-group>
-                            <x-admin::form.control-group class="!mb-0 sm:col-span-2">
-                                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-trust')</x-admin::form.control-group.label>
-                                <x-admin::form.control-group.control type="text" name="options[brand][trust]" :value="old('options.brand.trust', $brand['trust'])" />
-                            </x-admin::form.control-group>
+            <x-admin::form.control-group class="!mb-0 sm:col-span-2">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-desc')</x-admin::form.control-group.label>
+                <textarea name="options[brand][description]" rows="3" class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white">{{ old('options.brand.description', $brand['description']) }}</textarea>
+            </x-admin::form.control-group>
+            <x-admin::form.control-group class="!mb-0 sm:col-span-2">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-trust')</x-admin::form.control-group.label>
+                <x-admin::form.control-group.control type="text" name="options[brand][trust]" :value="old('options.brand.trust', $brand['trust'])" />
+            </x-admin::form.control-group>
                         </div>
-                    </div>
-                </div>
+        </div>
+    </div>
 
                 <div v-show="activeTab === 'social'" class="pt-2">
                     <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-                        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-social')</p>
+        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-social')</p>
                         <label class="mb-4 flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200">
                             <input type="hidden" name="options[visibility][social]" value="0">
                             <input type="checkbox" name="options[visibility][social]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.visibility.social', $visibility['social'] ?? true))>
@@ -411,8 +411,8 @@
                                 </div>
                             </template>
                         </draggable>
-                    </div>
-                </div>
+            </div>
+    </div>
 
                 <div v-show="activeTab === 'explore'" class="pt-2">
                     <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
@@ -422,15 +422,15 @@
                             <input type="checkbox" name="options[visibility][explore]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.visibility.explore', $visibility['explore'] ?? true))>
                             @lang('admin::app.settings.web-theme.edit.web-footer-show-section')
                         </label>
-                        <label class="mb-4 flex items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
+            <label class="mb-4 flex items-center gap-2 text-sm text-gray-800 dark:text-gray-200">
                             <input type="hidden" name="options[col_explore][show_chevron]" value="0">
                             <input type="checkbox" name="options[col_explore][show_chevron]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.col_explore.show_chevron', $ce['show_chevron'] ?? true))>
-                            @lang('admin::app.settings.web-theme.edit.web-footer-chevron')
-                        </label>
-                        <x-admin::form.control-group class="!mb-4">
-                            <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-col-title')</x-admin::form.control-group.label>
+                @lang('admin::app.settings.web-theme.edit.web-footer-chevron')
+            </label>
+            <x-admin::form.control-group class="!mb-4">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-col-title')</x-admin::form.control-group.label>
                             <x-admin::form.control-group.control type="text" name="options[col_explore][title]" :value="old('options.col_explore.title', $ce['title'])" />
-                        </x-admin::form.control-group>
+            </x-admin::form.control-group>
                         <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
                             <p class="text-xs text-gray-500 dark:text-gray-400">@lang('admin::app.settings.web-theme.edit.web-footer-repeater-links-hint')</p>
                             <button type="button" class="secondary-button text-sm" @click="addExploreLinkRow" :disabled="exploreLinkRows.length >= maxExploreLinks">
@@ -522,20 +522,20 @@
                             </template>
                         </draggable>
                     </div>
-                </div>
+        </div>
 
                 <div v-show="activeTab === 'contact'" class="pt-2">
                     <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-                        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-contact')</p>
+        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-contact')</p>
                         <label class="mb-4 flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200">
                             <input type="hidden" name="options[visibility][contact]" value="0">
                             <input type="checkbox" name="options[visibility][contact]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.visibility.contact', $visibility['contact'] ?? true))>
                             @lang('admin::app.settings.web-theme.edit.web-footer-show-section')
                         </label>
-                        <x-admin::form.control-group class="!mb-4">
-                            <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-col-title')</x-admin::form.control-group.label>
-                            <x-admin::form.control-group.control type="text" name="options[contact][title]" :value="old('options.contact.title', $contact['title'])" />
-                        </x-admin::form.control-group>
+        <x-admin::form.control-group class="!mb-4">
+            <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-col-title')</x-admin::form.control-group.label>
+            <x-admin::form.control-group.control type="text" name="options[contact][title]" :value="old('options.contact.title', $contact['title'])" />
+        </x-admin::form.control-group>
                         <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
                             <p class="text-xs text-gray-500 dark:text-gray-400">@lang('admin::app.settings.web-theme.edit.web-footer-repeater-contact-hint')</p>
                             <button type="button" class="secondary-button text-sm" @click="addContactItemRow" :disabled="contactItemRows.length >= maxContactItems">
@@ -571,65 +571,65 @@
                                 </div>
                             </template>
                         </draggable>
-                    </div>
-                </div>
+            </div>
+    </div>
 
                 <div v-show="activeTab === 'subscribe'" class="pt-2">
                     <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-                        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-subscribe')</p>
+        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-subscribe')</p>
                         <label class="mb-4 flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200">
                             <input type="hidden" name="options[visibility][subscribe]" value="0">
                             <input type="checkbox" name="options[visibility][subscribe]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.visibility.subscribe', $visibility['subscribe'] ?? true))>
                             @lang('admin::app.settings.web-theme.edit.web-footer-show-section')
                         </label>
-                        <div class="grid gap-4 sm:grid-cols-2">
-                            <x-admin::form.control-group class="!mb-0 sm:col-span-2">
-                                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-title')</x-admin::form.control-group.label>
-                                <x-admin::form.control-group.control type="text" name="options[subscribe][title]" :value="old('options.subscribe.title', $sub['title'])" />
-                            </x-admin::form.control-group>
-                            <x-admin::form.control-group class="!mb-0">
-                                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-placeholder')</x-admin::form.control-group.label>
-                                <x-admin::form.control-group.control type="text" name="options[subscribe][placeholder]" :value="old('options.subscribe.placeholder', $sub['placeholder'])" />
-                            </x-admin::form.control-group>
-                            <x-admin::form.control-group class="!mb-0 sm:col-span-2">
-                                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-privacy')</x-admin::form.control-group.label>
-                                <x-admin::form.control-group.control type="text" name="options[subscribe][privacy]" :value="old('options.subscribe.privacy', $sub['privacy'])" />
-                            </x-admin::form.control-group>
-                            <x-admin::form.control-group class="!mb-0">
-                                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-ok')</x-admin::form.control-group.label>
-                                <x-admin::form.control-group.control type="text" name="options[subscribe][success_msg]" :value="old('options.subscribe.success_msg', $sub['success_msg'])" />
-                            </x-admin::form.control-group>
-                            <x-admin::form.control-group class="!mb-0">
-                                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-bad')</x-admin::form.control-group.label>
-                                <x-admin::form.control-group.control type="text" name="options[subscribe][invalid_msg]" :value="old('options.subscribe.invalid_msg', $sub['invalid_msg'])" />
-                            </x-admin::form.control-group>
+        <div class="grid gap-4 sm:grid-cols-2">
+            <x-admin::form.control-group class="!mb-0 sm:col-span-2">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-title')</x-admin::form.control-group.label>
+                <x-admin::form.control-group.control type="text" name="options[subscribe][title]" :value="old('options.subscribe.title', $sub['title'])" />
+            </x-admin::form.control-group>
+            <x-admin::form.control-group class="!mb-0">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-placeholder')</x-admin::form.control-group.label>
+                <x-admin::form.control-group.control type="text" name="options[subscribe][placeholder]" :value="old('options.subscribe.placeholder', $sub['placeholder'])" />
+            </x-admin::form.control-group>
+            <x-admin::form.control-group class="!mb-0 sm:col-span-2">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-privacy')</x-admin::form.control-group.label>
+                <x-admin::form.control-group.control type="text" name="options[subscribe][privacy]" :value="old('options.subscribe.privacy', $sub['privacy'])" />
+            </x-admin::form.control-group>
+            <x-admin::form.control-group class="!mb-0">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-ok')</x-admin::form.control-group.label>
+                <x-admin::form.control-group.control type="text" name="options[subscribe][success_msg]" :value="old('options.subscribe.success_msg', $sub['success_msg'])" />
+            </x-admin::form.control-group>
+            <x-admin::form.control-group class="!mb-0">
+                <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-sub-bad')</x-admin::form.control-group.label>
+                <x-admin::form.control-group.control type="text" name="options[subscribe][invalid_msg]" :value="old('options.subscribe.invalid_msg', $sub['invalid_msg'])" />
+            </x-admin::form.control-group>
                         </div>
-                    </div>
-                </div>
+        </div>
+    </div>
 
                 <div v-show="activeTab === 'bottom'" class="pt-2">
                     <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-                        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-bottom')</p>
+        <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-bottom')</p>
                         <label class="mb-4 flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200">
                             <input type="hidden" name="options[visibility][bottom]" value="0">
                             <input type="checkbox" name="options[visibility][bottom]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.visibility.bottom', $visibility['bottom'] ?? true))>
                             @lang('admin::app.settings.web-theme.edit.web-footer-show-section')
                         </label>
-                        <x-admin::form.control-group class="!mb-4">
-                            <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-copyright')</x-admin::form.control-group.label>
-                            <x-admin::form.control-group.control type="text" name="options[bottom][copyright]" :value="old('options.bottom.copyright', $bottom['copyright'])" />
-                            <p class="mt-1 text-xs text-gray-500">@lang('admin::app.settings.web-theme.edit.web-footer-copyright-hint')</p>
-                        </x-admin::form.control-group>
+        <x-admin::form.control-group class="!mb-4">
+            <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-copyright')</x-admin::form.control-group.label>
+            <x-admin::form.control-group.control type="text" name="options[bottom][copyright]" :value="old('options.bottom.copyright', $bottom['copyright'])" />
+            <p class="mt-1 text-xs text-gray-500">@lang('admin::app.settings.web-theme.edit.web-footer-copyright-hint')</p>
+        </x-admin::form.control-group>
                         <label class="mb-4 flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200">
                             <input type="hidden" name="options[visibility][bottom_mini]" value="0">
                             <input type="checkbox" name="options[visibility][bottom_mini]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.visibility.bottom_mini', $visibility['bottom_mini'] ?? true))>
                             @lang('admin::app.settings.web-theme.edit.web-footer-show-mini-links')
                         </label>
                         <p class="mb-4 text-xs text-gray-500 dark:text-gray-400">@lang('admin::app.settings.web-theme.edit.web-footer-show-mini-links-hint')</p>
-                        <x-admin::form.control-group class="!mb-4">
-                            <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-mini-aria')</x-admin::form.control-group.label>
-                            <x-admin::form.control-group.control type="text" name="options[bottom][mini_nav_label]" :value="old('options.bottom.mini_nav_label', $bottom['mini_nav_label'])" />
-                        </x-admin::form.control-group>
+        <x-admin::form.control-group class="!mb-4">
+            <x-admin::form.control-group.label>@lang('admin::app.settings.web-theme.edit.web-footer-mini-aria')</x-admin::form.control-group.label>
+            <x-admin::form.control-group.control type="text" name="options[bottom][mini_nav_label]" :value="old('options.bottom.mini_nav_label', $bottom['mini_nav_label'])" />
+        </x-admin::form.control-group>
                         <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
                             <p class="text-xs text-gray-500 dark:text-gray-400">@lang('admin::app.settings.web-theme.edit.web-footer-repeater-links-hint')</p>
                             <button type="button" class="secondary-button text-sm" @click="addBottomLinkRow" :disabled="bottomLinkRows.length >= maxBottomLinks">
@@ -668,7 +668,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+    </div>
     </script>
 
     <script type="module">

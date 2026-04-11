@@ -42,7 +42,7 @@
                         <div class="web-slide-bg">
                             <img class="web-slide-bg-img" src="{{ $imageUrl }}" alt="{{ $slide['title'] }}">
                         </div>
-                        <div class="web-slide-overlay"></div>
+                        <div class="web-slide-overlay" aria-hidden="true"></div>
                         <div class="web-slide-content">
                             @if ($badgeText !== '')
                                 <div class="web-slide-badge">

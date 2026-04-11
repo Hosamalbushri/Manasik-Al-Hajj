@@ -28,7 +28,7 @@
             width: 100%;
             max-width: 100%;
             position: relative;
-            overflow-x: clip;
+            overflow-x: visible;
         }
         .web-adhkar-page .web-adhkar-container {
             position: relative;
@@ -53,6 +53,14 @@
             border: 1px solid rgba(255, 255, 255, 0.85);
             box-shadow: var(--adhkar-shadow);
         }
+        @media (max-width: 1023px) {
+            .web-adhkar-tabs-wrap {
+                position: sticky;
+                top: calc(env(safe-area-inset-top, 0px) + 4rem);
+                z-index: 100;
+                background: rgba(255, 255, 255, 0.94);
+            }
+        }
         .web-adhkar-tabs {
             display: flex;
             flex-wrap: nowrap;
@@ -60,17 +68,17 @@
             gap: 0.35rem;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            scroll-snap-type: x proximity;
+            overflow-y: hidden;
             scrollbar-width: thin;
             scrollbar-color: color-mix(in srgb, var(--adhkar-gold) 42%, transparent) transparent;
             padding-bottom: 2px;
+            scroll-padding-inline: 0.5rem;
         }
         @media (min-width: 1024px) {
             .web-adhkar-tabs { flex-wrap: wrap; justify-content: center; overflow-x: visible; }
         }
         .web-adhkar-tab-btn {
             flex: 0 0 auto;
-            scroll-snap-align: start;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -426,6 +434,21 @@
                     var id = p.id && p.id.replace('web-adhkar-panel-', '');
                     if (id) panels[id] = p;
                 });
+                function scrollActiveTabIntoView(behavior) {
+                    var strip = document.querySelector('.web-adhkar-tabs');
+                    var active = strip && strip.querySelector('.web-adhkar-tab-btn.active');
+                    if (!active || !strip || typeof active.scrollIntoView !== 'function') return;
+                    var be = behavior === 'smooth' ? 'smooth' : 'auto';
+                    try {
+                        active.scrollIntoView({
+                            inline: 'center',
+                            block: 'nearest',
+                            behavior: be,
+                        });
+                    } catch (e) {
+                        active.scrollIntoView(true);
+                    }
+                }
                 function showTab(id) {
                     tabBtns.forEach(function (b) {
                         var on = b.getAttribute('data-web-adhkar-tab') === id;
@@ -438,12 +461,22 @@
                         p.classList.toggle('active', on);
                         p.setAttribute('aria-hidden', on ? 'false' : 'true');
                     });
+                    requestAnimationFrame(function () {
+                        scrollActiveTabIntoView('smooth');
+                    });
                 }
                 tabBtns.forEach(function (btn) {
                     btn.addEventListener('click', function () {
                         showTab(btn.getAttribute('data-web-adhkar-tab'));
                     });
                 });
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    scrollActiveTabIntoView('instant');
+                } else {
+                    requestAnimationFrame(function () {
+                        scrollActiveTabIntoView('instant');
+                    });
+                }
                 function toast(msg) {
                     var el = document.getElementById('web-adhkar-toast');
                     if (!el) return;

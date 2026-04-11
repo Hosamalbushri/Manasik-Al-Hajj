@@ -1,6 +1,6 @@
 {
   "src/Resources/assets/css/app.css": {
-    "file": "assets/app-D9Wq_Scx.css",
+    "file": "assets/app-BHajrDAs.css",
     "src": "src/Resources/assets/css/app.css",
     "isEntry": true
   },
@@ -41,12 +41,12 @@
     "src": "src/Resources/assets/fonts/bagisto-shop.woff"
   },
   "src/Resources/assets/js/app.js": {
-    "file": "assets/app-PyNJzjIE.js",
+    "file": "assets/app-BajMFUny.js",
     "name": "app",
     "src": "src/Resources/assets/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-D9Wq_Scx.css"
+      "assets/app-BHajrDAs.css"
     ],
     "assets": [
       "assets/Cairo-ExtraLight-B8LDBVyd.ttf",
