@@ -27,6 +27,19 @@ return [
     'logo_url' => null,
 
     /**
+     * Default full-bleed band gradient (matches prayer-times CSS fallbacks). Overridden by
+     * general.store.web.inner_page_hero_gradient_* and section_divider_gradient_* in core_config.
+     *
+     * @var array{gradient_from: string, gradient_mid: string, gradient_to: string, gold?: string}
+     */
+    'band_background' => [
+        'gradient_from' => '#0D2A1A',
+        'gradient_mid'  => '#1A3A2A',
+        'gradient_to'   => '#0D2A1A',
+        'gold'          => '#D4AF37',
+    ],
+
+    /**
      * Brand colors when admin / core_config has no store palette yet (also .env overrides).
      * When configured in admin (General → Store → Web), those values drive --shop-* on the layout.
      */
@@ -64,7 +77,9 @@ return [
     ],
 
     /**
-     * Home page sections when DB has no rows (fallback).
+     * Home page sections when DB has no rows (fallback only).
+     * After installer seeding, rows come from shop_theme_customizations (see WebThemeDefaultsSeeder):
+     * hero → prayer times (title/description in block) → supplications (title + 3 cards) → section divider (maps intro) → maps showcase (3 cards).
      */
     'home_customizations' => [
         [
@@ -102,10 +117,6 @@ return [
         'services' => [
             'route' => null,
             'path'  => '#services',
-        ],
-        'schedule' => [
-            'route' => null,
-            'path'  => '#schedule',
         ],
         'maps' => [
             'route' => 'web.maps.index',

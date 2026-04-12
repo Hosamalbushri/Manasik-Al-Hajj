@@ -8,6 +8,7 @@
     use Webkul\Web\Repositories\WebThemeCustomizationRepository;
     use Webkul\Web\Support\InnerPageHeroOptions;
     use Webkul\Web\Support\WebHeaderPrimaryTabs;
+    use Webkul\Web\Support\WebStoreBandColors;
 
     $themeCode = config('web.storefront_theme_code', 'web');
     $innerRow = null;
@@ -63,11 +64,20 @@
     $secondaryUrl = trim((string) ($h['secondary_url'] ?? ''));
     $secondaryIcon = trim((string) ($h['secondary_icon'] ?? ''));
 
-    $gFrom = (string) ($h['gradient_from'] ?? '#0d2a1a');
-    $gMid = (string) ($h['gradient_mid'] ?? '#1a3a2a');
-    $gTo = (string) ($h['gradient_to'] ?? '#0d2a1a');
-    $gold = (string) ($h['gold'] ?? '#d4af37');
-    $waveFill = (string) ($h['wave_fill'] ?? '#fefaf5');
+    $bandDefaults = WebStoreBandColors::defaultTriple();
+    $gFrom = WebStoreBandColors::optionalHex(core()->getConfigData('general.store.web.inner_page_hero_gradient_from'))
+        ?? WebStoreBandColors::optionalHex($h['gradient_from'] ?? '')
+        ?? $bandDefaults['from'];
+    $gMid = WebStoreBandColors::optionalHex(core()->getConfigData('general.store.web.inner_page_hero_gradient_mid'))
+        ?? WebStoreBandColors::optionalHex($h['gradient_mid'] ?? '')
+        ?? $bandDefaults['mid'];
+    $gTo = WebStoreBandColors::optionalHex(core()->getConfigData('general.store.web.inner_page_hero_gradient_to'))
+        ?? WebStoreBandColors::optionalHex($h['gradient_to'] ?? '')
+        ?? $bandDefaults['to'];
+    $gold = WebStoreBandColors::optionalHex($h['gold'] ?? '')
+        ?? WebStoreBandColors::optionalHex(config('web.band_background.gold'))
+        ?? '#D4AF37';
+    $waveFill = WebStoreBandColors::optionalHex($h['wave_fill'] ?? '') ?? '#FEFAF5';
 
     $isRtl = in_array(strtolower(app()->getLocale()), ['ar', 'fa', 'he', 'ur', 'ku', 'dv'], true);
     $sepIcon = $isRtl ? 'fa-chevron-left' : 'fa-chevron-right';

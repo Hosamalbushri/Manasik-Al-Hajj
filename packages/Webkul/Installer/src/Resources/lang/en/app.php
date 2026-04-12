@@ -117,7 +117,6 @@ return [
                 'login-label' => 'Login',
                 'brand' => [
                     'title' => 'Manasik Al-Hajj',
-                    'subtitle' => '| Blessed journey',
                 ],
                 'nav' => [
                     'home' => 'Home',
@@ -212,6 +211,32 @@ return [
                     'stat3_label' => 'Qiblah',
                 ],
             ],
+            'supplications' => [
+                'heading' => 'Supplications and adhkar',
+                'subheading' => 'Selected authentic supplications and remembrances for Hajj and Umrah pilgrims—the same collection as on the dedicated page. Use “View more” to open the full library.',
+            ],
+            'section-divider' => [
+                'prayer' => [
+                    'title'       => 'Prayer times',
+                    'description' => 'Today’s salah timings for your city, with Hijri and Gregorian dates.',
+                ],
+                'supplications' => [
+                    'title'       => 'Dhikr & duas',
+                    'description' => 'Selected supplications for travel and rites — explore the full library from the link under the cards.',
+                ],
+                'maps' => [
+                    'title'       => 'Holy sites and maps',
+                    'description' => 'Directory of principal locations for Hajj and Umrah: explore the cards below, then visit the maps page for every site and interactive views.',
+                ],
+            ],
+            'maps-showcase' => [
+                'link_all' => 'View all maps',
+            ],
+            'prayer-times' => [
+                'heading' => 'Prayer times',
+                'description' => 'Today’s salah timings for your city, with Hijri and Gregorian dates.',
+                'location_label' => 'Makkah',
+            ],
         ],
 
         'workflow' => [
@@ -227,7 +252,7 @@ return [
                 'krayin' => 'Krayin',
                 'confirm-password' => 'Confirm Password',
                 'email' => 'Email',
-                'email-address' => 'admin@example.com',
+                'email-address' => 'admin@gmail.com',
                 'password' => 'Password',
                 'title' => 'Create Administrator',
             ],

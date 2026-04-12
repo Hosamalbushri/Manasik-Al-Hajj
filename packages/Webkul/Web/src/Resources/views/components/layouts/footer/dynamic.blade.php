@@ -14,7 +14,7 @@
         'explore' => true,
         'support' => true,
         'contact' => true,
-        'subscribe' => true,
+        'subscribe' => false,
         'bottom' => true,
         'bottom_mini' => true,
     ], is_array($o['visibility'] ?? null) ? $o['visibility'] : []);

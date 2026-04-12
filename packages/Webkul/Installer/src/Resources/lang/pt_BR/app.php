@@ -123,7 +123,7 @@ return [
                 'krayin' => 'Krayin',
                 'confirm-password' => 'Confirmar Senha',
                 'email' => 'E-mail',
-                'email-address' => 'admin@example.com',
+                'email-address' => 'admin@gmail.com',
                 'password' => 'Senha',
                 'title' => 'Adicionar Administrador',
             ],

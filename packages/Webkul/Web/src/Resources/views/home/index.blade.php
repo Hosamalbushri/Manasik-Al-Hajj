@@ -13,9 +13,11 @@
 @endpush
 
 <x-web::layouts :title="$metaTitle">
-    @foreach ($customizations as $customization)
+    @foreach ($customizations as $homeSectionIndex => $customization)
         @php
             $data = $customization->options ?? [];
+            $__homeSectionDbId = data_get($customization, 'id');
+            $homeSectionInstanceId = (int) ($__homeSectionDbId !== null ? $__homeSectionDbId : $homeSectionIndex);
         @endphp
 
         @switch ($customization->type)
@@ -31,6 +33,40 @@
                 <x-web::home.immersive-hero
                     :options="$data"
                     :aria-label="__('web::app.home.index.immersive-hero')"
+                />
+
+                @break
+
+            @case (ThemeCustomization::SUPPLICATIONS_CONTENT)
+                <x-web::home.supplications
+                    :options="$data"
+                    :aria-label="__('web::app.home.index.supplications')"
+                />
+
+                @break
+
+            @case (ThemeCustomization::SECTION_DIVIDER)
+                <x-web::home.section-divider
+                    :options="$data"
+                    :aria-label="__('web::app.home.index.section-divider')"
+                />
+
+                @break
+
+            @case (ThemeCustomization::MAPS_SHOWCASE)
+                <x-web::home.maps-showcase
+                    :options="$data"
+                    :section-id="$homeSectionInstanceId"
+                    :aria-label="__('web::app.home.index.maps-showcase')"
+                />
+
+                @break
+
+            @case (ThemeCustomization::PRAYER_TIMES)
+                <x-web::home.prayer-times
+                    :options="$data"
+                    :section-id="$homeSectionInstanceId"
+                    :aria-label="__('web::app.home.index.prayer-times')"
                 />
 
                 @break

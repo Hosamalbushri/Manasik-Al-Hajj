@@ -40,6 +40,8 @@ final class InnerPageHeroOptions
      */
     public static function defaults(): array
     {
+        $bg = config('web.inner_page_hero.background', []);
+
         return [
             'visible'          => true,
             'badge_show'       => true,
@@ -55,11 +57,11 @@ final class InnerPageHeroOptions
             'secondary_label'  => '',
             'secondary_url'    => '',
             'secondary_icon'   => 'fas fa-video',
-            'gradient_from'    => '#0d2a1a',
-            'gradient_mid'     => '#1a3a2a',
-            'gradient_to'      => '#0d2a1a',
-            'gold'             => '#d4af37',
-            'wave_fill'        => '#fefaf5',
+            'gradient_from'    => (string) ($bg['gradient_from'] ?? '#0d2a1a'),
+            'gradient_mid'     => (string) ($bg['gradient_mid'] ?? '#1a3a2a'),
+            'gradient_to'      => (string) ($bg['gradient_to'] ?? '#0d2a1a'),
+            'gold'             => (string) ($bg['gold'] ?? '#d4af37'),
+            'wave_fill'        => (string) ($bg['wave_fill'] ?? '#fefaf5'),
             'breadcrumb'       => [],
             'pages'            => [],
         ];

@@ -130,6 +130,11 @@
                                     'opts' => $opts,
                                 ])
 
+                                @includeWhen($theme->type === 'supplications_content', 'admin::settings.web-theme.edit.supplications-content', [
+                                    'theme' => $theme,
+                                    'opts' => $opts,
+                                ])
+
                                 @includeWhen($theme->type === 'web_header', 'admin::settings.web-theme.edit.web-header', [
                                     'theme' => $theme,
                                     'opts' => $opts,
@@ -144,6 +149,21 @@
                                     'theme' => $theme,
                                     'opts' => $opts,
                                     'innerHeroHeaderOpts' => $innerHeroHeaderOpts ?? [],
+                                ])
+
+                                @includeWhen($theme->type === 'section_divider', 'admin::settings.web-theme.edit.section-divider', [
+                                    'theme' => $theme,
+                                    'opts' => $opts,
+                                ])
+
+                                @includeWhen($theme->type === 'maps_showcase', 'admin::settings.web-theme.edit.maps-showcase', [
+                                    'theme' => $theme,
+                                    'opts' => $opts,
+                                ])
+
+                                @includeWhen($theme->type === 'prayer_times', 'admin::settings.web-theme.edit.prayer-times', [
+                                    'theme' => $theme,
+                                    'opts' => $opts,
                                 ])
 
                             </div>
@@ -216,9 +236,13 @@
                                     <option value="image_carousel">@lang('admin::app.settings.web-theme.create.type.image-carousel')</option>
                                     <option value="static_content">@lang('admin::app.settings.web-theme.create.type.static-content')</option>
                                     <option value="immersive_hero">@lang('admin::app.settings.web-theme.create.type.immersive-hero')</option>
+                                    <option value="supplications_content">@lang('admin::app.settings.web-theme.create.type.supplications-content')</option>
                                     <option value="web_header">@lang('admin::app.settings.web-theme.create.type.web-header')</option>
                                     <option value="web_footer">@lang('admin::app.settings.web-theme.create.type.web-footer')</option>
                                     <option value="inner_page_hero">@lang('admin::app.settings.web-theme.create.type.inner-page-hero')</option>
+                                    <option value="section_divider">@lang('admin::app.settings.web-theme.create.type.section-divider')</option>
+                                    <option value="maps_showcase">@lang('admin::app.settings.web-theme.create.type.maps-showcase')</option>
+                                    <option value="prayer_times">@lang('admin::app.settings.web-theme.create.type.prayer-times')</option>
                                 </x-admin::form.control-group.control>
 
                                 <x-admin::form.control-group.error control-name="type" />

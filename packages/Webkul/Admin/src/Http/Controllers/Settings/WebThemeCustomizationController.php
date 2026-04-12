@@ -25,6 +25,10 @@ class WebThemeCustomizationController extends Controller
         'image_carousel',
         'static_content',
         'immersive_hero',
+        ThemeCustomization::SUPPLICATIONS_CONTENT,
+        ThemeCustomization::SECTION_DIVIDER,
+        ThemeCustomization::MAPS_SHOWCASE,
+        ThemeCustomization::PRAYER_TIMES,
         ThemeCustomization::WEB_HEADER,
         ThemeCustomization::WEB_FOOTER,
         ThemeCustomization::INNER_PAGE_HERO,
@@ -125,6 +129,121 @@ class WebThemeCustomizationController extends Controller
         return [
             'slides' => $slides,
         ];
+    }
+
+    /**
+     * Homepage supplications block: copy comes from Web duas (adhkar); theme only sets framing + limit + CTA.
+     *
+     * @return array{heading: string, subheading: string, limit: int, show_more: bool, more_url: string}
+     */
+    protected function normalizeSupplicationsOptions(Request $request): array
+    {
+        $o = $request->input('options', []);
+        $o = is_array($o) ? $o : [];
+        $heading = mb_substr(trim((string) ($o['heading'] ?? '')), 0, 191);
+        $subheading = mb_substr(trim((string) ($o['subheading'] ?? '')), 0, 500);
+        $limit = (int) ($o['limit'] ?? 6);
+        $limit = max(1, min(50, $limit));
+        $showMore = $request->boolean('options.show_more');
+        $moreUrl = $this->sanitizeImmersiveUrl((string) ($o['more_url'] ?? ''));
+
+        return [
+            'heading'    => $heading,
+            'subheading' => $subheading,
+            'limit'      => $limit,
+            'show_more'  => $showMore,
+            'more_url'   => mb_substr($moreUrl, 0, 2048),
+        ];
+    }
+
+    /**
+     * Homepage maps block: same cards as the maps page; theme sets heading, optional limit, and link to full maps page.
+     *
+     * @return array{heading: string, subheading: string, limit: int, link_show: bool, link_label: string}
+     */
+    protected function normalizeMapsShowcaseOptions(Request $request): array
+    {
+        $o = $request->input('options', []);
+        $o = is_array($o) ? $o : [];
+        $heading = mb_substr(trim((string) ($o['heading'] ?? '')), 0, 191);
+        $subheading = mb_substr(trim((string) ($o['subheading'] ?? '')), 0, 500);
+        $limit = (int) ($o['limit'] ?? 0);
+        $limit = max(0, min(50, $limit));
+        $linkShow = $request->boolean('options.link_show');
+        $linkLabel = mb_substr(trim((string) ($o['link_label'] ?? '')), 0, 191);
+
+        return [
+            'heading'    => $heading,
+            'subheading' => $subheading,
+            'limit'      => $limit,
+            'link_show'  => $linkShow,
+            'link_label' => $linkLabel,
+        ];
+    }
+
+    /**
+     * Homepage prayer times (client fetch: custom API URL or Aladhan timingsByCity fallback).
+     *
+     * @return array<string, mixed>
+     */
+    protected function normalizePrayerTimesOptions(Request $request): array
+    {
+        $o = $request->input('options', []);
+        $o = is_array($o) ? $o : [];
+        $heading = mb_substr(trim((string) ($o['heading'] ?? '')), 0, 191);
+        $description = mb_substr(trim(strip_tags((string) ($o['description'] ?? ''))), 0, 500);
+        $locationLabel = mb_substr(trim((string) ($o['location_label'] ?? '')), 0, 191);
+        $apiUrl = $this->sanitizePrayerTimesApiUrl((string) ($o['api_url'] ?? ''));
+        $city = $this->normalizePrayerTimesCityCountry((string) ($o['city'] ?? ''), 'Makkah');
+        $country = $this->normalizePrayerTimesCityCountry((string) ($o['country'] ?? ''), 'Saudi Arabia');
+        $method = (int) ($o['method'] ?? 2);
+        $method = max(0, min(15, $method));
+        $autoplayMs = (int) ($o['autoplay_ms'] ?? 4000);
+        $autoplayMs = max(1000, min(60000, $autoplayMs));
+        $hour12Raw = $o['hour12'] ?? null;
+        if (is_array($hour12Raw)) {
+            $hour12Raw = end($hour12Raw);
+        }
+        $hour12 = $hour12Raw === null || $hour12Raw === ''
+            ? true
+            : filter_var($hour12Raw, FILTER_VALIDATE_BOOLEAN);
+
+        return [
+            'api_url'         => $apiUrl,
+            'heading'         => $heading,
+            'description'     => $description,
+            'location_label'  => $locationLabel,
+            'city'            => $city,
+            'country'         => $country,
+            'method'          => $method,
+            'autoplay_ms'     => $autoplayMs,
+            'hour12'          => $hour12,
+        ];
+    }
+
+    protected function sanitizePrayerTimesApiUrl(string $url): string
+    {
+        $url = trim($url);
+        if ($url === '' || strlen($url) > 2000) {
+            return '';
+        }
+        if (! preg_match('#^https?://#i', $url)) {
+            return '';
+        }
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+            return '';
+        }
+
+        return $url;
+    }
+
+    protected function normalizePrayerTimesCityCountry(string $value, string $fallback): string
+    {
+        $value = trim($value);
+        $value = preg_replace('/[^\p{L}\p{N}\s\-\'’`]+/u', '', $value) ?? '';
+        $value = mb_substr($value, 0, 80);
+
+        return $value !== '' ? $value : $fallback;
     }
 
     protected function sanitizeImmersiveColor(string $value, string $fallback, bool $hexOnly): string
@@ -452,6 +571,26 @@ class WebThemeCustomizationController extends Controller
 
                 break;
 
+            case ThemeCustomization::SUPPLICATIONS_CONTENT:
+                $this->persistLocalizedOptions($theme, $locale, $this->normalizeSupplicationsOptions($request));
+
+                break;
+
+            case ThemeCustomization::SECTION_DIVIDER:
+                $this->persistLocalizedOptions($theme, $locale, $this->normalizeSectionDividerOptions($request));
+
+                break;
+
+            case ThemeCustomization::MAPS_SHOWCASE:
+                $this->persistLocalizedOptions($theme, $locale, $this->normalizeMapsShowcaseOptions($request));
+
+                break;
+
+            case ThemeCustomization::PRAYER_TIMES:
+                $this->persistLocalizedOptions($theme, $locale, $this->normalizePrayerTimesOptions($request));
+
+                break;
+
             case ThemeCustomization::WEB_HEADER:
                 $this->persistLocalizedOptions($theme, $locale, $this->normalizeWebHeaderOptions($request, $theme, $locale));
 
@@ -573,8 +712,8 @@ class WebThemeCustomizationController extends Controller
             'default_locale' => $defaultLocale,
             'translations'   => $translations,
         ];
-        $theme->save();
-    }
+                $theme->save();
+        }
 
     protected function defaultStoreLocale(): string
     {
@@ -1304,5 +1443,63 @@ class WebThemeCustomizationController extends Controller
         $fb = strtoupper(trim($fallback));
 
         return preg_match('/^#[0-9A-F]{6}$/', $fb) ? $fb : '#0D2A1A';
+    }
+
+    /** Optional hex for section divider parchment overrides; empty = use theme defaults. */
+    protected function sanitizeSectionDividerOptionalHex(string $value): string
+    {
+        $value = strtoupper(trim($value));
+        if ($value === '') {
+            return '';
+        }
+
+        return preg_match('/^#[0-9A-F]{6}$/', $value) ? $value : '';
+    }
+
+    /** @var list<string> */
+    private const SECTION_DIVIDER_VARIANTS = ['inset_card', 'full_bleed', 'content_heading', 'parchment_card'];
+
+    protected function normalizeSectionDividerVariant(string $value): string
+    {
+        $value = strtolower(trim($value));
+
+        return in_array($value, self::SECTION_DIVIDER_VARIANTS, true) ? $value : 'inset_card';
+    }
+
+    /**
+     * Homepage section divider: multiple visual presets (gradient band, heading strip, parchment card).
+     *
+     * @return array<string, mixed>
+     */
+    protected function normalizeSectionDividerOptions(Request $request): array
+    {
+        $o = $request->input('options', []);
+        $o = is_array($o) ? $o : [];
+
+        return [
+            'variant'         => $this->normalizeSectionDividerVariant((string) ($o['variant'] ?? '')),
+            'visible'         => filter_var($o['visible'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'gradient_from'   => $this->sanitizeInnerPageHeroHex((string) ($o['gradient_from'] ?? ''), '#0D2A1A'),
+            'gradient_mid'    => $this->sanitizeInnerPageHeroHex((string) ($o['gradient_mid'] ?? ''), '#1A3A2A'),
+            'gradient_to'     => $this->sanitizeInnerPageHeroHex((string) ($o['gradient_to'] ?? ''), '#0D2A1A'),
+            'gold'            => $this->sanitizeInnerPageHeroHex((string) ($o['gold'] ?? ''), '#D4AF37'),
+            'wave_fill'       => $this->sanitizeInnerPageHeroHex((string) ($o['wave_fill'] ?? ''), '#FEFAF5'),
+            'badge_show'      => filter_var($o['badge_show'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'badge_icon'      => $this->sanitizeImmersiveFaClass((string) ($o['badge_icon'] ?? '')),
+            'badge_text'      => mb_substr(trim((string) ($o['badge_text'] ?? '')), 0, 191),
+            'title'           => mb_substr(trim((string) ($o['title'] ?? '')), 0, 191),
+            'description'     => mb_substr(trim((string) ($o['description'] ?? '')), 0, 2000),
+            'primary_show'    => filter_var($o['primary_show'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            'primary_label'   => mb_substr(trim((string) ($o['primary_label'] ?? '')), 0, 191),
+            'primary_url'     => $this->sanitizeImmersiveUrl((string) ($o['primary_url'] ?? '')),
+            'primary_icon'    => $this->sanitizeImmersiveFaClass((string) ($o['primary_icon'] ?? '')),
+            'secondary_show'  => filter_var($o['secondary_show'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            'secondary_label' => mb_substr(trim((string) ($o['secondary_label'] ?? '')), 0, 191),
+            'secondary_url'   => $this->sanitizeImmersiveUrl((string) ($o['secondary_url'] ?? '')),
+            'secondary_icon'  => $this->sanitizeImmersiveFaClass((string) ($o['secondary_icon'] ?? '')),
+            'parchment_start' => $this->sanitizeSectionDividerOptionalHex((string) ($o['parchment_start'] ?? '')),
+            'parchment_mid'   => $this->sanitizeSectionDividerOptionalHex((string) ($o['parchment_mid'] ?? '')),
+            'parchment_end'   => $this->sanitizeSectionDividerOptionalHex((string) ($o['parchment_end'] ?? '')),
+        ];
     }
 }

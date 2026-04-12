@@ -10,7 +10,6 @@
     $navItems = [
         ['label' => 'الرئيسية', 'icon' => 'fas fa-home', 'url' => route('web.home.index')],
         ['label' => 'المناسك', 'icon' => 'fas fa-hands-praying', 'url' => '#'],
-        ['label' => 'المواعيد', 'icon' => 'fas fa-calendar-alt', 'url' => '#'],
         ['label' => 'الخرائط', 'icon' => 'fas fa-map-marked-alt', 'url' => \Illuminate\Support\Facades\Route::has('web.maps.index') ? route('web.maps.index') : '/maps'],
         ['label' => 'الأذكار والأدعية', 'icon' => 'fas fa-hands-praying', 'url' => \Illuminate\Support\Facades\Route::has('web.adhkar.index') ? route('web.adhkar.index') : '/adhkar'],
         ['label' => 'الدعم', 'icon' => 'fas fa-phone-alt', 'url' => '#'],

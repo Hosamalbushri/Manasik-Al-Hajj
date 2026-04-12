@@ -137,9 +137,13 @@
                             image_carousel: "@lang('admin::app.settings.web-theme.create.type.image-carousel')",
                             static_content: "@lang('admin::app.settings.web-theme.create.type.static-content')",
                             immersive_hero: "@lang('admin::app.settings.web-theme.create.type.immersive-hero')",
+                            supplications_content: "@lang('admin::app.settings.web-theme.create.type.supplications-content')",
                             web_header: "@lang('admin::app.settings.web-theme.create.type.web-header')",
                             web_footer: "@lang('admin::app.settings.web-theme.create.type.web-footer')",
                             inner_page_hero: "@lang('admin::app.settings.web-theme.create.type.inner-page-hero')",
+                            section_divider: "@lang('admin::app.settings.web-theme.create.type.section-divider')",
+                            maps_showcase: "@lang('admin::app.settings.web-theme.create.type.maps-showcase')",
+                            prayer_times: "@lang('admin::app.settings.web-theme.create.type.prayer-times')",
                         },
 
                         isLoading: false,

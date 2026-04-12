@@ -123,7 +123,7 @@ return [
                 'krayin' => 'کرایین',
                 'confirm-password' => 'تایید رمز عبور',
                 'email' => 'ایمیل',
-                'email-address' => 'admin@example.com',
+                'email-address' => 'admin@gmail.com',
                 'password' => 'رمز عبور',
                 'title' => 'ایجاد مدیر',
             ],

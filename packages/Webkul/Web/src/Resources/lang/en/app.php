@@ -2,20 +2,20 @@
 
 return [
     'meta' => [
-        'title' => 'Student portal — Events',
+        'title' => 'Manasik Al-Hajj — Digital portal for Hajj and Umrah',
     ],
 
     'layout' => [
-        'brand' => 'Student portal',
+        'brand' => 'Manasik Al-Hajj',
         'nav' => [
             'home'           => 'Home',
-            'events'         => 'Events',
-            'student-login'  => 'Student sign-in',
+            'events'         => 'Announcements',
+            'student-login'  => 'Pilgrim sign-in',
             'student-logout' => 'Sign out',
-            'student-menu'   => 'Student account menu',
-            'student-registration'   => 'Registration no.',
-            'student-account-edit' => 'Edit account',
-            'student-events'       => 'My events',
+            'student-menu'   => 'Account menu',
+            'student-registration'   => 'Registration number',
+            'student-account-edit' => 'Edit account details',
+            'student-events'       => 'View announcements',
         ],
     ],
 
@@ -27,30 +27,30 @@ return [
                     'bottom' => [
                         'logo-alt'   => 'Home',
                         'nav-label'  => 'Main navigation',
-                        'search'     => 'Search events',
-                        'search-text'=> 'Search events…',
+                        'search'     => 'Search the portal',
+                        'search-text'=> 'Search content…',
                     ],
                 ],
                 'mobile' => [
                     'logo-alt'   => 'Home',
                     'menu'       => 'Open menu',
-                    'search'     => 'Search events',
-                    'search-text'=> 'Search events…',
+                    'search'     => 'Search the portal',
+                    'search-text'=> 'Search content…',
                 ],
             ],
             'footer' => [
-                'link-student-login' => 'Student sign-in',
+                'link-student-login' => 'Sign in',
             ],
             'flash-group' => [
                 'close' => 'Dismiss notification',
             ],
             'services' => [
-                'calendar-title' => 'Event calendar',
-                'calendar-desc'  => 'See what is on and plan ahead.',
-                'updates-title'  => 'Stay informed',
-                'updates-desc'   => 'Descriptions and details in one place.',
-                'campus-title'   => 'Campus & venues',
-                'campus-desc'    => 'Know where activities take place.',
+                'calendar-title' => 'Dates & calendar',
+                'calendar-desc'  => 'View important dates and plan your journey.',
+                'updates-title'  => 'News & updates',
+                'updates-desc'   => 'Trusted information in one place.',
+                'campus-title'   => 'Holy sites & locations',
+                'campus-desc'    => 'Learn about the principal sacred places.',
             ],
         ],
     ],
@@ -74,15 +74,14 @@ return [
         'nav_fallback_labels' => [
             'home'     => 'Home',
             'services' => 'Services',
-            'schedule' => 'Schedule',
             'maps'     => 'Maps',
-            'adhkar'   => 'Dhikr & duas',
+            'adhkar'   => 'Supplications & adhkar',
         ],
     ],
 
     'adhkar' => [
-        'meta_title'       => 'Dhikr & duas',
-        'meta_description' => 'Duas and dhikr for pilgrims.',
+        'meta_title'       => 'Supplications and adhkar — Manasik Al-Hajj',
+        'meta_description' => 'Authoritative supplications and remembrances for Hajj and Umrah pilgrims, arranged by category for easy reference.',
         'tabs_aria'        => 'Dhikr and dua categories',
         'copy'             => 'Copy',
         'favorite_btn'     => 'Save',
@@ -98,8 +97,8 @@ return [
     ],
 
     'maps' => [
-        'meta_title'       => 'Holy rites sites — maps & cards',
-        'meta_description' => 'Maps for Hajj and Umrah sites.',
+        'meta_title'       => 'Holy sites — maps and directory',
+        'meta_description' => 'Official guide to the principal locations for Hajj and Umrah: Makkah al-Mukarramah, al-Madinah al-Munawwarah, and the sacred sites of the rites.',
         'section_title'    => 'Holy rites sites',
         'section_subtitle' => 'Learn about the key places you will visit on Hajj and Umrah.',
         'features_title'   => 'Places',
@@ -163,19 +162,45 @@ return [
     ],
 
     'home' => [
-        'title' => 'Web Home',
+        'title' => 'Home — Manasik Al-Hajj',
         'seo' => [
-            'meta-title'       => 'Student portal',
-            'meta-description' => 'Browse events and updates for students.',
-            'meta-keywords'    => 'students, events, portal',
+            'meta-title'       => 'Manasik Al-Hajj — Home',
+            'meta-description' => 'Official Manasik Al-Hajj portal: daily prayer times, authenticated supplications and adhkar, and an illustrated directory of the holy sites for Hajj and Umrah.',
+            'meta-keywords'    => 'Hajj, Umrah, Makkah, Madinah, prayer times, supplications, holy sites, pilgrimage, Manasik Al-Hajj',
         ],
         'index' => [
-            'image-carousel'      => 'Featured images',
-            'events-carousel'     => 'Featured events',
-            'categories-carousel' => 'Event categories',
-            'footer-links'        => 'Homepage link columns',
-            'services-strip'      => 'Services and features',
-            'immersive-hero'      => 'Immersive hero showcase',
+            'image-carousel'      => 'Featured image carousel',
+            'events-carousel'     => 'Featured announcements',
+            'categories-carousel' => 'Content categories',
+            'footer-links'        => 'Footer navigation',
+            'services-strip'      => 'Services overview',
+            'immersive-hero'      => 'Homepage main banner',
+            'supplications'       => 'Supplications and adhkar',
+            'section-divider'     => 'Section heading band',
+            'maps-showcase'       => 'Holy sites — homepage preview',
+            'prayer-times'        => 'Daily prayer times',
+        ],
+        'maps-showcase' => [
+            'link-default' => 'View all maps',
+        ],
+        'prayer-times' => [
+            'default_heading' => 'Prayer times',
+            'default_location' => 'Makkah',
+            'fajr' => 'Fajr',
+            'sunrise' => 'Sunrise',
+            'dhuhr' => 'Dhuhr',
+            'asr' => 'Asr',
+            'maghrib' => 'Maghrib',
+            'isha' => 'Isha',
+            'next_label' => 'Next prayer',
+            'updated_note' => 'Times refresh automatically',
+            'am' => 'AM',
+            'pm' => 'PM',
+            'pagination_label' => 'Prayer time slides',
+        ],
+        'supplications' => [
+            'source_label' => 'Source',
+            'view_more' => 'View more',
         ],
         'carousel' => [
             'slide-alt'   => 'Carousel image :n',
@@ -237,10 +262,10 @@ return [
         'column_titles' => [
             'Browse',
             'About',
-            'Students',
+            'Pilgrims',
         ],
         'mobile_menu_title' => 'Site links',
-        'copyright' => '© :year — Web portal. All rights reserved.',
+        'copyright' => '© :year — Manasik Al-Hajj. All rights reserved.',
     ],
 
     'manasik_footer' => [

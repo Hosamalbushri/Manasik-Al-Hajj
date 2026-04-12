@@ -100,6 +100,36 @@ return [
                 'type' => 'color',
                 'default' => '#0284c7',
             ], [
+                'name' => 'inner_page_hero_gradient_from',
+                'title' => 'admin::app.configuration.index.general.store.web-logo.inner-hero-gradient-from',
+                'type' => 'color',
+                'default' => '#0d2a1a',
+            ], [
+                'name' => 'inner_page_hero_gradient_mid',
+                'title' => 'admin::app.configuration.index.general.store.web-logo.inner-hero-gradient-mid',
+                'type' => 'color',
+                'default' => '#1a3a2a',
+            ], [
+                'name' => 'inner_page_hero_gradient_to',
+                'title' => 'admin::app.configuration.index.general.store.web-logo.inner-hero-gradient-to',
+                'type' => 'color',
+                'default' => '#0d2a1a',
+            ], [
+                'name' => 'section_divider_gradient_from',
+                'title' => 'admin::app.configuration.index.general.store.web-logo.section-divider-gradient-from',
+                'type' => 'color',
+                'default' => '#0d2a1a',
+            ], [
+                'name' => 'section_divider_gradient_mid',
+                'title' => 'admin::app.configuration.index.general.store.web-logo.section-divider-gradient-mid',
+                'type' => 'color',
+                'default' => '#1a3a2a',
+            ], [
+                'name' => 'section_divider_gradient_to',
+                'title' => 'admin::app.configuration.index.general.store.web-logo.section-divider-gradient-to',
+                'type' => 'color',
+                'default' => '#0d2a1a',
+            ], [
                 'name' => 'header_middle_logo',
                 'title' => 'admin::app.configuration.index.general.store.web-logo.header-middle-logo',
                 'type' => 'image',

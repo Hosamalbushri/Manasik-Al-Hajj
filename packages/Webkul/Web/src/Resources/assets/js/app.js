@@ -1,5 +1,8 @@
 import '../css/app.css';
 
+import Swiper from 'swiper/bundle';
+import 'swiper/css/bundle';
+
 function loadScriptOnce(src) {
     return new Promise((resolve, reject) => {
         const existing = document.querySelector(`script[src="${src}"]`);
@@ -28,6 +31,225 @@ function loadStylesheetOnce(href) {
     link.rel = 'stylesheet';
     link.href = href;
     document.head.appendChild(link);
+}
+
+function parsePrayerMinutes(timeStr) {
+    if (!timeStr || typeof timeStr !== 'string') return null;
+    const parts = timeStr.trim().split(':');
+    if (parts.length < 2) return null;
+    const h = parseInt(parts[0], 10);
+    const m = parseInt(parts[1], 10);
+    if (Number.isNaN(h) || Number.isNaN(m)) return null;
+    return h * 60 + m;
+}
+
+/** Raw HH:mm (24h) from API timings */
+function prayerRawTime24(timings, key) {
+    const t = timings && timings[key];
+    if (typeof t !== 'string') return '';
+    return t.split(' ')[0].trim() || '';
+}
+
+function escapeHtml(text) {
+    if (text == null) return '';
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+
+/** LTR island for clock text (digits then ص/م) inside RTL <html dir="rtl"> */
+function wrapPrayerClockHtml(innerSafe) {
+    return `<span dir="ltr" class="web-prayer-times__clock" translate="no">${innerSafe}</span>`;
+}
+
+function formatPrayerTimeDisplayHtml(raw24, use12h, clock) {
+    if (!raw24) return wrapPrayerClockHtml('--:--');
+    const total = parsePrayerMinutes(raw24);
+    if (total === null) return wrapPrayerClockHtml('--:--');
+    const h24 = Math.floor(total / 60) % 24;
+    const m = total % 60;
+    const mm = String(m).padStart(2, '0');
+    if (!use12h) {
+        return wrapPrayerClockHtml(`${String(h24).padStart(2, '0')}:${mm}`);
+    }
+    const h12 = h24 % 12 || 12;
+    const am = (clock && clock.am) || 'AM';
+    const pm = (clock && clock.pm) || 'PM';
+    const suffix = h24 < 12 ? am : pm;
+    return wrapPrayerClockHtml(`${h12}:${mm}\u202f${escapeHtml(suffix)}`);
+}
+
+function readPrayerTimesConfig(root) {
+    const scriptEl = root.querySelector('script.web-prayer-times__config[type="application/json"]');
+    if (scriptEl && scriptEl.textContent.trim() !== '') {
+        try {
+            return JSON.parse(scriptEl.textContent);
+        } catch {
+            /* fall through */
+        }
+    }
+    try {
+        return JSON.parse(root.getAttribute('data-prayer-config') || '{}');
+    } catch {
+        return {};
+    }
+}
+
+function extractAladhanPayload(data) {
+    if (!data || typeof data !== 'object') {
+        return null;
+    }
+    const inner = data.data && typeof data.data === 'object' ? data.data : data;
+    const timings = inner.timings && typeof inner.timings === 'object' ? inner.timings : null;
+    if (!timings) {
+        return null;
+    }
+    const ok = data.code === undefined || data.code === 200;
+    if (!ok) {
+        return null;
+    }
+    return {
+        timings,
+        date: inner.date && typeof inner.date === 'object' ? inner.date : null,
+    };
+}
+
+async function initPrayerTimesRoot(root) {
+    if (root.dataset.prayerInited === '1') return;
+    const cfg = readPrayerTimesConfig(root);
+    if (!cfg || typeof cfg !== 'object') {
+        return;
+    }
+    const city = cfg.city || 'Makkah';
+    const country = cfg.country || 'Saudi Arabia';
+    const method = Number.isFinite(cfg.method) ? cfg.method : 2;
+    const autoplayMs = Number.isFinite(cfg.autoplayMs) ? cfg.autoplayMs : 4000;
+    const prayerLabels = (cfg.labels && cfg.labels.prayers) || {};
+    const clockLabels = (cfg.labels && cfg.labels.clock) || {};
+    const customApiUrl = typeof cfg.apiUrl === 'string' ? cfg.apiUrl.trim() : '';
+    const use12h = cfg.hour12 !== false;
+
+    async function applyTimings() {
+        let url = customApiUrl;
+        if (!url) {
+            const params = new URLSearchParams({
+                city,
+                country,
+                method: String(method),
+            });
+            url = `https://api.aladhan.com/v1/timingsByCity?${params.toString()}`;
+        }
+        try {
+            const response = await fetch(url, { credentials: 'omit' });
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            const data = await response.json();
+            const payload = extractAladhanPayload(data);
+            if (!payload) {
+                throw new Error('bad response');
+            }
+            const { timings } = payload;
+            const { date } = payload;
+
+            root.querySelectorAll('[data-prayer-time]').forEach((el) => {
+                const key = el.getAttribute('data-prayer-time');
+                if (!key) return;
+                const raw = prayerRawTime24(timings, key);
+                el.innerHTML = formatPrayerTimeDisplayHtml(raw, use12h, clockLabels);
+            });
+
+            const hijriEl = root.querySelector('[data-prayer-hijri]');
+            const gregEl = root.querySelector('[data-prayer-gregorian]');
+            if (date && hijriEl && gregEl) {
+                const h = date.hijri || {};
+                const g = date.gregorian || {};
+                const hijriLine = `${h.weekday?.ar || h.weekday?.en || ''} - ${h.day || ''} ${h.month?.ar || h.month?.en || ''} ${h.year || ''}`.trim();
+                hijriEl.innerHTML = `<i class="fas fa-moon" aria-hidden="true"></i> ${hijriLine}`;
+                gregEl.innerHTML = `<i class="fas fa-calendar-alt" aria-hidden="true"></i> ${g.date || ''}`;
+            }
+
+            const now = new Date();
+            const currentM = now.getHours() * 60 + now.getMinutes();
+            const nextKeys = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+            let nextName = '';
+            let nextRaw = '';
+            let minDiff = Infinity;
+            nextKeys.forEach((key) => {
+                const raw = prayerRawTime24(timings, key);
+                const pm = parsePrayerMinutes(raw);
+                if (pm === null) return;
+                let diff = pm - currentM;
+                if (diff <= 0) diff += 24 * 60;
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    nextName = prayerLabels[key] || key;
+                    nextRaw = raw;
+                }
+            });
+
+            const nameEl = root.querySelector('[data-prayer-next-name]');
+            const timeEl = root.querySelector('[data-prayer-next-time]');
+            if (nameEl) nameEl.textContent = nextName || '--';
+            if (timeEl) {
+                timeEl.innerHTML = nextRaw
+                    ? formatPrayerTimeDisplayHtml(nextRaw, use12h, clockLabels)
+                    : wrapPrayerClockHtml('--:--');
+            }
+        } catch {
+            root.querySelectorAll('[data-prayer-time]').forEach((el) => {
+                el.innerHTML = wrapPrayerClockHtml('--:--');
+            });
+            const nameEl = root.querySelector('[data-prayer-next-name]');
+            const timeEl = root.querySelector('[data-prayer-next-time]');
+            if (nameEl) nameEl.textContent = '--';
+            if (timeEl) timeEl.innerHTML = wrapPrayerClockHtml('--:--');
+        }
+    }
+
+    await applyTimings();
+    window.setInterval(applyTimings, 60 * 60 * 1000);
+
+    const swiperEl = root.querySelector('.web-prayer-times__swiper');
+    if (swiperEl && swiperEl.dataset.swiperInited !== '1') {
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const rtl = document.documentElement.getAttribute('dir') === 'rtl';
+        try {
+            // eslint-disable-next-line no-new
+            new Swiper(swiperEl, {
+                /* Two prayers per slide; autoplay + clickable pagination dots */
+                slidesPerView: 1,
+                spaceBetween: 18,
+                centeredSlides: true,
+                loop: true,
+                autoplay: reduceMotion
+                    ? false
+                    : {
+                          delay: autoplayMs,
+                          disableOnInteraction: false,
+                          pauseOnMouseEnter: true,
+                      },
+                pagination: {
+                    el: root.querySelector('.web-prayer-times__pagination'),
+                    type: 'bullets',
+                    clickable: true,
+                },
+                speed: 500,
+                rtl,
+            });
+        } catch (err) {
+            console.warn('[web-prayer-times] Swiper init failed', err);
+        }
+        swiperEl.dataset.swiperInited = '1';
+    }
+
+    root.dataset.prayerInited = '1';
+}
+
+function initWebPrayerTimes() {
+    document.querySelectorAll('[data-web-prayer-times]').forEach((root) => {
+        initPrayerTimesRoot(root).catch((err) => console.warn('[web-prayer-times] init failed', err));
+    });
 }
 
 function initNavbar() {
@@ -527,6 +749,7 @@ function bootWebPackageUi() {
     initImageCarouselAutoplay();
     initFlashMessages();
     initHeroSlider();
+    initWebPrayerTimes();
 }
 
 if (document.readyState === 'loading') {

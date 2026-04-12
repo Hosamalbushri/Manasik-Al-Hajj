@@ -59,6 +59,39 @@ class WebDuaRepository
             ->values();
     }
 
+    /**
+     * First $limit active duas in storefront order (sections by sort_order, then duas),
+     * same source as the adhkar page — for homepage theme preview block.
+     *
+     * @return list<array{title: string, badge: string, text: string, reference: string}>
+     */
+    public function getHomePreviewDuas(int $limit, ?string $locale = null): array
+    {
+        $limit = max(0, min(50, $limit));
+        if ($limit === 0) {
+            return [];
+        }
+
+        $sections = $this->getActiveSectionsWithDuasForLocale($locale);
+        $out = [];
+
+        foreach ($sections as $section) {
+            foreach ($section['duas'] as $d) {
+                $out[] = [
+                    'title'     => $d['title'],
+                    'badge'     => $section['badge'],
+                    'text'      => $d['text'],
+                    'reference' => $d['reference'],
+                ];
+                if (count($out) >= $limit) {
+                    return $out;
+                }
+            }
+        }
+
+        return $out;
+    }
+
     public function slugToTabId(string $slug): string
     {
         $s = preg_replace('/[^a-zA-Z0-9_-]+/', '-', $slug) ?? $slug;

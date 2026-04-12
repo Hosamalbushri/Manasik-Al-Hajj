@@ -7,8 +7,8 @@ type AdminFixtures = {
 export const test = base.extend<AdminFixtures>({
     adminPage: async ({ page }, use) => {
         const adminCredentials = {
-            email: "admin@example.com",
-            password: "admin123",
+            email: "admin@gmail.com",
+            password: "123456",
         };
 
         await page.goto("admin/login");

@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Schema;
+use Webkul\Web\Models\ThemeCustomization;
 
 class WebThemeDefaultsSeeder extends Seeder
 {
@@ -55,21 +56,13 @@ class WebThemeDefaultsSeeder extends Seeder
 
         $this->seedCoreWebColors($now);
         $this->seedAdminPanelFooterLabel($now, $defaultLocale);
-        $this->upsertByType(
-            'immersive_hero',
-            'Home hero',
-            5,
-            $themeCode,
-            $this->buildLocalizableOptions($defaultLocale, [
-                'ar' => $this->immersiveHeroOptionsForLocale('ar'),
-                'en' => $this->immersiveHeroOptionsForLocale('en'),
-            ]),
-            $now
-        );
+
+        $this->seedStorefrontHomeSections($themeCode, $defaultLocale, $now);
+
         $this->upsertByType(
             'web_header',
             'Web Header',
-            10,
+            100,
             $themeCode,
             $this->buildLocalizableOptions($defaultLocale, [
                 'ar' => $this->headerOptionsForLocale('ar'),
@@ -80,7 +73,7 @@ class WebThemeDefaultsSeeder extends Seeder
         $this->upsertByType(
             'inner_page_hero',
             'Inner pages hero',
-            15,
+            110,
             $themeCode,
             $this->buildLocalizableOptions($defaultLocale, [
                 'ar' => $this->innerPageHeroOptionsForLocale('ar'),
@@ -91,7 +84,7 @@ class WebThemeDefaultsSeeder extends Seeder
         $this->upsertByType(
             'web_footer',
             'Web Footer',
-            20,
+            120,
             $themeCode,
             $this->buildLocalizableOptions($defaultLocale, [
                 'ar' => $this->footerOptionsForLocale('ar'),
@@ -101,6 +94,194 @@ class WebThemeDefaultsSeeder extends Seeder
         );
     }
 
+    /**
+     * Homepage chain: hero → prayer times (heading + description in block) → supplications (title + description + 3 cards)
+     * → section divider (title + description for maps) → maps showcase (3 cards).
+     * Clears prior rows of these types for the storefront theme code so re-seeding matches the template.
+     */
+    protected function seedStorefrontHomeSections(string $themeCode, string $defaultLocale, Carbon $now): void
+    {
+        $homeTypes = [
+            ThemeCustomization::IMMERSIVE_HERO,
+            ThemeCustomization::SECTION_DIVIDER,
+            ThemeCustomization::PRAYER_TIMES,
+            ThemeCustomization::SUPPLICATIONS_CONTENT,
+            ThemeCustomization::MAPS_SHOWCASE,
+        ];
+
+        DB::table('shop_theme_customizations')
+            ->where('theme_code', $themeCode)
+            ->whereIn('type', $homeTypes)
+            ->delete();
+
+        $this->insertHomeThemeRow(
+            ThemeCustomization::IMMERSIVE_HERO,
+            'Home hero',
+            10,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->immersiveHeroOptionsForLocale('ar'),
+                'en' => $this->immersiveHeroOptionsForLocale('en'),
+            ]),
+            $now
+        );
+
+        $this->insertHomeThemeRow(
+            ThemeCustomization::PRAYER_TIMES,
+            'Prayer times',
+            20,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->prayerTimesOptionsForLocale('ar'),
+                'en' => $this->prayerTimesOptionsForLocale('en'),
+            ]),
+            $now
+        );
+
+        $this->insertHomeThemeRow(
+            ThemeCustomization::SUPPLICATIONS_CONTENT,
+            'Home supplications',
+            30,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->supplicationsHomeOptionsForLocale('ar'),
+                'en' => $this->supplicationsHomeOptionsForLocale('en'),
+            ]),
+            $now
+        );
+
+        $this->insertHomeThemeRow(
+            ThemeCustomization::SECTION_DIVIDER,
+            'Maps section intro',
+            35,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->sectionDividerFullBleedOptionsForLocale('ar', 'maps'),
+                'en' => $this->sectionDividerFullBleedOptionsForLocale('en', 'maps'),
+            ]),
+            $now
+        );
+
+        $this->insertHomeThemeRow(
+            ThemeCustomization::MAPS_SHOWCASE,
+            'Maps showcase',
+            40,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->mapsShowcaseHomeOptionsForLocale('ar'),
+                'en' => $this->mapsShowcaseHomeOptionsForLocale('en'),
+            ]),
+            $now
+        );
+    }
+
+    /**
+     * @param  array<string, mixed>  $options
+     */
+    protected function insertHomeThemeRow(
+        string $type,
+        string $name,
+        int $sortOrder,
+        string $themeCode,
+        array $options,
+        Carbon $now
+    ): void {
+        DB::table('shop_theme_customizations')->insert([
+            'type'         => $type,
+            'name'         => $name,
+            'sort_order'   => $sortOrder,
+            'status'       => true,
+            'theme_code'   => $themeCode,
+            'options'      => json_encode($options, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+            'created_at'   => $now,
+            'updated_at'   => $now,
+        ]);
+    }
+
+    /**
+     * Full-bleed gradient band (same palette as inner hero) with title + description only.
+     *
+     * @return array<string, mixed>
+     */
+    protected function sectionDividerFullBleedOptionsForLocale(string $locale, string $segment): array
+    {
+        $p = 'seeders.web-theme.section-divider.'.$segment;
+
+        return [
+            'variant'         => 'full_bleed',
+            'visible'         => true,
+            'gradient_from'   => strtoupper(trim((string) config('web.section_divider.background.gradient_from', '#0D2A1A'))),
+            'gradient_mid'    => strtoupper(trim((string) config('web.section_divider.background.gradient_mid', '#1A3A2A'))),
+            'gradient_to'     => strtoupper(trim((string) config('web.section_divider.background.gradient_to', '#0D2A1A'))),
+            'gold'            => strtoupper(trim((string) config('web.section_divider.background.gold', '#D4AF37'))),
+            'wave_fill'       => strtoupper(trim((string) config('web.section_divider.background.wave_fill', '#FEFAF5'))),
+            'badge_show'      => false,
+            'badge_icon'      => '',
+            'badge_text'      => '',
+            'title'           => $this->t($p.'.title', $locale, ''),
+            'description'     => $this->t($p.'.description', $locale, ''),
+            'primary_show'    => false,
+            'primary_label'   => '',
+            'primary_url'     => '',
+            'primary_icon'    => '',
+            'secondary_show'  => false,
+            'secondary_label' => '',
+            'secondary_url'   => '',
+            'secondary_icon'  => '',
+            'parchment_start' => '',
+            'parchment_mid'   => '',
+            'parchment_end'   => '',
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function prayerTimesOptionsForLocale(string $locale): array
+    {
+        return [
+            'api_url'         => '',
+            'heading'         => $this->t('seeders.web-theme.prayer-times.heading', $locale, ''),
+            'description'     => $this->t('seeders.web-theme.prayer-times.description', $locale, ''),
+            'location_label'  => $this->t('seeders.web-theme.prayer-times.location_label', $locale, 'Makkah'),
+            'city'            => 'Makkah',
+            'country'         => 'Saudi Arabia',
+            'method'          => 2,
+            'autoplay_ms'     => 4000,
+            'hour12'          => true,
+        ];
+    }
+
+    /**
+     * Title and description from installer lang; cards use the same content as the adhkar page.
+     *
+     * @return array{heading: string, subheading: string, limit: int, show_more: bool, more_url: string}
+     */
+    protected function supplicationsHomeOptionsForLocale(string $locale): array
+    {
+        return [
+            'heading'    => $this->t('seeders.web-theme.supplications.heading', $locale, ''),
+            'subheading' => $this->t('seeders.web-theme.supplications.subheading', $locale, ''),
+            'limit'      => 3,
+            'show_more'  => true,
+            'more_url'   => '',
+        ];
+    }
+
+    /**
+     * @return array{heading: string, subheading: string, limit: int, link_show: bool, link_label: string}
+     */
+    protected function mapsShowcaseHomeOptionsForLocale(string $locale): array
+    {
+        return [
+            'heading'    => '',
+            'subheading' => '',
+            'limit'      => 3,
+            'link_show'  => true,
+            'link_label' => $this->t('seeders.web-theme.maps-showcase.link_all', $locale, 'View all maps'),
+        ];
+    }
+
     protected function seedCoreWebColors(Carbon $now): void
     {
         if (! Schema::hasTable('core_config')) {
@@ -108,10 +289,16 @@ class WebThemeDefaultsSeeder extends Seeder
         }
 
         $map = [
-            'general.store.web.primary_color'   => self::SHOP_PRIMARY,
-            'general.store.web.accent_color'    => self::SHOP_ACCENT,
-            'general.store.web.icon_color'      => self::SHOP_ICON,
-            'general.store.web.badge_color'     => self::GOLD,
+            'general.store.web.primary_color'                    => self::SHOP_PRIMARY,
+            'general.store.web.accent_color'                     => self::SHOP_ACCENT,
+            'general.store.web.icon_color'                       => self::SHOP_ICON,
+            'general.store.web.badge_color'                      => self::GOLD,
+            'general.store.web.inner_page_hero_gradient_from'   => '#0D2A1A',
+            'general.store.web.inner_page_hero_gradient_mid'    => '#1A3A2A',
+            'general.store.web.inner_page_hero_gradient_to'     => '#0D2A1A',
+            'general.store.web.section_divider_gradient_from'   => '#0D2A1A',
+            'general.store.web.section_divider_gradient_mid'    => '#1A3A2A',
+            'general.store.web.section_divider_gradient_to'     => '#0D2A1A',
         ];
 
         foreach ($map as $code => $value) {
@@ -219,13 +406,12 @@ class WebThemeDefaultsSeeder extends Seeder
             'brand'   => [
                 'icon'      => 'fas fa-kaaba',
                 'title'     => $this->t('seeders.web-theme.header.brand.title', $locale, 'Hajj rites'),
-                'subtitle'  => $this->t('seeders.web-theme.header.brand.subtitle', $locale, ''),
+                'subtitle'  => '',
                 'logo_path' => '',
             ],
             'nav_primary' => [
                 ['page_key' => 'home', 'label' => $this->t('seeders.web-theme.header.nav.home', $locale, 'Home')],
                 ['page_key' => 'services', 'label' => $this->t('seeders.web-theme.header.nav.services', $locale, 'Services')],
-                ['page_key' => 'schedule', 'label' => $this->t('seeders.web-theme.header.nav.schedule', $locale, 'Schedule')],
                 ['page_key' => 'maps', 'label' => $this->t('seeders.web-theme.header.nav.maps', $locale, 'Maps')],
                 ['page_key' => 'adhkar', 'label' => $this->t('seeders.web-theme.header.nav.adhkar', $locale, 'Dhikr & duas')],
             ],
@@ -233,7 +419,6 @@ class WebThemeDefaultsSeeder extends Seeder
             'nav'           => [
                 ['label' => $this->t('seeders.web-theme.header.nav.home', $locale, 'Home'), 'url' => '/', 'icon' => ''],
                 ['label' => $this->t('seeders.web-theme.header.nav.services', $locale, 'Services'), 'url' => '#services', 'icon' => ''],
-                ['label' => $this->t('seeders.web-theme.header.nav.schedule', $locale, 'Schedule'), 'url' => '#schedule', 'icon' => ''],
                 ['label' => $this->t('seeders.web-theme.header.nav.maps', $locale, 'Maps'), 'url' => '/maps', 'icon' => ''],
                 ['label' => $this->t('seeders.web-theme.header.nav.adhkar', $locale, 'Dhikr & duas'), 'url' => '/adhkar', 'icon' => ''],
             ],
@@ -262,7 +447,7 @@ class WebThemeDefaultsSeeder extends Seeder
                 'explore' => true,
                 'support' => true,
                 'contact' => true,
-                'subscribe' => true,
+                'subscribe' => false,
                 'bottom' => true,
                 'bottom_mini' => true,
             ],
@@ -281,7 +466,6 @@ class WebThemeDefaultsSeeder extends Seeder
             ],
             'social'      => [
                 ['icon' => 'fab fa-facebook-f', 'url' => '#', 'aria_label' => 'Facebook'],
-                ['icon' => 'fab fa-x-twitter', 'url' => '#', 'aria_label' => 'X'],
                 ['icon' => 'fab fa-instagram', 'url' => '#', 'aria_label' => 'Instagram'],
             ],
             'col_explore' => [
@@ -337,14 +521,13 @@ class WebThemeDefaultsSeeder extends Seeder
     {
         return [
             'visible'       => true,
-            'gradient_from' => self::DEEP_FOREST,
-            'gradient_mid'  => self::INNER_HERO_MID,
-            'gradient_to'   => self::DEEP_FOREST,
-            'gold'          => self::GOLD,
-            'wave_fill'     => '#FEFAF5',
+            'gradient_from' => strtoupper(trim((string) config('web.inner_page_hero.background.gradient_from', '#0D2A1A'))),
+            'gradient_mid'  => strtoupper(trim((string) config('web.inner_page_hero.background.gradient_mid', '#1A3A2A'))),
+            'gradient_to'   => strtoupper(trim((string) config('web.inner_page_hero.background.gradient_to', '#0D2A1A'))),
+            'gold'          => strtoupper(trim((string) config('web.inner_page_hero.background.gold', '#D4AF37'))),
+            'wave_fill'     => strtoupper(trim((string) config('web.inner_page_hero.background.wave_fill', '#FEFAF5'))),
             'pages'         => [
                 'services' => $this->innerHeroPageSeed('services', $locale),
-                'schedule' => $this->innerHeroPageSeed('schedule', $locale),
                 'maps'     => $this->innerHeroPageSeed('maps', $locale),
                 'adhkar'   => $this->innerHeroPageSeed('adhkar', $locale),
             ],

@@ -2,26 +2,14 @@
     <meta name="description" content="{{ __('web::app.adhkar.meta_description') }}" />
 @endpush
 
+@include('web::components.adhkar.card-actions-script')
+
 @push('styles')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .web-adhkar-page {
-            /* Tabs/cards: same identity as header (--shop-*) + optional config/web.identity overrides on <html> */
-            --adhkar-forest: var(--shop-primary);
-            --adhkar-forest-mid: color-mix(in srgb, var(--shop-primary) 88%, black);
-            --adhkar-forest-soft: var(--shop-accent);
-            --adhkar-gold: var(--portal-gold);
-            --adhkar-gold-bright: var(--portal-gold-bright);
-            --adhkar-parchment: color-mix(in srgb, var(--shop-primary) 5%, #fdfcfa);
-            --adhkar-ink: var(--portal-ink);
-            --adhkar-muted: var(--portal-muted);
-            --adhkar-line: color-mix(in srgb, var(--shop-primary) 18%, #ffffff);
-            --adhkar-shadow: 0 1px 3px color-mix(in srgb, var(--shop-primary) 8%, transparent),
-                0 12px 28px color-mix(in srgb, var(--shop-primary) 14%, transparent);
-            --adhkar-shadow-hover: 0 8px 24px color-mix(in srgb, var(--shop-primary) 14%, transparent),
-                0 24px 48px color-mix(in srgb, var(--shop-primary) 12%, transparent);
+        .web-adhkar-page.web-adhkar-ui {
             font-family: 'Cairo', var(--shop-font-sans), ui-sans-serif, system-ui, sans-serif;
             color: var(--adhkar-ink);
             background: #fff;
@@ -117,222 +105,6 @@
         }
         @media (prefers-reduced-motion: reduce) {
             .web-adhkar-tab-panel.active { animation: none; }
-            .web-adhkar-card { transition: none; }
-        }
-
-        .web-adhkar-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr);
-            gap: clamp(1.25rem, 2.5vw, 1.75rem);
-        }
-        @media (min-width: 640px) {
-            .web-adhkar-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-        @media (min-width: 1024px) {
-            .web-adhkar-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-                gap: clamp(1.35rem, 2vw, 2rem);
-            }
-        }
-
-        .web-adhkar-card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-            border-radius: 1.25rem;
-            padding: 0;
-            border: 1px solid var(--adhkar-line);
-            box-shadow: var(--adhkar-shadow);
-            transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, border-color 0.2s ease;
-            overflow: hidden;
-            min-height: 0;
-        }
-        /* Accent stripe on logical inline-start (right in RTL, left in LTR) */
-        .web-adhkar-card::before {
-            content: '';
-            position: absolute;
-            inset-inline-start: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: linear-gradient(
-                180deg,
-                var(--adhkar-gold) 0%,
-                var(--adhkar-gold-bright) 45%,
-                color-mix(in srgb, var(--adhkar-gold) 35%, transparent) 100%
-            );
-            border-radius: 1px;
-            opacity: 0.95;
-        }
-        .web-adhkar-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--adhkar-shadow-hover);
-            border-color: color-mix(in srgb, var(--adhkar-gold) 30%, transparent);
-        }
-        .web-adhkar-card__inner {
-            padding-block: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.5rem, 3vw, 2.25rem);
-            padding-inline: clamp(1.35rem, 3vw, 2rem);
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .web-adhkar-card__head {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-bottom: 1.25rem;
-            padding-bottom: 1.25rem;
-            border-bottom: 1px solid var(--adhkar-line);
-        }
-        .web-adhkar-card__title {
-            font-size: clamp(1.125rem, 2.2vw, 1.375rem);
-            font-weight: 700;
-            line-height: 1.45;
-            color: var(--adhkar-forest);
-        }
-        .web-adhkar-card__badge {
-            flex-shrink: 0;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: var(--adhkar-forest-soft);
-            background: #fff;
-            padding: 0.4rem 0.75rem;
-            border-radius: 999px;
-            border: 1px solid var(--adhkar-line);
-        }
-
-        .web-adhkar-card__quote {
-            position: relative;
-            flex: 1;
-            margin-bottom: 1rem;
-        }
-        .web-adhkar-card__text {
-            position: relative;
-            z-index: 1;
-            font-size: clamp(1.0625rem, 2vw, 1.25rem);
-            font-weight: 500;
-            line-height: 2.1;
-            color: var(--adhkar-ink);
-            font-feature-settings: 'kern' 1, 'liga' 1;
-        }
-        .web-adhkar-card__ref {
-            font-size: 0.875rem;
-            line-height: 1.55;
-            color: var(--adhkar-muted);
-            padding-block: 0.75rem;
-            padding-inline: 1rem 0;
-            border-radius: 0;
-            background: transparent;
-            border-inline-start: 3px solid color-mix(in srgb, var(--adhkar-gold) 45%, transparent);
-            margin-bottom: 0;
-            font-style: normal;
-        }
-
-        .web-adhkar-card__actions {
-            display: flex;
-            align-items: stretch;
-            gap: 0.75rem;
-            margin-top: auto;
-            padding-block: 1.25rem clamp(1.35rem, 3vw, 2rem);
-            padding-inline: clamp(1.35rem, 3vw, 2rem);
-            background: transparent;
-            border-top: 1px solid var(--adhkar-line);
-        }
-        .web-adhkar-btn-copy {
-            flex: 1;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.45rem;
-            min-height: 3rem;
-            padding: 0.65rem 1.15rem;
-            border: none;
-            border-radius: 0.65rem;
-            font-family: inherit;
-            font-size: 0.9375rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--adhkar-forest);
-            background: #fff;
-            border: 1px solid var(--adhkar-line);
-            box-shadow: 0 1px 2px color-mix(in srgb, var(--shop-primary) 6%, transparent);
-            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .web-adhkar-btn-copy:hover {
-            background: var(--adhkar-forest-mid);
-            border-color: var(--adhkar-forest-mid);
-            color: #fff;
-            box-shadow: 0 4px 12px color-mix(in srgb, var(--shop-primary) 22%, transparent);
-        }
-        .web-adhkar-btn-copy:focus-visible {
-            outline: 2px solid var(--adhkar-gold);
-            outline-offset: 2px;
-        }
-        .web-adhkar-btn-fav {
-            flex-shrink: 0;
-            min-height: 3rem;
-            padding: 0.65rem 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--adhkar-line);
-            border-radius: 0.65rem;
-            background: #fff;
-            color: var(--adhkar-forest-mid);
-            font-size: 0.8125rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-        }
-        .web-adhkar-btn-fav:hover {
-            background: color-mix(in srgb, var(--adhkar-gold) 14%, white);
-            border-color: color-mix(in srgb, var(--adhkar-gold) 38%, transparent);
-            color: var(--adhkar-forest-mid);
-        }
-        .web-adhkar-btn-fav.is-saved {
-            background: rgba(198, 40, 40, 0.12);
-            border-color: rgba(198, 40, 40, 0.35);
-            color: #b71c1c;
-        }
-        .web-adhkar-btn-fav:focus-visible {
-            outline: 2px solid var(--adhkar-gold);
-            outline-offset: 2px;
-        }
-
-        .web-adhkar-toast {
-            position: fixed;
-            bottom: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(8px);
-            max-width: min(92vw, 22rem);
-            padding: 0.85rem 1.25rem;
-            border-radius: 999px;
-            font-size: 0.875rem;
-            font-weight: 600;
-            line-height: 1.35;
-            text-align: center;
-            z-index: 1080;
-            opacity: 0;
-            pointer-events: none;
-            color: var(--adhkar-gold-bright);
-            background: color-mix(in srgb, var(--shop-primary) 92%, black);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid color-mix(in srgb, var(--adhkar-gold-bright) 28%, transparent);
-            box-shadow: 0 8px 32px color-mix(in srgb, var(--shop-primary) 32%, transparent);
-            transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .web-adhkar-toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
         }
     </style>
 @endpush
@@ -340,7 +112,7 @@
 <x-web::layouts :title="$pageTitle">
     <x-web::layouts.inner-page-hero page-key="adhkar" />
 
-    <div class="web-adhkar-page">
+    <div class="web-adhkar-page web-adhkar-ui">
         <div class="web-adhkar-container">
             @if (count($duaTabs) === 0)
                 <div class="web-page-empty" role="status" aria-live="polite">
@@ -421,9 +193,9 @@
             @endforeach
             @endif
         </div>
-    </div>
 
-    <div id="web-adhkar-toast" class="web-adhkar-toast" role="status" aria-live="polite"></div>
+        <div id="web-adhkar-toast" class="web-adhkar-toast" role="status" aria-live="polite"></div>
+    </div>
 
     @push('scripts')
         <script>
@@ -477,35 +249,6 @@
                         scrollActiveTabIntoView('instant');
                     });
                 }
-                function toast(msg) {
-                    var el = document.getElementById('web-adhkar-toast');
-                    if (!el) return;
-                    el.textContent = msg;
-                    el.classList.add('show');
-                    clearTimeout(el._t);
-                    el._t = setTimeout(function () { el.classList.remove('show'); }, 2200);
-                }
-                document.querySelector('.web-adhkar-page').addEventListener('click', function (e) {
-                    var copyBtn = e.target.closest('[data-web-adhkar-copy]');
-                    if (copyBtn) {
-                        var card = copyBtn.closest('.web-adhkar-card');
-                        var textEl = card && card.querySelector('.web-adhkar-card__text');
-                        var text = textEl ? textEl.innerText.trim() : '';
-                        if (text && navigator.clipboard && navigator.clipboard.writeText) {
-                            navigator.clipboard.writeText(text).then(function () {
-                                toast(@json(__('web::app.adhkar.toast_copied')));
-                            }).catch(function () { toast(@json(__('web::app.adhkar.toast_copy_failed'))); });
-                        }
-                        return;
-                    }
-                    var favBtn = e.target.closest('[data-web-adhkar-fav]');
-                    if (favBtn) {
-                        favBtn.classList.toggle('is-saved');
-                        toast(favBtn.classList.contains('is-saved')
-                            ? @json(__('web::app.adhkar.toast_fav_added'))
-                            : @json(__('web::app.adhkar.toast_fav_removed')));
-                    }
-                });
             })();
         </script>
     @endpush

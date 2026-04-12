@@ -61,6 +61,7 @@ class HomeController extends Controller
             ->map(function (WebThemeCustomization $row) {
                 $options = is_array($row->options) ? $row->options : [];
                 $obj = (object) [
+                    'id'      => $row->id,
                     'type'    => $row->type,
                     'options' => $options,
                 ];

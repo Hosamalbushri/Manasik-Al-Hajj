@@ -140,7 +140,7 @@
         'explore' => true,
         'support' => true,
         'contact' => true,
-        'subscribe' => true,
+        'subscribe' => false,
         'bottom' => true,
         'bottom_mini' => true,
     ], is_array($oEditor['visibility'] ?? null) ? $oEditor['visibility'] : []);
@@ -579,7 +579,7 @@
         <p class="mb-4 text-base font-semibold text-gray-800 dark:text-white">@lang('admin::app.settings.web-theme.edit.web-footer-subscribe')</p>
                         <label class="mb-4 flex items-center gap-2 text-sm font-medium text-gray-800 dark:text-gray-200">
                             <input type="hidden" name="options[visibility][subscribe]" value="0">
-                            <input type="checkbox" name="options[visibility][subscribe]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.visibility.subscribe', $visibility['subscribe'] ?? true))>
+                            <input type="checkbox" name="options[visibility][subscribe]" value="1" class="rounded border-gray-300 text-brandColor dark:border-gray-600 dark:bg-gray-900" @checked(old('options.visibility.subscribe', $visibility['subscribe'] ?? false))>
                             @lang('admin::app.settings.web-theme.edit.web-footer-show-section')
                         </label>
         <div class="grid gap-4 sm:grid-cols-2">

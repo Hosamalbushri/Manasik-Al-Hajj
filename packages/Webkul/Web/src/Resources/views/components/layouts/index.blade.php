@@ -5,6 +5,8 @@
 ])
 
 @php
+    use Webkul\Web\Support\WebStoreBandColors;
+
     $fb = config('web.identity.fallback_shop_colors', []);
     $fbPrimary = $fb['primary'] ?? '#165022';
     $fbAccent = $fb['accent'] ?? '#2E8B3A';
@@ -58,6 +60,9 @@
             $identityCss .= $cssName.': '.trim((string) $val).';';
         }
     }
+
+    $storeInnerBand = WebStoreBandColors::innerHeroStoreDefaults();
+    $storeDividerBand = WebStoreBandColors::sectionDividerStoreDefaults();
 @endphp
 
 <!DOCTYPE html>
@@ -82,6 +87,12 @@
         --shop-gradient-mid: color-mix(in srgb, var(--shop-primary) 6%, white);
         --shop-placeholder: color-mix(in srgb, var(--shop-primary) 42%, #64748b);
         --shop-badge-ring: color-mix(in srgb, var(--shop-primary) 14%, transparent);
+        --web-store-inner-hero-from: {{ $storeInnerBand['from'] }};
+        --web-store-inner-hero-mid: {{ $storeInnerBand['mid'] }};
+        --web-store-inner-hero-to: {{ $storeInnerBand['to'] }};
+        --web-store-section-divider-from: {{ $storeDividerBand['from'] }};
+        --web-store-section-divider-mid: {{ $storeDividerBand['mid'] }};
+        --web-store-section-divider-to: {{ $storeDividerBand['to'] }};
         {{ $identityCss }}
     "
 >
