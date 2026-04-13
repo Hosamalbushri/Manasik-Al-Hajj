@@ -22,7 +22,7 @@
     }
 
     $adminDirection = in_array(strtolower(app()->getLocale()), ['ar', 'fa', 'he', 'ur', 'ku', 'dv'], true) ? 'rtl' : 'ltr';
-    $duaRepo = app(\Webkul\Web\Repositories\WebDuaRepository::class);
+    $duaRepo = app(\Webkul\Manasik\Repositories\DuaRepository::class);
     $adminLoc = strtolower(app()->getLocale());
 @endphp
 
@@ -156,9 +156,9 @@
                             </x-admin::form.control-group.label>
                             <x-admin::form.control-group.control
                                 type="select"
-                                name="web_dua_section_id"
+                                name="manasik_dua_section_id"
                                 rules="required"
-                                :value="old('web_dua_section_id', $isEdit ? (string) $dua->web_dua_section_id : ((int) $prefillSectionId > 0 ? (string) $prefillSectionId : ''))"
+                                :value="old('manasik_dua_section_id', $isEdit ? (string) $dua->manasik_dua_section_id : ((int) $prefillSectionId > 0 ? (string) $prefillSectionId : ''))"
                                 :label="trans('admin::app.settings.duas.form.section')"
                             >
                                 <option value="">@lang('admin::app.settings.duas.form.section-placeholder')</option>
@@ -175,7 +175,7 @@
                                     </option>
                                 @endforeach
                             </x-admin::form.control-group.control>
-                            <x-admin::form.control-group.error control-name="web_dua_section_id" />
+                            <x-admin::form.control-group.error control-name="manasik_dua_section_id" />
                         </x-admin::form.control-group>
 
                         <x-admin::form.control-group>

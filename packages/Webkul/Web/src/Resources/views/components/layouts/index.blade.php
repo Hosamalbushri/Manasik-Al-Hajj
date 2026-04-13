@@ -190,6 +190,8 @@
 
         {!! view_render_event('shop.layout.body.after') !!}
 
+        <x-web::modal-confirm />
+
         @stack('scripts')
     </body>
 </html>

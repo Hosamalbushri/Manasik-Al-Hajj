@@ -53,6 +53,15 @@ return [
                 'campus-desc'    => 'Learn about the principal sacred places.',
             ],
         ],
+
+        'modal' => [
+            'confirm' => [
+                'title'         => 'Are you sure?',
+                'message'       => 'Please confirm this action.',
+                'disagree-btn'  => 'Cancel',
+                'agree-btn'     => 'Confirm',
+            ],
+        ],
     ],
 
     'student' => [

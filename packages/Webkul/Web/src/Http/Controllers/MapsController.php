@@ -5,7 +5,7 @@ namespace Webkul\Web\Http\Controllers;
 use Illuminate\Contracts\View\View;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Schema;
-use Webkul\Web\Repositories\WebMapLocationRepository;
+use Webkul\Manasik\Repositories\MapLocationRepository;
 
 class MapsController extends Controller
 {
@@ -13,8 +13,8 @@ class MapsController extends Controller
     {
         $cards = [];
 
-        if (Schema::hasTable('web_map_locations')) {
-            $fromDb = app(WebMapLocationRepository::class)->getActiveCardsForLocale();
+        if (Schema::hasTable('manasik_map_locations')) {
+            $fromDb = app(MapLocationRepository::class)->getActiveCardsForLocale();
             if ($fromDb->isNotEmpty()) {
                 $cards = $fromDb->all();
             }
@@ -30,9 +30,9 @@ class MapsController extends Controller
         }
 
         return view('web::maps.index', [
-            'cards'       => $cards,
+            'cards' => $cards,
             'cardDetails' => $cardDetails,
-            'pageTitle'   => __('web::app.maps.meta_title'),
+            'pageTitle' => __('web::app.maps.meta_title'),
         ]);
     }
 }

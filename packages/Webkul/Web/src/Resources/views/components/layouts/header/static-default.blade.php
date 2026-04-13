@@ -3,7 +3,7 @@
     $hajjLoginLabel = __('web::app.header.login');
     if (auth()->guard('hajj')->check() && \Illuminate\Support\Facades\Route::has('hajj.account.index')) {
         $hajjLoginUrl = route('hajj.account.index');
-        $hajjLoginLabel = trans('hajj::account.nav');
+        $hajjLoginLabel = trans('web::hajj_account.nav');
     } elseif (\Illuminate\Support\Facades\Route::has('hajj.session.create')) {
         $hajjLoginUrl = route('hajj.session.create');
     }

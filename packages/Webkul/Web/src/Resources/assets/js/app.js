@@ -722,25 +722,368 @@ function initImageCarouselAutoplay() {
     document.querySelectorAll('[data-shop-image-carousel-track]').forEach(initTrack);
 }
 
+const SHOP_FLASH_STYLES = {
+    success: {
+        container: 'background: #D4EDDA',
+        message: 'color: #155721',
+        icon: 'color: #155721',
+    },
+    error: {
+        container: 'background: #F8D7DA',
+        message: 'color: #721C24',
+        icon: 'color: #721C24',
+    },
+    warning: {
+        container: 'background: #FFF3CD',
+        message: 'color: #856404',
+        icon: 'color: #856404',
+    },
+    info: {
+        container: 'background: #E2E3E5',
+        message: 'color: #383D41',
+        icon: 'color: #383D41',
+    },
+};
+
+const SHOP_FLASH_ICON_CLASS = {
+    success: 'icon-toast-done',
+    error: 'icon-toast-error',
+    warning: 'icon-toast-exclamation-mark',
+    info: 'icon-toast-info',
+};
+
+function webFlashCloseLabel() {
+    return (typeof window.__webFlashCloseLabel === 'string' && window.__webFlashCloseLabel)
+        ? window.__webFlashCloseLabel
+        : 'Dismiss notification';
+}
+
+function scheduleShopFlashAutoDismiss(el) {
+    const ms = parseInt(el.getAttribute('data-auto-dismiss') || '5000', 10);
+    if (ms > 0) {
+        window.setTimeout(() => {
+            if (el.isConnected) {
+                el.remove();
+            }
+        }, ms);
+    }
+}
+
+function buildShopFlashElement(type, message) {
+    const t = SHOP_FLASH_STYLES[type] || SHOP_FLASH_STYLES.info;
+    const iconClass = SHOP_FLASH_ICON_CLASS[type] || SHOP_FLASH_ICON_CLASS.info;
+    const msgHtml = escapeHtml(String(message ?? '')).replace(/\n/g, '<br>');
+
+    const root = document.createElement('div');
+    root.setAttribute('data-shop-flash', '');
+    root.setAttribute('data-auto-dismiss', '5000');
+    root.className =
+        'web-flash-group-item flex w-max max-w-[408px] justify-between gap-12 rounded-lg px-5 py-3 max-sm:max-w-80 max-sm:items-center max-sm:gap-2 max-sm:p-3';
+    root.style.cssText = t.container;
+
+    root.innerHTML = `
+        <p class="flex items-center break-words text-sm" style="${t.message}">
+            <span class="${iconClass} text-2xl ltr:mr-2.5 rtl:ml-2.5" style="${t.icon}" aria-hidden="true"></span>
+            <span>${msgHtml}</span>
+        </p>
+        <span role="button" tabindex="0" data-shop-flash-dismiss class="icon-cancel max-h-4 max-w-4 shrink-0 cursor-pointer" style="${t.icon}" aria-label=""></span>
+    `;
+    const dismiss = root.querySelector('[data-shop-flash-dismiss]');
+    if (dismiss) {
+        dismiss.setAttribute('aria-label', webFlashCloseLabel());
+    }
+
+    return root;
+}
+
+function appendShopFlashCopies(type, message) {
+    const proto = buildShopFlashElement(type, message);
+    const desktop = document.querySelector('[data-web-flash-desktop]');
+    const mobile = document.querySelector('[data-web-flash-mobile]');
+    if (desktop) {
+        const node = proto.cloneNode(true);
+        desktop.appendChild(node);
+        scheduleShopFlashAutoDismiss(node);
+    }
+    if (mobile) {
+        const node = proto.cloneNode(true);
+        mobile.appendChild(node);
+        scheduleShopFlashAutoDismiss(node);
+    }
+}
+
 function initFlashMessages() {
-    document.querySelectorAll('[data-shop-flash-dismiss]').forEach((btn) => {
+    document.addEventListener('click', (e) => {
+        const dismiss = e.target.closest('[data-shop-flash-dismiss]');
+        if (!dismiss) {
+            return;
+        }
+        const root = dismiss.closest('[data-shop-flash]');
+        if (root) {
+            root.remove();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') {
+            return;
+        }
+        const dismiss = e.target.closest('[data-shop-flash-dismiss]');
+        if (!dismiss) {
+            return;
+        }
+        e.preventDefault();
+        const root = dismiss.closest('[data-shop-flash]');
+        if (root) {
+            root.remove();
+        }
+    });
+
+    document.querySelectorAll('[data-shop-flash]').forEach(scheduleShopFlashAutoDismiss);
+
+    window.Webkul = window.Webkul || {};
+    window.Webkul.addFlash = (payload) => {
+        const o = payload && typeof payload === 'object' ? payload : {};
+        const type = o.type || 'info';
+        const msg = o.message != null ? String(o.message) : '';
+        appendShopFlashCopies(type, msg);
+    };
+
+    document.addEventListener('add-flash', (e) => {
+        const d = e && e.detail && typeof e.detail === 'object' ? e.detail : {};
+        window.Webkul.addFlash(d);
+    });
+}
+
+function initHajjAccountPage() {
+    const root = document.querySelector('.hajj-account-page');
+    if (!root) {
+        return;
+    }
+
+    const validationSummary = root.getAttribute('data-hajj-validation-summary');
+    if (validationSummary && window.Webkul && typeof window.Webkul.addFlash === 'function') {
+        window.Webkul.addFlash({ type: 'error', message: validationSummary });
+    }
+
+    root.querySelectorAll('.hajj-account-tab-btn[data-hajj-tab]').forEach((btn) => {
         btn.addEventListener('click', () => {
-            const root = btn.closest('[data-shop-flash]');
-            if (root) root.remove();
+            const tab = btn.getAttribute('data-hajj-tab');
+            root.querySelectorAll('.hajj-account-tab-btn').forEach((b) => {
+                const on = b === btn;
+                b.classList.toggle('is-active', on);
+                b.setAttribute('aria-selected', on ? 'true' : 'false');
+            });
+            root.querySelectorAll('[data-hajj-tab-panel]').forEach((panel) => {
+                const show = panel.getAttribute('data-hajj-tab-panel') === tab;
+                panel.toggleAttribute('hidden', !show);
+                panel.classList.toggle('is-active', show);
+            });
         });
     });
 
-    document.querySelectorAll('[data-shop-flash]').forEach((el) => {
-        const ms = parseInt(el.getAttribute('data-auto-dismiss') || '5000', 10);
-        if (ms > 0) {
-            window.setTimeout(() => {
-                el.remove();
-            }, ms);
+    const burger = root.querySelector('[data-hajj-account-burger]');
+    const mobileNav = root.querySelector('[data-hajj-account-mobile-nav]');
+    if (burger && mobileNav) {
+        burger.addEventListener('click', () => {
+            const willOpen = mobileNav.hidden;
+            mobileNav.hidden = !willOpen;
+            burger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+    }
+
+    root.querySelectorAll('[data-hajj-account-avatar]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const msg = root.getAttribute('data-hajj-avatar-msg') || '';
+            if (msg && window.Webkul && typeof window.Webkul.addFlash === 'function') {
+                window.Webkul.addFlash({ type: 'info', message: msg });
+            }
+        });
+    });
+
+    const delForm = root.querySelector('form[data-hajj-delete-account]');
+    if (delForm) {
+        delForm.addEventListener('submit', (e) => {
+            const c1 = root.getAttribute('data-hajj-delete-confirm') || '';
+            const c2 = root.getAttribute('data-hajj-delete-final') || '';
+            if (!window.confirm(c1)) {
+                e.preventDefault();
+                return;
+            }
+            if (!window.confirm(c2)) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    root.querySelectorAll('[data-toggle-pass]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-toggle-pass');
+            const input = id ? document.getElementById(id) : null;
+            if (!input) {
+                return;
+            }
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) {
+                    icon.className = 'fas fa-eye-slash';
+                }
+            } else {
+                input.type = 'password';
+                if (icon) {
+                    icon.className = 'fas fa-eye';
+                }
+            }
+        });
+    });
+}
+
+function initWebModalConfirm() {
+    const root = document.querySelector('[data-web-modal-confirm]');
+    if (!root) {
+        return;
+    }
+
+    const backdrop = root.querySelector('[data-wmc-backdrop]');
+    const titleEl = root.querySelector('[data-wmc-title]');
+    const messageEl = root.querySelector('[data-wmc-message]');
+    const btnDisagree = root.querySelector('[data-wmc-disagree]');
+    const btnAgree = root.querySelector('[data-wmc-agree]');
+
+    if (!backdrop || !titleEl || !messageEl || !btnDisagree || !btnAgree) {
+        return;
+    }
+
+    const readDefaults = () => ({
+        title: root.getAttribute('data-default-title') || '',
+        message: root.getAttribute('data-default-message') || '',
+        btnDisagree: root.getAttribute('data-default-btn-disagree') || '',
+        btnAgree: root.getAttribute('data-default-btn-agree') || '',
+    });
+
+    let agreeCb = () => {};
+    let disagreeCb = () => {};
+
+    function unlockBody() {
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
+
+    function close() {
+        root.classList.remove('web-modal-confirm--open');
+        root.setAttribute('aria-hidden', 'true');
+        unlockBody();
+        document.removeEventListener('keydown', onKeyDown);
+    }
+
+    function onKeyDown(e) {
+        if (e.key === 'Escape') {
+            disagree();
         }
+    }
+
+    function disagree() {
+        const fn = disagreeCb;
+        close();
+        try {
+            fn();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function agree() {
+        const fn = agreeCb;
+        close();
+        try {
+            fn();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function open(detail = {}) {
+        const d = readDefaults();
+        const opts = detail.options && typeof detail.options === 'object' ? detail.options : {};
+
+        titleEl.textContent = detail.title != null ? String(detail.title) : d.title;
+        messageEl.textContent = detail.message != null ? String(detail.message) : d.message;
+        btnDisagree.textContent =
+            opts.btnDisagree != null ? String(opts.btnDisagree) : d.btnDisagree;
+        btnAgree.textContent = opts.btnAgree != null ? String(opts.btnAgree) : d.btnAgree;
+
+        agreeCb = typeof detail.agree === 'function' ? detail.agree : () => {};
+        disagreeCb = typeof detail.disagree === 'function' ? detail.disagree : () => {};
+
+        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+        document.body.style.overflow = 'hidden';
+        if (scrollbarWidth > 0) {
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+        }
+
+        root.classList.add('web-modal-confirm--open');
+        root.setAttribute('aria-hidden', 'false');
+        document.addEventListener('keydown', onKeyDown);
+        requestAnimationFrame(() => {
+            btnAgree.focus();
+        });
+    }
+
+    btnDisagree.addEventListener('click', () => disagree());
+    btnAgree.addEventListener('click', () => agree());
+    backdrop.addEventListener('click', () => disagree());
+
+    window.Webkul = window.Webkul || {};
+    window.Webkul.WebModalConfirm = { open };
+
+    document.addEventListener('open-confirm-modal', (e) => {
+        open(e.detail || {});
+    });
+}
+
+function initHajjAuthPage() {
+    if (!document.body.classList.contains('hajj-auth-page')) {
+        return;
+    }
+    const msgForgot = document.body.getAttribute('data-hajj-forgot-msg') || '';
+    const msgSocial = document.body.getAttribute('data-hajj-social-msg') || '';
+
+    document.querySelectorAll('[data-hajj-forgot]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            window.alert(msgForgot);
+        });
+    });
+    document.querySelectorAll('[data-hajj-social]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            window.alert(msgSocial);
+        });
+    });
+    document.querySelectorAll('[data-toggle-pass]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-toggle-pass');
+            const input = id ? document.getElementById(id) : null;
+            if (!input) {
+                return;
+            }
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) {
+                    icon.className = 'fas fa-eye-slash';
+                }
+            } else {
+                input.type = 'password';
+                if (icon) {
+                    icon.className = 'fas fa-eye';
+                }
+            }
+        });
     });
 }
 
 function bootWebPackageUi() {
+    initWebModalConfirm();
     initNavbar();
     initCategoryCarousel();
     initPortalFooter();
@@ -750,6 +1093,8 @@ function bootWebPackageUi() {
     initFlashMessages();
     initHeroSlider();
     initWebPrayerTimes();
+    initHajjAuthPage();
+    initHajjAccountPage();
 }
 
 if (document.readyState === 'loading') {

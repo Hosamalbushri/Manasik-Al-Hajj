@@ -2,6 +2,7 @@
 
 namespace Webkul\Admin\Http\Controllers\AdhkarDuas;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -9,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Webkul\Admin\DataGrids\AdhkarDuas\WebDuaSectionDataGrid;
 use Webkul\Admin\Http\Controllers\Controller;
-use Webkul\Web\Models\WebDuaSection;
+use Webkul\Manasik\Models\DuaSection;
 
 class WebDuaSectionController extends Controller
 {
@@ -100,7 +101,7 @@ class WebDuaSectionController extends Controller
 
         return [
             'default_locale' => $defaultLocale,
-            'translations'   => $translations,
+            'translations' => $translations,
         ];
     }
 
@@ -113,7 +114,7 @@ class WebDuaSectionController extends Controller
         $slug = substr($slug, 0, 60);
         $original = $slug;
         $n = 0;
-        while (WebDuaSection::query()->where('slug', $slug)->exists()) {
+        while (DuaSection::query()->where('slug', $slug)->exists()) {
             $n++;
             $suffix = '-'.$n;
             $slug = substr($original, 0, 64 - strlen($suffix)).$suffix;
@@ -122,7 +123,7 @@ class WebDuaSectionController extends Controller
         return $slug;
     }
 
-    public function index(): View|\Illuminate\Http\JsonResponse
+    public function index(): View|JsonResponse
     {
         $this->assertCanView();
 
@@ -151,7 +152,7 @@ class WebDuaSectionController extends Controller
 
         Validator::make($request->all(), [
             'sort_order' => ['required', 'integer', 'min:0', 'max:999999'],
-            'status'     => ['nullable', 'in:0,1'],
+            'status' => ['nullable', 'in:0,1'],
         ])->validate();
 
         $content = $this->normalizeContentFromRequest($request);
@@ -167,11 +168,11 @@ class WebDuaSectionController extends Controller
 
         $slug = $this->makeUniqueSlug($title !== '' ? $title : 'section-'.Str::random(6));
 
-        $row = WebDuaSection::query()->create([
-            'slug'       => $slug,
+        $row = DuaSection::query()->create([
+            'slug' => $slug,
             'sort_order' => (int) $request->input('sort_order'),
-            'status'     => $request->boolean('status', true),
-            'content'    => $content,
+            'status' => $request->boolean('status', true),
+            'content' => $content,
         ]);
 
         $to = route('admin.adhkar-duas.dua-sections.edit', $row->id);
@@ -189,7 +190,7 @@ class WebDuaSectionController extends Controller
         $this->assertCanView();
         $this->assertCanEdit();
 
-        $section = WebDuaSection::query()->findOrFail($id);
+        $section = DuaSection::query()->findOrFail($id);
         $storeLocaleCodes = $this->getStoreLocaleCodes();
 
         $content = is_array($section->content) ? $section->content : [];
@@ -209,19 +210,19 @@ class WebDuaSectionController extends Controller
         $this->assertCanView();
         $this->assertCanEdit();
 
-        $section = WebDuaSection::query()->findOrFail($id);
+        $section = DuaSection::query()->findOrFail($id);
 
         Validator::make($request->all(), [
             'sort_order' => ['required', 'integer', 'min:0', 'max:999999'],
-            'status'     => ['nullable', 'in:0,1'],
+            'status' => ['nullable', 'in:0,1'],
         ])->validate();
 
         $content = $this->normalizeContentFromRequest($request);
 
         $section->update([
             'sort_order' => (int) $request->input('sort_order'),
-            'status'     => $request->boolean('status', true),
-            'content'    => $content,
+            'status' => $request->boolean('status', true),
+            'content' => $content,
         ]);
 
         $to = route('admin.adhkar-duas.dua-sections.edit', $section->id);
@@ -239,7 +240,7 @@ class WebDuaSectionController extends Controller
         $this->assertCanView();
         $this->assertCanDelete();
 
-        WebDuaSection::query()->findOrFail($id)->delete();
+        DuaSection::query()->findOrFail($id)->delete();
 
         return redirect()
             ->route('admin.adhkar-duas.dua-sections.index')

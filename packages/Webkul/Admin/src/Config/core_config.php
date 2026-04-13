@@ -138,6 +138,55 @@ return [
             ],
         ],
     ], [
+        'key' => 'general.store.hajj_auth',
+        'name' => 'admin::app.configuration.index.general.store.hajj-auth.title',
+        'info' => 'admin::app.configuration.index.general.store.hajj-auth.info',
+        'icon' => 'icon-configuration',
+        'sort' => 2,
+    ], [
+        'key' => 'general.store.hajj_auth.register',
+        'name' => 'admin::app.configuration.index.general.store.hajj-auth.register.title',
+        'info' => 'admin::app.configuration.index.general.store.hajj-auth.register.info',
+        'sort' => 1,
+        'fields' => [
+            [
+                'name' => 'meta_description',
+                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.meta-description',
+                'type' => 'textarea',
+                'validation' => 'max:1000',
+            ], [
+                'name' => 'meta_keywords',
+                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.meta-keywords',
+                'type' => 'text',
+                'validation' => 'max:255',
+            ], [
+                'name' => 'newsletter_subscription',
+                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.newsletter-subscription',
+                'type' => 'boolean',
+                'default' => false,
+            ], [
+                'name' => 'gdpr_enabled',
+                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.gdpr-enabled',
+                'type' => 'boolean',
+                'default' => false,
+            ], [
+                'name' => 'gdpr_agreement_enabled',
+                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.gdpr-agreement-enabled',
+                'type' => 'boolean',
+                'default' => false,
+            ], [
+                'name' => 'gdpr_agreement_label',
+                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.gdpr-agreement-label',
+                'type' => 'textarea',
+                'validation' => 'max:2000',
+            ], [
+                'name' => 'gdpr_agreement_content',
+                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.gdpr-agreement-content',
+                'type' => 'editor',
+                'tinymce' => true,
+            ],
+        ],
+    ], [
         'key' => 'general.store.navigation',
         'name' => 'admin::app.configuration.index.general.store.navigation.title',
         'info' => 'admin::app.configuration.index.general.store.navigation.title-info',

@@ -2,16 +2,17 @@
 
 namespace Webkul\Admin\Http\Controllers\MapLocations;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Webkul\Admin\DataGrids\MapLocations\WebMapLocationDataGrid;
 use Webkul\Admin\Http\Controllers\Controller;
-use Webkul\Web\Models\WebMapLocation;
+use Webkul\Manasik\Models\MapLocation;
 
 class WebMapLocationController extends Controller
 {
@@ -110,17 +111,17 @@ class WebMapLocationController extends Controller
             }
 
             $translations[$code] = [
-                'title'        => mb_substr(trim((string) ($slice['title'] ?? '')), 0, 500),
-                'badge'        => mb_substr(trim((string) ($slice['badge'] ?? '')), 0, 191),
-                'description'  => mb_substr(trim((string) ($slice['description'] ?? '')), 0, 5000),
+                'title' => mb_substr(trim((string) ($slice['title'] ?? '')), 0, 500),
+                'badge' => mb_substr(trim((string) ($slice['badge'] ?? '')), 0, 191),
+                'description' => mb_substr(trim((string) ($slice['description'] ?? '')), 0, 5000),
                 'detail_alert' => '',
-                'features'     => $features,
+                'features' => $features,
             ];
         }
 
         return [
             'default_locale' => $defaultLocale,
-            'translations'   => $translations,
+            'translations' => $translations,
         ];
     }
 
@@ -160,7 +161,7 @@ class WebMapLocationController extends Controller
         return null;
     }
 
-    public function index(): View|\Illuminate\Http\JsonResponse
+    public function index(): View|JsonResponse
     {
         $this->assertCanView();
 
@@ -188,12 +189,12 @@ class WebMapLocationController extends Controller
         $this->assertCanCreate();
 
         $validator = Validator::make($request->all(), [
-            'latitude'   => ['required', 'numeric', 'between:-90,90'],
-            'longitude'  => ['required', 'numeric', 'between:-180,180'],
-            'zoom'       => ['nullable', 'integer', 'min:1', 'max:21'],
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+            'zoom' => ['nullable', 'integer', 'min:1', 'max:21'],
             'sort_order' => ['required', 'integer', 'min:0', 'max:999999'],
-            'status'     => ['nullable', 'in:0,1'],
-            'image.*'    => ['nullable', 'image', 'max:5120'],
+            'status' => ['nullable', 'in:0,1'],
+            'image.*' => ['nullable', 'image', 'max:5120'],
         ]);
         $validator->validate();
 
@@ -204,21 +205,21 @@ class WebMapLocationController extends Controller
 
         $pendingSlug = 'pending-'.str_replace('-', '', Str::uuid()->toString());
 
-        $row = WebMapLocation::query()->create([
-            'slug'        => substr($pendingSlug, 0, 64),
-            'map_id'      => 'pending',
-            'latitude'    => (float) $lat,
-            'longitude'   => (float) $lng,
-            'zoom'        => $request->filled('zoom') ? (int) $request->input('zoom') : 15,
-            'embed'       => null,
-            'sort_order'  => (int) $request->input('sort_order'),
-            'status'      => $request->boolean('status', true),
-            'content'     => $content,
-            'image'       => null,
+        $row = MapLocation::query()->create([
+            'slug' => substr($pendingSlug, 0, 64),
+            'map_id' => 'pending',
+            'latitude' => (float) $lat,
+            'longitude' => (float) $lng,
+            'zoom' => $request->filled('zoom') ? (int) $request->input('zoom') : 15,
+            'embed' => null,
+            'sort_order' => (int) $request->input('sort_order'),
+            'status' => $request->boolean('status', true),
+            'content' => $content,
+            'image' => null,
         ]);
 
         $row->update([
-            'slug'   => 'map-loc-'.$row->id,
+            'slug' => 'map-loc-'.$row->id,
             'map_id' => 'map-'.$row->id,
         ]);
 
@@ -242,7 +243,7 @@ class WebMapLocationController extends Controller
         $this->assertCanView();
         $this->assertCanEdit();
 
-        $location = WebMapLocation::query()->findOrFail($id);
+        $location = MapLocation::query()->findOrFail($id);
         $storeLocaleCodes = $this->getStoreLocaleCodes();
 
         $content = is_array($location->content) ? $location->content : [];
@@ -262,15 +263,15 @@ class WebMapLocationController extends Controller
         $this->assertCanView();
         $this->assertCanEdit();
 
-        $location = WebMapLocation::query()->findOrFail($id);
+        $location = MapLocation::query()->findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'latitude'     => ['required', 'numeric', 'between:-90,90'],
-            'longitude'    => ['required', 'numeric', 'between:-180,180'],
-            'zoom'         => ['nullable', 'integer', 'min:1', 'max:21'],
-            'sort_order'   => ['required', 'integer', 'min:0', 'max:999999'],
-            'status'       => ['nullable', 'in:0,1'],
-            'image.*'      => ['nullable', 'image', 'max:5120'],
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+            'zoom' => ['nullable', 'integer', 'min:1', 'max:21'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:999999'],
+            'status' => ['nullable', 'in:0,1'],
+            'image.*' => ['nullable', 'image', 'max:5120'],
         ]);
         $validator->validate();
 
@@ -290,14 +291,14 @@ class WebMapLocationController extends Controller
         $lng = $request->input('longitude');
 
         $location->update([
-            'latitude'    => (float) $lat,
-            'longitude'   => (float) $lng,
-            'zoom'        => $request->filled('zoom') ? (int) $request->input('zoom') : 15,
-            'embed'       => null,
-            'sort_order'  => (int) $request->input('sort_order'),
-            'status'      => $request->boolean('status', true),
-            'content'     => $content,
-            'image'       => $image,
+            'latitude' => (float) $lat,
+            'longitude' => (float) $lng,
+            'zoom' => $request->filled('zoom') ? (int) $request->input('zoom') : 15,
+            'embed' => null,
+            'sort_order' => (int) $request->input('sort_order'),
+            'status' => $request->boolean('status', true),
+            'content' => $content,
+            'image' => $image,
         ]);
 
         $to = route('admin.map-locations.edit', $location->id);
@@ -315,7 +316,7 @@ class WebMapLocationController extends Controller
         $this->assertCanView();
         $this->assertCanDelete();
 
-        $location = WebMapLocation::query()->findOrFail($id);
+        $location = MapLocation::query()->findOrFail($id);
         $this->deleteStoredImageIfLocal($location->image);
         $location->delete();
 

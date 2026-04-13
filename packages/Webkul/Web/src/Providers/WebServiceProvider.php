@@ -2,8 +2,10 @@
 
 namespace Webkul\Web\Providers;
 
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Webkul\Web\Repositories\WebThemeCustomizationRepository;
 
 class WebServiceProvider extends ServiceProvider
 {
@@ -17,12 +19,8 @@ class WebServiceProvider extends ServiceProvider
             'web'
         );
 
-        $this->app->singleton(\Webkul\Web\Repositories\WebThemeCustomizationRepository::class, function ($app) {
-            return new \Webkul\Web\Repositories\WebThemeCustomizationRepository($app);
-        });
-
-        $this->app->singleton(\Webkul\Web\Repositories\WebMapLocationRepository::class, function ($app) {
-            return new \Webkul\Web\Repositories\WebMapLocationRepository($app);
+        $this->app->singleton(WebThemeCustomizationRepository::class, function ($app) {
+            return new WebThemeCustomizationRepository($app);
         });
     }
 
@@ -32,6 +30,19 @@ class WebServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
+
+        Authenticate::redirectUsing(function ($request) {
+            $admin = trim((string) config('app.admin_path', 'admin'), '/');
+            if ($admin !== '' && ($request->is($admin) || $request->is($admin.'/*'))) {
+                return route('admin.session.create');
+            }
+
+            if ($request->is('hajj') || $request->is('hajj/*')) {
+                return route('hajj.session.create');
+            }
+
+            return route('admin.session.create');
+        });
 
         $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
 

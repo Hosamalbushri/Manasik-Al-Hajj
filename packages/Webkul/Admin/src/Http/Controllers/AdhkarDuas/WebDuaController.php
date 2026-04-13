@@ -2,14 +2,16 @@
 
 namespace Webkul\Admin\Http\Controllers\AdhkarDuas;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Webkul\Admin\DataGrids\AdhkarDuas\WebDuaDataGrid;
 use Webkul\Admin\Http\Controllers\Controller;
-use Webkul\Web\Models\WebDua;
-use Webkul\Web\Models\WebDuaSection;
+use Webkul\Manasik\Models\Dua;
+use Webkul\Manasik\Models\DuaSection;
 
 class WebDuaController extends Controller
 {
@@ -94,27 +96,27 @@ class WebDuaController extends Controller
             }
 
             $translations[$code] = [
-                'title'     => mb_substr(trim((string) ($slice['title'] ?? '')), 0, 500),
-                'text'      => mb_substr(trim((string) ($slice['text'] ?? '')), 0, 10000),
+                'title' => mb_substr(trim((string) ($slice['title'] ?? '')), 0, 500),
+                'text' => mb_substr(trim((string) ($slice['text'] ?? '')), 0, 10000),
                 'reference' => mb_substr(trim((string) ($slice['reference'] ?? '')), 0, 1000),
             ];
         }
 
         return [
             'default_locale' => $defaultLocale,
-            'translations'   => $translations,
+            'translations' => $translations,
         ];
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, \Webkul\Web\Models\WebDuaSection>
+     * @return Collection<int, DuaSection>
      */
     protected function sectionsForSelect()
     {
-        return WebDuaSection::query()->orderBy('sort_order')->orderBy('id')->get();
+        return DuaSection::query()->orderBy('sort_order')->orderBy('id')->get();
     }
 
-    public function index(): View|\Illuminate\Http\JsonResponse
+    public function index(): View|JsonResponse
     {
         $this->assertCanView();
 
@@ -134,8 +136,8 @@ class WebDuaController extends Controller
         $activeLocale = $this->resolveRequestedStoreLocale($storeLocaleCodes);
         $sections = $this->sectionsForSelect();
 
-        $prefillSectionId = (int) request()->query('web_dua_section_id', 0);
-        if ($prefillSectionId > 0 && ! WebDuaSection::query()->whereKey($prefillSectionId)->exists()) {
+        $prefillSectionId = (int) request()->query('manasik_dua_section_id', 0);
+        if ($prefillSectionId > 0 && ! DuaSection::query()->whereKey($prefillSectionId)->exists()) {
             $prefillSectionId = 0;
         }
 
@@ -148,18 +150,18 @@ class WebDuaController extends Controller
         $this->assertCanCreate();
 
         Validator::make($request->all(), [
-            'web_dua_section_id' => ['required', 'integer', 'exists:web_dua_sections,id'],
-            'sort_order'         => ['required', 'integer', 'min:0', 'max:999999'],
-            'status'             => ['nullable', 'in:0,1'],
+            'manasik_dua_section_id' => ['required', 'integer', 'exists:manasik_dua_sections,id'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:999999'],
+            'status' => ['nullable', 'in:0,1'],
         ])->validate();
 
         $content = $this->normalizeContentFromRequest($request);
 
-        $row = WebDua::query()->create([
-            'web_dua_section_id' => (int) $request->input('web_dua_section_id'),
-            'sort_order'         => (int) $request->input('sort_order'),
-            'status'             => $request->boolean('status', true),
-            'content'            => $content,
+        $row = Dua::query()->create([
+            'manasik_dua_section_id' => (int) $request->input('manasik_dua_section_id'),
+            'sort_order' => (int) $request->input('sort_order'),
+            'status' => $request->boolean('status', true),
+            'content' => $content,
         ]);
 
         $to = route('admin.adhkar-duas.duas.edit', $row->id);
@@ -177,7 +179,7 @@ class WebDuaController extends Controller
         $this->assertCanView();
         $this->assertCanEdit();
 
-        $dua = WebDua::query()->findOrFail($id);
+        $dua = Dua::query()->findOrFail($id);
         $storeLocaleCodes = $this->getStoreLocaleCodes();
 
         $content = is_array($dua->content) ? $dua->content : [];
@@ -199,21 +201,21 @@ class WebDuaController extends Controller
         $this->assertCanView();
         $this->assertCanEdit();
 
-        $dua = WebDua::query()->findOrFail($id);
+        $dua = Dua::query()->findOrFail($id);
 
         Validator::make($request->all(), [
-            'web_dua_section_id' => ['required', 'integer', 'exists:web_dua_sections,id'],
-            'sort_order'         => ['required', 'integer', 'min:0', 'max:999999'],
-            'status'             => ['nullable', 'in:0,1'],
+            'manasik_dua_section_id' => ['required', 'integer', 'exists:manasik_dua_sections,id'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:999999'],
+            'status' => ['nullable', 'in:0,1'],
         ])->validate();
 
         $content = $this->normalizeContentFromRequest($request);
 
         $dua->update([
-            'web_dua_section_id' => (int) $request->input('web_dua_section_id'),
-            'sort_order'         => (int) $request->input('sort_order'),
-            'status'             => $request->boolean('status', true),
-            'content'            => $content,
+            'manasik_dua_section_id' => (int) $request->input('manasik_dua_section_id'),
+            'sort_order' => (int) $request->input('sort_order'),
+            'status' => $request->boolean('status', true),
+            'content' => $content,
         ]);
 
         $to = route('admin.adhkar-duas.duas.edit', $dua->id);
@@ -231,7 +233,7 @@ class WebDuaController extends Controller
         $this->assertCanView();
         $this->assertCanDelete();
 
-        WebDua::query()->findOrFail($id)->delete();
+        Dua::query()->findOrFail($id)->delete();
 
         return redirect()
             ->route('admin.adhkar-duas.duas.index')

@@ -1,6 +1,6 @@
 <?php
 
-use Webkul\Hajj\Models\HajjUser;
+use Webkul\Manasik\Models\HajjUser;
 use Webkul\User\Models\User;
 
 return [
@@ -45,7 +45,7 @@ return [
         ],
 
         'hajj' => [
-            'driver'   => 'session',
+            'driver' => 'session',
             'provider' => 'hajj_users',
         ],
 
@@ -76,7 +76,7 @@ return [
 
         'hajj_users' => [
             'driver' => 'eloquent',
-            'model'  => HajjUser::class,
+            'model' => HajjUser::class,
         ],
 
     ],
@@ -105,8 +105,8 @@ return [
 
         'hajj_users' => [
             'provider' => 'hajj_users',
-            'table'    => 'hajj_password_reset_tokens',
-            'expire'   => 60,
+            'table' => 'manasik_hajj_password_reset_tokens',
+            'expire' => 60,
         ],
     ],
 

@@ -165,7 +165,7 @@
                 >
                     <div class="web-adhkar-grid">
                         @foreach ($cards as $card)
-                            <article class="web-adhkar-card">
+                            <article class="web-adhkar-card" data-dua-id="{{ (int) ($card['id'] ?? 0) }}">
                                 <div class="web-adhkar-card__inner">
                                     <div class="web-adhkar-card__head">
                                         <div class="web-adhkar-card__title">

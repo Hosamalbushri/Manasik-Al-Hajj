@@ -1,27 +1,40 @@
-{{--
-    Session flash toasts (Bagisto-style placement and colors, no Vue).
-    Types: success, warning, error, info — same as session()->flash('success', ...).
---}}
 @php
-    $shopFlashes = [];
+    $flashes = [];
+
     foreach (['success', 'warning', 'error', 'info'] as $type) {
-        if (session()->has($type)) {
-            $shopFlashes[] = [
+        $message = session()->get($type);
+        if ($message !== null && $message !== '') {
+            $flashes[] = [
                 'type' => $type,
-                'message' => session($type),
+                'message' => $message,
             ];
         }
     }
 @endphp
 
-@if (count($shopFlashes) > 0)
-    {{-- Bagisto-like: desktop top-end, mobile bottom-center (single toast each) --}}
-    <div
-        class="fixed z-[1001] grid max-w-[calc(100vw-2rem)] gap-2.5 max-sm:bottom-10 max-sm:left-1/2 max-sm:w-full max-sm:max-w-[min(408px,calc(100vw-2rem))] max-sm:-translate-x-1/2 max-sm:translate-y-0 max-sm:justify-items-center max-sm:px-4 sm:top-5 sm:justify-items-end ltr:sm:right-5 rtl:sm:left-5"
-        aria-live="polite"
-    >
-        @foreach ($shopFlashes as $flash)
-            @include('web::components.flash-group.item', ['flash' => $flash])
-        @endforeach
-    </div>
-@endif
+{{-- Same layout as Bagisto Shop: desktop top-end, mobile bottom center (duplicate nodes per breakpoint). --}}
+<div
+    data-web-flash-desktop
+    class="web-flash-group fixed top-5 z-[12000] grid justify-items-end gap-2.5 max-sm:hidden ltr:right-5 rtl:left-5"
+    aria-live="polite"
+>
+    @foreach ($flashes as $flash)
+        <x-web::flash-group.item :flash="$flash" />
+    @endforeach
+</div>
+
+<div
+    data-web-flash-mobile
+    class="web-flash-group fixed bottom-10 left-1/2 z-[12000] grid -translate-x-1/2 -translate-y-1/2 transform justify-items-center gap-2.5 sm:hidden"
+    aria-live="polite"
+>
+    @foreach ($flashes as $flash)
+        <x-web::flash-group.item :flash="$flash" />
+    @endforeach
+</div>
+
+@pushOnce('scripts', 'web-flash-close-label')
+    <script>
+        window.__webFlashCloseLabel = @json(__('web::app.components.layouts.flash-group.close'));
+    </script>
+@endpushOnce

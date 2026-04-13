@@ -6,7 +6,7 @@
 
 @php
     use Illuminate\Support\Facades\Schema;
-    use Webkul\Web\Repositories\WebMapLocationRepository;
+    use Webkul\Manasik\Repositories\MapLocationRepository;
 
     $heading = trim((string) ($options['heading'] ?? ''));
     $subheading = trim((string) ($options['subheading'] ?? ''));
@@ -24,8 +24,8 @@
     $cards = [];
     $cardDetails = [];
 
-    if (Schema::hasTable('web_map_locations')) {
-        $fromDb = app(WebMapLocationRepository::class)->getActiveCardsForLocale();
+    if (Schema::hasTable('manasik_map_locations')) {
+        $fromDb = app(MapLocationRepository::class)->getActiveCardsForLocale();
         if ($fromDb->isNotEmpty()) {
             $cards = $limit > 0 ? $fromDb->take($limit)->all() : $fromDb->all();
         }

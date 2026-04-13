@@ -2971,6 +2971,22 @@ return [
                         'custom-2-label' => 'Custom tab 2 label',
                         'custom-2-url' => 'Custom tab 2 URL',
                     ],
+
+                    'hajj-auth' => [
+                        'title' => 'Hajj pilgrim auth',
+                        'info' => 'Registration page options for the public Hajj (pilgrim) portal.',
+                        'register' => [
+                            'title' => 'Hajj registration',
+                            'info' => 'SEO, newsletter signup, and GDPR-style agreement for the create-account form.',
+                            'meta-description' => 'Meta description (register page)',
+                            'meta-keywords' => 'Meta keywords (register page)',
+                            'newsletter-subscription' => 'Show “subscribe to newsletter” checkbox',
+                            'gdpr-enabled' => 'Enable extended privacy / agreement mode',
+                            'gdpr-agreement-enabled' => 'Require agreement checkbox (replaces simple terms checkbox)',
+                            'gdpr-agreement-label' => 'Agreement label (HTML allowed)',
+                            'gdpr-agreement-content' => 'Agreement body (shown in dialog)',
+                        ],
+                    ],
                 ],
 
                 'settings' => [

@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Schema;
+use Webkul\Installer\Support\WebThemeInstallAssets;
 use Webkul\Web\Models\ThemeCustomization;
 
 class WebThemeDefaultsSeeder extends Seeder
@@ -29,9 +30,6 @@ class WebThemeDefaultsSeeder extends Seeder
 
     private const INNER_HERO_MID = '#1f6b2c';
 
-    /** Hero background image (Masjid al-Haram area — stable Unsplash CDN). */
-    private const HERO_IMAGE_URL = 'https://images.unsplash.com/photo-1590076219834-43e223d1a3bf?auto=format&fit=crop&w=1920&q=82';
-
     /** Locales always seeded for web theme (bilingual content). */
     private const THEME_LOCALES = ['ar', 'en'];
 
@@ -45,6 +43,8 @@ class WebThemeDefaultsSeeder extends Seeder
         if (! Schema::hasTable('shop_theme_customizations')) {
             return;
         }
+
+        WebThemeInstallAssets::ensureMakaPublishedToPublicDisk();
 
         $themeCode = (string) config('web.storefront_theme_code', 'web');
         $defaultLocale = strtolower((string) ($parameters['default_store_locale'] ?? $parameters['locale'] ?? config('app.locale', 'en')));
@@ -372,7 +372,7 @@ class WebThemeDefaultsSeeder extends Seeder
                     'badge'       => $this->t($p.'.badge', $locale, ''),
                     'title'       => $this->t($p.'.title', $locale, ''),
                     'description' => $this->t($p.'.description', $locale, ''),
-                    'image'       => self::HERO_IMAGE_URL,
+                    'image'       => WebThemeInstallAssets::MAKA_PUBLIC_RELATIVE_PATH,
                     'primary'     => [
                         'label' => $this->t($p.'.primary_label', $locale, ''),
                         'icon'  => '',

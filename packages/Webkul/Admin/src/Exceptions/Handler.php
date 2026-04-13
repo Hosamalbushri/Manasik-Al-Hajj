@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use PDOException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -66,7 +67,30 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => $this->jsonErrorMessages[401]], 401);
         }
 
-        return redirect()->guest(route('customer.session.index'));
+        $admin = trim((string) config('app.admin_path', 'admin'), '/');
+        if ($admin !== '' && ($request->is($admin) || $request->is($admin.'/*'))) {
+            return redirect()->guest(route('admin.session.create'));
+        }
+
+        if ($request->is('hajj') || $request->is('hajj/*')) {
+            if (Route::has('hajj.session.create')) {
+                return redirect()->guest(route('hajj.session.create'));
+            }
+        }
+
+        if (Route::has('shop.customer.session.index')) {
+            return redirect()->guest(route('shop.customer.session.index'));
+        }
+
+        if (Route::has('web.home.index')) {
+            return redirect()->guest(route('web.home.index'));
+        }
+
+        if (Route::has('hajj.session.create')) {
+            return redirect()->guest(route('hajj.session.create'));
+        }
+
+        return redirect()->guest('/');
     }
 
     /**

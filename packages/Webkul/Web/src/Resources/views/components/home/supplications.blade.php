@@ -4,7 +4,7 @@
 ])
 
 @php
-    use Webkul\Web\Repositories\WebDuaRepository;
+    use Webkul\Manasik\Repositories\DuaRepository;
 
     $heading = trim((string) ($options['heading'] ?? ''));
     $subheading = trim((string) ($options['subheading'] ?? ''));
@@ -18,7 +18,7 @@
         $moreUrl = route('web.adhkar.index');
     }
 
-    $duas = app(WebDuaRepository::class)->getHomePreviewDuas($limit);
+    $duas = app(DuaRepository::class)->getHomePreviewDuas($limit);
 @endphp
 
 @if (count($duas))
@@ -43,7 +43,7 @@
             <div class="web-adhkar-ui">
                 <div class="web-adhkar-grid">
                     @foreach ($duas as $card)
-                        <article class="web-adhkar-card">
+                        <article class="web-adhkar-card" data-dua-id="{{ (int) ($card['id'] ?? 0) }}">
                             <div class="web-adhkar-card__inner">
                                 <div class="web-adhkar-card__head">
                                     <div class="web-adhkar-card__title">
