@@ -3,7 +3,6 @@
 namespace Webkul\Installer\Database\Seeders\Core;
 
 use Illuminate\Database\Seeder;
-use Webkul\Manasik\Database\Seeders\MapLocationsSeeder;
 use Webkul\Manasik\Database\Seeders\WebDuaDefaultsSeeder;
 
 class DatabaseSeeder extends Seeder
