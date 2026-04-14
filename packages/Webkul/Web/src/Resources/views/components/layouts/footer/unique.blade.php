@@ -3,7 +3,7 @@
     $isRtl = in_array(app()->getLocale(), ['ar', 'fa'], true);
     $chev = $isRtl ? 'fa-chevron-left' : 'fa-chevron-right';
 
-    $homeUrl = \Illuminate\Support\Facades\Route::has('web.home.index') ? route('web.home.index') : '#';
+    $homeUrl = \Illuminate\Support\Facades\Route::has('web.home.index') ? route('web.home.index') : url('/');
     $mapsUrl = \Illuminate\Support\Facades\Route::has('web.maps.index') ? route('web.maps.index') : '/maps';
 
     $exploreLinks = [
@@ -44,8 +44,17 @@
             <div class="web-uf__grid">
                 <div class="web-uf__brand">
                     <div class="web-uf__logo-pill">
-                        <i class="fas fa-kaaba" aria-hidden="true"></i>
-                        <span>{{ __('web::app.manasik_footer.brand') }}</span>
+                        <a
+                            href="{{ $homeUrl }}"
+                            class="web-uf__brand-mark"
+                            aria-label="{{ __('web::app.components.layouts.header.desktop.bottom.logo-alt') }}"
+                            title="{{ $homeUrl }}"
+                        >
+                            <i class="fas fa-kaaba web-uf__brand-icon" aria-hidden="true"></i>
+                            <div class="web-uf__brand-titles">
+                                <span class="web-uf__brand-title">{{ __('web::app.manasik_footer.brand') }}</span>
+                            </div>
+                        </a>
                     </div>
                     <p class="web-uf__desc">{{ __('web::app.manasik_footer.description') }}</p>
                     <div class="web-uf__trust">

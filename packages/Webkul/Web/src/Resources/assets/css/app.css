@@ -3189,33 +3189,56 @@ img.lazy {
         margin-bottom: 2.5rem;
     }
     .web-uf__brand { display: flex; flex-direction: column; gap: 0.8rem; }
+    /* Brand row: mirrors .web-hajj-navbar .logo (header) — flex, gap, hover lift */
     .web-uf__logo-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
         width: fit-content;
     }
-    .web-uf__logo-pill i { font-size: 1.75rem; color: var(--web-uf-primary); }
-    .web-uf__logo-pill span { font-size: 1.35rem; font-weight: 700; color: #f5efdf; letter-spacing: -0.5px; }
-    .web-uf__brand-logo-link {
-        display: inline-flex;
+    .web-uf__brand-mark {
+        display: flex;
         align-items: center;
+        gap: 12px;
         text-decoration: none;
         color: inherit;
+        transition: transform 0.2s ease;
+        min-width: 0;
     }
-
-    .web-uf__brand-logo-link:focus-visible {
+    .web-uf__brand-mark:hover {
+        transform: translateY(-1px);
+    }
+    .web-uf__brand-mark:focus-visible {
         outline: 2px solid var(--web-uf-primary, #d4af37);
         outline-offset: 3px;
-        border-radius: 6px;
+        border-radius: 10px;
     }
-
-    .web-uf__logo-pill img.web-uf__brand-logo {
-        max-height: 2.25rem;
+    .web-uf__brand-icon {
+        font-size: 2.2rem;
+        color: var(--web-uf-primary);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        flex-shrink: 0;
+        line-height: 1;
+    }
+    .web-uf__brand-titles {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        min-width: 0;
+    }
+    .web-uf__brand-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: #f5efdf;
+        line-height: 1.15;
+    }
+    /* Match header .header-brand-logo utilities: max-h-10, max-w-[200px], object-contain */
+    .web-uf__brand-mark img.web-uf__brand-logo {
+        max-height: 2.5rem;
         width: auto;
         max-width: 200px;
         object-fit: contain;
+        object-position: left center;
         display: block;
+        flex-shrink: 0;
     }
     .web-uf__desc { color: #b8cfb0; font-size: 0.95rem; line-height: 1.7; max-width: min(100%, 22rem); margin: 0; }
     .web-uf__trust { display: flex; align-items: center; gap: 8px; margin-top: 0.2rem; }
@@ -3385,6 +3408,10 @@ img.lazy {
         .web-uf__grid { grid-template-columns: 1fr; text-align: center; gap: 1.2rem; }
         .web-uf__brand { align-items: center; text-align: center; }
         .web-uf__logo-pill { margin-inline: auto; }
+        .web-uf__brand-mark { justify-content: center; gap: 8px; }
+        .web-uf__brand-icon { font-size: 1.8rem; }
+        .web-uf__brand-title { font-size: 1.05rem; line-height: 1.2; }
+        .web-uf__brand-mark img.web-uf__brand-logo { object-position: center; }
         .web-uf__desc { max-width: 100%; }
         .web-uf__contact-item { justify-content: center; }
         .web-uf__social { justify-content: center; }

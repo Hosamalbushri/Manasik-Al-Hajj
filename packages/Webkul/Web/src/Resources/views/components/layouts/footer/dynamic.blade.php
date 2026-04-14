@@ -123,23 +123,25 @@
                         <div class="web-uf__brand">
                             @if ($showBrandBlock)
                                 <div class="web-uf__logo-pill">
-                                    @if ($brandLogoUrl !== '')
-                                        <a
-                                            href="{{ $webHomeUrl }}"
-                                            class="web-uf__brand-logo-link"
-                                            aria-label="{{ __('web::app.components.layouts.header.desktop.bottom.logo-alt') }}"
-                                            title="{{ $webHomeUrl }}"
-                                        >
+                                    <a
+                                        href="{{ $webHomeUrl }}"
+                                        class="web-uf__brand-mark"
+                                        aria-label="{{ __('web::app.components.layouts.header.desktop.bottom.logo-alt') }}"
+                                        title="{{ $webHomeUrl }}"
+                                    >
+                                        @if ($brandLogoUrl !== '')
                                             <img
                                                 src="{{ $brandLogoUrl }}"
                                                 alt="{{ __('web::app.layout.store_logo_alt', ['name' => $brand['title'] ?: config('app.name')]) }}"
                                                 class="web-uf__brand-logo"
                                             >
-                                        </a>
-                                    @else
-                                        <i class="{{ $brand['icon'] ?: 'fas fa-kaaba' }}" aria-hidden="true"></i>
-                                        <span>{{ $brand['title'] }}</span>
-                                    @endif
+                                        @else
+                                            <i class="{{ $brand['icon'] ?: 'fas fa-kaaba' }} web-uf__brand-icon" aria-hidden="true"></i>
+                                            <div class="web-uf__brand-titles">
+                                                <span class="web-uf__brand-title">{{ $brand['title'] ?: __('web::app.manasik_footer.brand') }}</span>
+                                            </div>
+                                        @endif
+                                    </a>
                                 </div>
                                 @if (! empty($brand['description']))
                                     <p class="web-uf__desc">{{ $brand['description'] }}</p>
