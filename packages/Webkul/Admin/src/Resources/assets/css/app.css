@@ -1089,32 +1089,6 @@ body:has(.admin-login-page-hajj) .flash-group {
     flex-shrink: 0;
 }
 
-.admin-login-page-hajj .back-to-site {
-    position: fixed;
-    top: 1.5rem;
-    inset-inline-start: 1.5rem;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px);
-    padding: 0.6rem 1.2rem;
-    border-radius: 40px;
-    color: white;
-    text-decoration: none;
-    font-size: 0.8rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    z-index: 10;
-    border: 1px solid color-mix(in srgb, var(--brand-color) 45%, rgba(255, 255, 255, 0.6));
-}
-
-.admin-login-page-hajj .back-to-site:hover {
-    background: color-mix(in srgb, var(--brand-color) 38%, rgba(255, 255, 255, 0.12));
-}
-
-.admin-login-page-hajj .back-to-site [class^="icon-"] {
-    font-size: 0.75rem;
-}
-
 @media (max-width: 550px) {
     .admin-login-page-hajj .login-card {
         padding: 2rem 1.35rem;
@@ -1171,24 +1145,9 @@ body:has(.admin-login-page-hajj) .flash-group {
         line-height: 1.4;
     }
 
-    /* Back link in document flow so it does not overlay the login card */
     .admin-login-page-hajj {
         display: flex;
         flex-direction: column;
-    }
-
-    .admin-login-page-hajj .back-to-site {
-        position: static;
-        z-index: auto;
-        align-self: flex-start;
-        width: fit-content;
-        max-width: calc(100% - 2rem);
-        margin-top: max(0.75rem, env(safe-area-inset-top, 0px));
-        margin-inline: 1rem;
-        margin-bottom: 0.35rem;
-        padding: 0.45rem 1rem;
-        font-size: 0.75rem;
-        flex-shrink: 0;
     }
 
     .admin-login-page-hajj .login-container {

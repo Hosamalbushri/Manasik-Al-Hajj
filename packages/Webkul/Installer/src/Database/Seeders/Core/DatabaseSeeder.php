@@ -3,6 +3,7 @@
 namespace Webkul\Installer\Database\Seeders\Core;
 
 use Illuminate\Database\Seeder;
+use Webkul\Manasik\Database\Seeders\HajjRiteDefaultsSeeder;
 use Webkul\Manasik\Database\Seeders\WebDuaDefaultsSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,5 +23,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(MapLocationsSeeder::class);
         $this->call(WebDuaDefaultsSeeder::class);
+        $this->call(HajjRiteDefaultsSeeder::class);
     }
 }

@@ -186,21 +186,6 @@
         <button type="submit" class="submit-btn">{{ __('web::hajj_auth.signup-form.button-title') }}</button>
     </x-web::form>
 
-    <div class="divider">
-        <div class="divider-line" aria-hidden="true"></div>
-        <span>{{ __('web::hajj_auth.auth-shell.or') }}</span>
-        <div class="divider-line" aria-hidden="true"></div>
-    </div>
-
-    <div class="social-buttons">
-        <button type="button" class="social-btn" data-hajj-social="google">
-            <i class="fab fa-google" aria-hidden="true"></i> {{ __('web::hajj_auth.auth-shell.social_google') }}
-        </button>
-        <button type="button" class="social-btn" data-hajj-social="facebook">
-            <i class="fab fa-facebook-f" aria-hidden="true"></i> {{ __('web::hajj_auth.auth-shell.social_facebook') }}
-        </button>
-    </div>
-
     @if ($gdprOn && filled($gdprContent))
         <dialog
             id="hajj-gdpr-terms-dialog"

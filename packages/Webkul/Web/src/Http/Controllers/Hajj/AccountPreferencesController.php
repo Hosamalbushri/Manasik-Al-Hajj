@@ -17,12 +17,13 @@ class AccountPreferencesController extends Controller
         $user->locale = strtolower((string) $validated['locale']);
 
         $existing = $user->resolvedPreferences();
-        $user->preferences = [
+        $rawPrefs = is_array($user->preferences) ? $user->preferences : [];
+        $user->preferences = array_merge($rawPrefs, [
             'notify_prayer' => $existing['notify_prayer'],
             'notify_hajj' => $existing['notify_hajj'],
             'notify_news' => $existing['notify_news'],
             'theme' => $existing['theme'],
-        ];
+        ]);
         $user->save();
 
         $request->session()->put('locale', $user->locale);

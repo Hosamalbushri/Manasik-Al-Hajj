@@ -4,25 +4,6 @@
     </x-slot>
 
     <div class="admin-login-page-hajj">
-        <a
-            href="{{ url('/') }}"
-            class="back-to-site"
-        >
-            @if (in_array(app()->getLocale(), ['fa', 'ar'], true))
-                <span
-                    class="icon-right-arrow"
-                    aria-hidden="true"
-                ></span>
-            @else
-                <span
-                    class="icon-left-arrow"
-                    aria-hidden="true"
-                ></span>
-            @endif
-
-            <span>@lang('admin::app.users.login.back-to-site')</span>
-        </a>
-
         <div class="login-container">
             <div class="login-card">
                 {!! view_render_event('admin.sessions.reset-password.form_controls.before') !!}

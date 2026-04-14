@@ -12,6 +12,9 @@
     <p class="hajj-auth-form-sub">{{ __('web::hajj_auth.login-form.form-login-text') }}</p>
 
     <x-web::form :action="route('hajj.session.store')">
+        @if (! empty($loginRedirect))
+            <input type="hidden" name="redirect" value="{{ $loginRedirect }}">
+        @endif
         <x-web::form.control-group class="input-group">
             <x-web::form.control-group.label class="hajj-auth-sr-only">
                 {{ __('web::hajj_auth.login-form.email') }}
@@ -64,21 +67,6 @@
 
         <button type="submit" class="submit-btn">{{ __('web::hajj_auth.login-form.button-title') }}</button>
     </x-web::form>
-
-    <div class="divider">
-        <div class="divider-line" aria-hidden="true"></div>
-        <span>{{ __('web::hajj_auth.auth-shell.or') }}</span>
-        <div class="divider-line" aria-hidden="true"></div>
-    </div>
-
-    <div class="social-buttons">
-        <button type="button" class="social-btn" data-hajj-social="google">
-            <i class="fab fa-google" aria-hidden="true"></i> {{ __('web::hajj_auth.auth-shell.social_google') }}
-        </button>
-        <button type="button" class="social-btn" data-hajj-social="facebook">
-            <i class="fab fa-facebook-f" aria-hidden="true"></i> {{ __('web::hajj_auth.auth-shell.social_facebook') }}
-        </button>
-    </div>
 
     <p class="hajj-auth-outro">
         {{ __('web::hajj_auth.login-form.new-customer') }}

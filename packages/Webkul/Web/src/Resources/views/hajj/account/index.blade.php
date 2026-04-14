@@ -88,7 +88,7 @@
                         </div>
                         <div class="hajj-acc2-stat">
                             <dt>{{ __('web::hajj_account.sidebar_rituals_stat') }}</dt>
-                            <dd>{{ __('web::hajj_account.sidebar_rituals_placeholder') }}</dd>
+                            <dd>{{ (int) ($hajjUser->manasik_guide_completions_count ?? 0) }}</dd>
                         </div>
                         <div class="hajj-acc2-stat">
                             <dt>{{ __('web::hajj_account.sidebar_favorites_count') }}</dt>

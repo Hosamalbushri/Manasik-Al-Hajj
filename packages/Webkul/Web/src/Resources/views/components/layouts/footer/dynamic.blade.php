@@ -1,9 +1,12 @@
 @props(['opts' => []])
 
 @php
+    use Illuminate\Support\Facades\Route;
     use Illuminate\Support\Facades\Storage;
+    use Webkul\Web\Support\WebCoreStoreBranding;
 
     $o = is_array($opts) ? $opts : [];
+    $webHomeUrl = Route::has('web.home.index') ? route('web.home.index') : url('/');
     $ufId = 'webuf-' . \Illuminate\Support\Str::random(8);
     $isRtl = in_array(app()->getLocale(), ['ar', 'fa'], true);
     $chev = $isRtl ? 'fa-chevron-left' : 'fa-chevron-right';
@@ -38,6 +41,9 @@
         if ($pub !== '' && Storage::disk('public')->exists($pub)) {
             $brandLogoUrl = Storage::url($pub);
         }
+    }
+    if ($brandLogoUrl === '') {
+        $brandLogoUrl = WebCoreStoreBranding::storefrontLogoUrl();
     }
 
     $social = is_array($o['social'] ?? null) ? $o['social'] : [];
@@ -118,11 +124,18 @@
                             @if ($showBrandBlock)
                                 <div class="web-uf__logo-pill">
                                     @if ($brandLogoUrl !== '')
-                                        <img
-                                            src="{{ $brandLogoUrl }}"
-                                            alt="{{ $brand['title'] ?: __('web::app.manasik_footer.brand') }}"
-                                            class="web-uf__brand-logo"
+                                        <a
+                                            href="{{ $webHomeUrl }}"
+                                            class="web-uf__brand-logo-link"
+                                            aria-label="{{ __('web::app.components.layouts.header.desktop.bottom.logo-alt') }}"
+                                            title="{{ $webHomeUrl }}"
                                         >
+                                            <img
+                                                src="{{ $brandLogoUrl }}"
+                                                alt="{{ __('web::app.layout.store_logo_alt', ['name' => $brand['title'] ?: config('app.name')]) }}"
+                                                class="web-uf__brand-logo"
+                                            >
+                                        </a>
                                     @else
                                         <i class="{{ $brand['icon'] ?: 'fas fa-kaaba' }}" aria-hidden="true"></i>
                                         <span>{{ $brand['title'] }}</span>

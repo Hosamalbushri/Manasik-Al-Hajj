@@ -11,13 +11,16 @@ use Webkul\Web\Http\Requests\Hajj\LoginRequest;
 
 class SessionController extends Controller
 {
-    public function create(): RedirectResponse|View
+    public function create(Request $request): RedirectResponse|View
     {
         if (Auth::guard('hajj')->check()) {
             return redirect()->route('web.home.index');
         }
 
-        return view('web::hajj.auth.sign-in', ['active' => 'login']);
+        return view('web::hajj.auth.sign-in', [
+            'active' => 'login',
+            'loginRedirect' => $this->safeRedirectPath($request->query('redirect')),
+        ]);
     }
 
     public function store(LoginRequest $request): RedirectResponse
@@ -51,6 +54,11 @@ class SessionController extends Controller
 
         $request->session()->flash('success', trans('web::hajj_auth.login-form.login-success'));
 
+        $to = $this->safeRedirectPath($request->input('redirect'));
+        if ($to !== null) {
+            return redirect()->to($to);
+        }
+
         return redirect()->route('web.home.index');
     }
 
@@ -64,5 +72,21 @@ class SessionController extends Controller
         return redirect()
             ->route('hajj.session.create')
             ->with('success', trans('web::hajj_auth.login-form.logout-success'));
+    }
+
+    private function safeRedirectPath(mixed $value): ?string
+    {
+        if (! is_string($value)) {
+            return null;
+        }
+        $value = trim($value);
+        if ($value === '' || strlen($value) > 512) {
+            return null;
+        }
+        if (! str_starts_with($value, '/') || str_starts_with($value, '//')) {
+            return null;
+        }
+
+        return $value;
     }
 }

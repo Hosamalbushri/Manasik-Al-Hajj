@@ -1047,16 +1047,10 @@ function initHajjAuthPage() {
         return;
     }
     const msgForgot = document.body.getAttribute('data-hajj-forgot-msg') || '';
-    const msgSocial = document.body.getAttribute('data-hajj-social-msg') || '';
 
     document.querySelectorAll('[data-hajj-forgot]').forEach((btn) => {
         btn.addEventListener('click', () => {
             window.alert(msgForgot);
-        });
-    });
-    document.querySelectorAll('[data-hajj-social]').forEach((btn) => {
-        btn.addEventListener('click', () => {
-            window.alert(msgSocial);
         });
     });
     document.querySelectorAll('[data-toggle-pass]').forEach((btn) => {
@@ -1082,6 +1076,407 @@ function initHajjAuthPage() {
     });
 }
 
+function initWebManasikGuide() {
+    const root = document.querySelector('.web-manasik-guide');
+    if (!root) {
+        return;
+    }
+
+    const storageKey = root.getAttribute('data-storage-key') || 'web_manasik_rituals_v1';
+    const n = parseInt(root.getAttribute('data-step-count') || '0', 10);
+    if (!Number.isFinite(n) || n <= 0) {
+        return;
+    }
+
+    let ui = {};
+    let enc = [];
+    try {
+        ui = JSON.parse(root.getAttribute('data-i18n-ui') || '{}');
+    } catch (e) {
+        ui = {};
+    }
+    try {
+        enc = JSON.parse(root.getAttribute('data-i18n-encouragement') || '[]');
+    } catch (e) {
+        enc = [];
+    }
+
+    const hajjAuth = root.getAttribute('data-hajj-auth') === '1';
+    const saveProgressUrl = (root.getAttribute('data-save-progress-url') || '').trim();
+    const guestCompletionUrl = (root.getAttribute('data-guest-completion-url') || '').trim();
+    let serverProgress = null;
+    try {
+        const spRaw = root.getAttribute('data-server-progress');
+        if (spRaw && spRaw !== 'null' && spRaw !== '') {
+            serverProgress = JSON.parse(spRaw);
+        }
+    } catch (e) {
+        serverProgress = null;
+    }
+
+    let completed = new Array(n).fill(false);
+    let loadedFromServer = false;
+    if (hajjAuth && serverProgress && Array.isArray(serverProgress.completed) && serverProgress.completed.length === n) {
+        completed = serverProgress.completed.map((v) => !!v);
+        loadedFromServer = true;
+    }
+    if (!loadedFromServer) {
+        try {
+            const raw = localStorage.getItem(storageKey);
+            if (raw) {
+                const p = JSON.parse(raw);
+                if (Array.isArray(p) && p.length === n) {
+                    completed = p.map((v) => !!v);
+                }
+            }
+        } catch (e) {
+            completed = new Array(n).fill(false);
+        }
+    }
+
+    let activeIndex = 0;
+    if (hajjAuth && serverProgress && serverProgress.active_index !== undefined && serverProgress.active_index !== null) {
+        const ai = parseInt(String(serverProgress.active_index), 10);
+        if (Number.isFinite(ai)) {
+            activeIndex = Math.min(Math.max(0, ai), n - 1);
+        }
+    }
+
+    const pills = root.querySelectorAll('[data-manasik-step]');
+    const cards = root.querySelectorAll('[data-manasik-card]');
+    const percentEl = root.querySelector('[data-manasik-percent]');
+    const barEl = root.querySelector('[data-manasik-bar]');
+    const encEl = root.querySelector('[data-manasik-encouragement]');
+    const prevBtn = root.querySelector('[data-manasik-prev]');
+    const nextBtn = root.querySelector('[data-manasik-next]');
+    const resetBtn = root.querySelector('[data-manasik-reset]');
+    const stepMetaEl = root.querySelector('[data-manasik-step-meta]');
+
+    function canAccessStep(j) {
+        if (j < 0 || j >= n) {
+            return false;
+        }
+        for (let k = 0; k < j; k += 1) {
+            if (!completed[k]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function maxAccessibleIndex() {
+        for (let i = 0; i < n; i += 1) {
+            if (!completed[i]) {
+                return i;
+            }
+        }
+        return n - 1;
+    }
+
+    function scrollPillIntoView(idx) {
+        const pill = root.querySelector(`[data-manasik-step="${idx}"]`);
+        if (!pill || pill.hasAttribute('hidden')) {
+            return;
+        }
+        pill.scrollIntoView({ block: 'nearest', behavior: 'smooth', inline: 'nearest' });
+    }
+
+    function escapeHtml(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    function updateEncouragement() {
+        const done = completed.filter(Boolean).length;
+        const pct = n ? Math.round((done / n) * 100) : 0;
+        let mi = 0;
+        if (pct >= 100) {
+            mi = 3;
+        } else if (pct >= 66) {
+            mi = 2;
+        } else if (pct >= 33) {
+            mi = 1;
+        }
+        const msg = enc[mi] || enc[0] || '';
+        if (encEl) {
+            encEl.innerHTML = `<p><i class="fas fa-star-of-life" aria-hidden="true"></i> ${escapeHtml(msg)}</p>`;
+        }
+    }
+
+    function showManasikToast(message) {
+        if (!message) {
+            return;
+        }
+        const t = document.createElement('div');
+        t.className = 'web-manasik-guide__toast';
+        t.setAttribute('role', 'status');
+        t.textContent = message;
+        t.style.cssText =
+            'position:fixed;bottom:max(20px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);'
+            + 'background:var(--shop-primary,#1a3a2a);color:var(--shop-badge-color,#d4af37);'
+            + 'padding:0.75rem 1.35rem;border-radius:50px;z-index:2000;font-size:0.88rem;font-weight:600;'
+            + 'box-shadow:0 8px 24px rgba(0,0,0,.15);font-family:var(--shop-font-sans,inherit)';
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2200);
+    }
+
+    function fallbackCopyText(text, onOk, onFail) {
+        try {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.setAttribute('readonly', '');
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            const ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            if (ok) {
+                onOk();
+            } else {
+                onFail();
+            }
+        } catch (err) {
+            onFail();
+        }
+    }
+
+    function getManasikCsrfToken() {
+        const m = document.querySelector('meta[name="csrf-token"]');
+        return m ? m.getAttribute('content') || '' : '';
+    }
+
+    let manasikServerSaveTimer = null;
+    function scheduleManasikServerSave() {
+        if (!hajjAuth || !saveProgressUrl) {
+            return;
+        }
+        clearTimeout(manasikServerSaveTimer);
+        manasikServerSaveTimer = setTimeout(() => {
+            const token = getManasikCsrfToken();
+            if (!token) {
+                return;
+            }
+            fetch(saveProgressUrl, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({
+                    step_count: n,
+                    completed,
+                    active_index: activeIndex,
+                }),
+                credentials: 'same-origin',
+            })
+                .then((r) => {
+                    if (!r.ok) {
+                        throw new Error('save failed');
+                    }
+                })
+                .catch(() => {
+                    const errMsg = ui.toast_sync_failed || '';
+                    if (errMsg) {
+                        showManasikToast(errMsg);
+                    }
+                });
+        }, 450);
+    }
+
+    let prevAllDone = n > 0 && completed.every(Boolean);
+
+    function updateUI() {
+        const maxAcc = maxAccessibleIndex();
+        if (activeIndex > maxAcc) {
+            activeIndex = maxAcc;
+        }
+
+        const done = completed.filter(Boolean).length;
+        const pct = n ? Math.round((done / n) * 100) : 0;
+        if (percentEl) {
+            percentEl.textContent = `${pct}%`;
+        }
+        if (barEl) {
+            barEl.style.width = `${pct}%`;
+        }
+
+        cards.forEach((card, i) => {
+            card.classList.toggle('is-done', !!completed[i]);
+            if (i === activeIndex) {
+                card.removeAttribute('hidden');
+            } else {
+                card.setAttribute('hidden', '');
+            }
+        });
+
+        pills.forEach((pill, i) => {
+            pill.removeAttribute('hidden');
+            pill.removeAttribute('aria-hidden');
+
+            const unlocked = canAccessStep(i);
+            pill.disabled = !unlocked;
+            pill.classList.toggle('is-done', !!completed[i]);
+            pill.classList.toggle('is-active', i === activeIndex);
+            pill.classList.toggle('is-locked', !unlocked);
+            pill.classList.toggle('is-window-last', i === n - 1);
+            pill.setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
+            pill.setAttribute('aria-disabled', unlocked ? 'false' : 'true');
+        });
+
+        if (prevBtn) {
+            prevBtn.disabled = activeIndex <= 0;
+        }
+        if (nextBtn) {
+            const atLast = activeIndex >= n - 1;
+            const needComplete = !completed[activeIndex];
+            nextBtn.disabled = atLast || needComplete;
+        }
+
+        if (stepMetaEl) {
+            const tpl = ui.step_meta || '';
+            if (tpl) {
+                stepMetaEl.textContent = tpl
+                    .replace(/\{\{current\}\}/g, String(activeIndex + 1))
+                    .replace(/\{\{total\}\}/g, String(n));
+            }
+        }
+
+        root.querySelectorAll('[data-manasik-toggle]').forEach((btn) => {
+            const idx = parseInt(btn.getAttribute('data-manasik-toggle') || '0', 10);
+            const doneLabel = ui.mark_complete_done || ui.mark_complete || '';
+            const openLabel = ui.mark_complete || '';
+            btn.textContent = completed[idx] ? doneLabel : openLabel;
+        });
+
+        updateEncouragement();
+        try {
+            localStorage.setItem(storageKey, JSON.stringify(completed));
+        } catch (e) {
+            /* ignore quota */
+        }
+
+        const allDoneNow = n > 0 && completed.every(Boolean);
+        if (allDoneNow && !prevAllDone && !hajjAuth && guestCompletionUrl) {
+            const guestToken = getManasikCsrfToken();
+            if (guestToken) {
+                fetch(guestCompletionUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        'X-CSRF-TOKEN': guestToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ step_count: n, completed }),
+                    credentials: 'same-origin',
+                }).catch(() => {});
+            }
+        }
+        prevAllDone = allDoneNow;
+
+        scheduleManasikServerSave();
+    }
+
+    function goToStep(idx) {
+        if (idx < 0 || idx >= n) {
+            return;
+        }
+        if (!canAccessStep(idx)) {
+            showManasikToast(ui.step_locked || '');
+            return;
+        }
+        activeIndex = idx;
+        updateUI();
+        scrollPillIntoView(idx);
+    }
+
+    pills.forEach((pill) => {
+        pill.addEventListener('click', () => {
+            const idx = parseInt(pill.getAttribute('data-manasik-step') || '0', 10);
+            goToStep(idx);
+        });
+    });
+
+    root.querySelectorAll('[data-manasik-toggle]').forEach((btn) => {
+        btn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            const idx = parseInt(btn.getAttribute('data-manasik-toggle') || '0', 10);
+            if (idx < 0 || idx >= n) {
+                return;
+            }
+            completed[idx] = !completed[idx];
+            updateUI();
+            scrollPillIntoView(idx);
+        });
+    });
+
+    root.querySelectorAll('[data-manasik-copy]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-manasik-copy');
+            const el = id ? document.getElementById(id) : null;
+            const text = el ? el.textContent.trim() : '';
+            const okMsg = ui.toast_copied || '';
+            const badMsg = ui.toast_copy_failed || '';
+            if (!text) {
+                return;
+            }
+            const onOk = () => showManasikToast(okMsg);
+            const onFail = () => {
+                if (badMsg) {
+                    window.alert(badMsg);
+                }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(onOk).catch(() => {
+                    fallbackCopyText(text, onOk, onFail);
+                });
+            } else {
+                fallbackCopyText(text, onOk, onFail);
+            }
+        });
+    });
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => goToStep(activeIndex - 1));
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (activeIndex >= n - 1 || !completed[activeIndex]) {
+                return;
+            }
+            goToStep(activeIndex + 1);
+        });
+    }
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            const msg = ui.reset_confirm || 'Reset progress?';
+            if (!window.confirm(msg)) {
+                return;
+            }
+            completed = new Array(n).fill(false);
+            activeIndex = 0;
+            updateUI();
+            goToStep(0);
+        });
+    }
+
+    const guestHint = root.querySelector('[data-manasik-guest-hint]');
+    if (guestHint) {
+        guestHint.querySelector('[data-manasik-guest-dismiss]')?.addEventListener('click', () => {
+            guestHint.setAttribute('hidden', '');
+        });
+    }
+
+    activeIndex = Math.min(activeIndex, maxAccessibleIndex());
+
+    updateUI();
+    requestAnimationFrame(() => scrollPillIntoView(activeIndex));
+}
+
 function bootWebPackageUi() {
     initWebModalConfirm();
     initNavbar();
@@ -1093,6 +1488,7 @@ function bootWebPackageUi() {
     initFlashMessages();
     initHeroSlider();
     initWebPrayerTimes();
+    initWebManasikGuide();
     initHajjAuthPage();
     initHajjAccountPage();
 }

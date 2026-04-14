@@ -1,5 +1,12 @@
 @php
+    use Illuminate\Support\Facades\Route;
+    use Illuminate\Support\Facades\Storage;
+    use Webkul\Web\Support\WebCoreStoreBranding;
+
     $activeTab = isset($active) && $active === 'register' ? 'register' : 'login';
+    $storefrontLogoUrl = WebCoreStoreBranding::storefrontLogoUrl();
+    $storefrontFaviconPath = WebCoreStoreBranding::storefrontFaviconStoragePath();
+    $webHomeUrl = Route::has('web.home.index') ? route('web.home.index') : url('/');
 @endphp
 
 <!DOCTYPE html>
@@ -13,6 +20,14 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>@yield('title')</title>
+
+        @if ($storefrontFaviconPath !== '')
+            <link
+                rel="icon"
+                href="{{ Storage::url($storefrontFaviconPath) }}"
+                sizes="32x32"
+            >
+        @endif
 
         @stack('meta')
 
@@ -31,7 +46,6 @@
     <body
         class="hajj-auth-page"
         data-hajj-forgot-msg="{{ e(__('web::hajj_auth.auth-shell.forgot_soon')) }}"
-        data-hajj-social-msg="{{ e(__('web::hajj_auth.auth-shell.social_soon')) }}"
     >
         <x-web::flash-group />
 
@@ -41,40 +55,38 @@
         <div class="orb orb-2" aria-hidden="true"></div>
         <div class="orb orb-3" aria-hidden="true"></div>
 
-        <div class="hajj-auth-topbar">
-            <a href="{{ route('web.home.index') }}" class="hajj-auth-home-link">
-                <i class="fas fa-house hajj-auth-home-link__icon" aria-hidden="true"></i>
-                {{ __('web::hajj_auth.auth-shell.back-home') }}
-            </a>
-        </div>
-
         <div class="auth-container">
             <div class="auth-card">
                 <div class="auth-welcome">
                     <div class="welcome-content">
-                        <div class="welcome-icon" aria-hidden="true">
-                            <i class="fas fa-kaaba"></i>
-                        </div>
-                        <h1 class="welcome-title">
-                            {{ __('web::hajj_auth.auth-shell.welcome_lead') }}
-                            <span>{{ __('web::hajj_auth.auth-shell.welcome_brand') }}</span>
-                        </h1>
+                        @if ($storefrontLogoUrl !== '')
+                            <a
+                                href="{{ $webHomeUrl }}"
+                                class="welcome-brand-link"
+                                aria-label="{{ __('web::app.components.layouts.header.desktop.bottom.logo-alt') }}"
+                                title="{{ $webHomeUrl }}"
+                            >
+                                <img
+                                    src="{{ $storefrontLogoUrl }}"
+                                    alt="{{ __('web::app.layout.store_logo_alt', ['name' => config('app.name')]) }}"
+                                    class="welcome-brand-logo"
+                                >
+                            </a>
+                            <h1 class="hajj-auth-sr-only">
+                                {{ __('web::hajj_auth.auth-shell.welcome_lead') }}
+                                {{ __('web::hajj_auth.auth-shell.welcome_brand') }}
+                            </h1>
+                        @else
+                            <div class="welcome-icon" aria-hidden="true">
+                                <i class="fas fa-kaaba"></i>
+                            </div>
+                            <h1 class="welcome-title">
+                                {{ __('web::hajj_auth.auth-shell.welcome_lead') }}
+                                <span>{{ __('web::hajj_auth.auth-shell.welcome_brand') }}</span>
+                            </h1>
+                        @endif
                         <div class="welcome-divider" aria-hidden="true"></div>
                         <p class="welcome-text">{{ __('web::hajj_auth.auth-shell.welcome_text') }}</p>
-                        <div class="stats" aria-hidden="true">
-                            <div class="stat">
-                                <div class="stat-number">+150K</div>
-                                <div class="stat-label">{{ __('web::hajj_auth.auth-shell.stat_pilgrims') }}</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-number">10+</div>
-                                <div class="stat-label">{{ __('web::hajj_auth.auth-shell.stat_languages') }}</div>
-                            </div>
-                            <div class="stat">
-                                <div class="stat-number">24/7</div>
-                                <div class="stat-label">{{ __('web::hajj_auth.auth-shell.stat_support') }}</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 

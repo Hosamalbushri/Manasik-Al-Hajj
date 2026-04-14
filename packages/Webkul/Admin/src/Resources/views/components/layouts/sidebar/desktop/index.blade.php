@@ -45,6 +45,10 @@
                                                     href="{{ $subMenuItem->getUrl() }}"
                                                     class="flex gap-2.5 p-2 items-center cursor-pointer hover:rounded-lg {{ $subMenuItem->isActive() == 'active' ? 'bg-brandColor rounded-lg' : ' hover:bg-gray-100 hover:dark:bg-gray-950' }} peer"
                                                 >
+                                                    @if ($subMenuItem->getIcon())
+                                                        <span class="{{ $subMenuItem->getIcon() }} shrink-0 text-xl text-gray-500 dark:text-gray-400 {{ $subMenuItem->isActive() ? 'text-white dark:!text-white' : '' }}"></span>
+                                                    @endif
+
                                                     <p class="text-gray-600 dark:text-gray-300 font-medium whitespace-nowrap {{ $subMenuItem->isActive() ? 'text-white' : ''}}">
                                                         {{ core()->getConfigData('general.settings.menu.'.$subMenuItem->getKey()) ?? $subMenuItem->getName() }}
                                                     </p>

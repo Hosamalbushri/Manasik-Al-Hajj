@@ -418,7 +418,7 @@ class WebThemeDefaultsSeeder extends Seeder
             'nav_secondary' => [],
             'nav'           => [
                 ['label' => $this->t('seeders.web-theme.header.nav.home', $locale, 'Home'), 'url' => '/', 'icon' => ''],
-                ['label' => $this->t('seeders.web-theme.header.nav.services', $locale, 'Services'), 'url' => '#services', 'icon' => ''],
+                ['label' => $this->t('seeders.web-theme.header.nav.services', $locale, 'Services'), 'url' => '/manasik', 'icon' => ''],
                 ['label' => $this->t('seeders.web-theme.header.nav.maps', $locale, 'Maps'), 'url' => '/maps', 'icon' => ''],
                 ['label' => $this->t('seeders.web-theme.header.nav.adhkar', $locale, 'Dhikr & duas'), 'url' => '/adhkar', 'icon' => ''],
             ],
@@ -473,7 +473,7 @@ class WebThemeDefaultsSeeder extends Seeder
                 'show_chevron' => true,
                 'links'        => [
                     ['label' => $this->t('seeders.web-theme.header.nav.home', $locale, 'Home'), 'url' => '/'],
-                    ['label' => $this->t('seeders.web-theme.header.nav.services', $locale, 'Services'), 'url' => '#'],
+                    ['label' => $this->t('seeders.web-theme.header.nav.services', $locale, 'Services'), 'url' => '/manasik'],
                     ['label' => $this->t('seeders.web-theme.header.nav.maps', $locale, 'Maps'), 'url' => '/maps'],
                     ['label' => $this->t('seeders.web-theme.header.nav.adhkar', $locale, 'Dhikr & duas'), 'url' => '/adhkar'],
                 ],

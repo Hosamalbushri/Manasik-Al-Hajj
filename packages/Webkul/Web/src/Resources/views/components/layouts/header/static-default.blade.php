@@ -1,4 +1,9 @@
 @php
+    use Illuminate\Support\Facades\Route;
+    use Webkul\Web\Support\WebCoreStoreBranding;
+
+    $coreStoreLogoUrl = WebCoreStoreBranding::storefrontLogoUrl();
+    $webHomeUrl = Route::has('web.home.index') ? route('web.home.index') : url('/');
     $hajjLoginUrl = '';
     $hajjLoginLabel = __('web::app.header.login');
     if (auth()->guard('hajj')->check() && \Illuminate\Support\Facades\Route::has('hajj.account.index')) {
@@ -9,7 +14,7 @@
     }
     $navItems = [
         ['label' => 'الرئيسية', 'icon' => 'fas fa-home', 'url' => route('web.home.index')],
-        ['label' => 'المناسك', 'icon' => 'fas fa-hands-praying', 'url' => '#'],
+        ['label' => 'المناسك', 'icon' => 'fas fa-hands-praying', 'url' => \Illuminate\Support\Facades\Route::has('web.manasik.index') ? route('web.manasik.index') : '/manasik'],
         ['label' => 'الخرائط', 'icon' => 'fas fa-map-marked-alt', 'url' => \Illuminate\Support\Facades\Route::has('web.maps.index') ? route('web.maps.index') : '/maps'],
         ['label' => 'الأذكار والأدعية', 'icon' => 'fas fa-hands-praying', 'url' => \Illuminate\Support\Facades\Route::has('web.adhkar.index') ? route('web.adhkar.index') : '/adhkar'],
         ['label' => 'الدعم', 'icon' => 'fas fa-phone-alt', 'url' => '#'],
@@ -26,12 +31,25 @@
     <div class="web-hajj-navbar__backdrop" aria-hidden="true"></div>
     <div class="nav-container">
         <div class="nav-brand-zone">
-            <a href="{{ route('web.home.index') }}" class="logo">
-                <i class="fas fa-kaaba logo-icon"></i>
-                <div>
-                    <span class="logo-text">مناسك الحج</span>
-                    <span class="logo-sub">| حج مبرور</span>
-                </div>
+            <a
+                href="{{ $webHomeUrl }}"
+                class="logo"
+                aria-label="{{ __('web::app.components.layouts.header.desktop.bottom.logo-alt') }}"
+                title="{{ $webHomeUrl }}"
+            >
+                @if ($coreStoreLogoUrl !== '')
+                    <img
+                        src="{{ $coreStoreLogoUrl }}"
+                        alt="{{ __('web::app.layout.store_logo_alt', ['name' => config('app.name')]) }}"
+                        class="header-brand-logo max-h-10 w-auto max-w-[200px] object-contain object-left"
+                    >
+                @else
+                    <i class="fas fa-kaaba logo-icon"></i>
+                    <div>
+                        <span class="logo-text">مناسك الحج</span>
+                        <span class="logo-sub">| حج مبرور</span>
+                    </div>
+                @endif
             </a>
         </div>
 

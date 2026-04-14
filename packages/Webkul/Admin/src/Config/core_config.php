@@ -129,113 +129,12 @@ return [
                 'title' => 'admin::app.configuration.index.general.store.web-logo.section-divider-gradient-to',
                 'type' => 'color',
                 'default' => '#0d2a1a',
-            ], [
-                'name' => 'header_middle_logo',
-                'title' => 'admin::app.configuration.index.general.store.web-logo.header-middle-logo',
-                'type' => 'image',
-                'channel_based' => false,
-                'validation' => 'mimes:bmp,jpeg,jpg,png,webp,svg',
-            ],
+            ]
         ],
-    ], [
-        'key' => 'general.store.hajj_auth',
-        'name' => 'admin::app.configuration.index.general.store.hajj-auth.title',
-        'info' => 'admin::app.configuration.index.general.store.hajj-auth.info',
-        'icon' => 'icon-configuration',
-        'sort' => 2,
-    ], [
-        'key' => 'general.store.hajj_auth.register',
-        'name' => 'admin::app.configuration.index.general.store.hajj-auth.register.title',
-        'info' => 'admin::app.configuration.index.general.store.hajj-auth.register.info',
-        'sort' => 1,
-        'fields' => [
-            [
-                'name' => 'meta_description',
-                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.meta-description',
-                'type' => 'textarea',
-                'validation' => 'max:1000',
-            ], [
-                'name' => 'meta_keywords',
-                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.meta-keywords',
-                'type' => 'text',
-                'validation' => 'max:255',
-            ], [
-                'name' => 'newsletter_subscription',
-                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.newsletter-subscription',
-                'type' => 'boolean',
-                'default' => false,
-            ], [
-                'name' => 'gdpr_enabled',
-                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.gdpr-enabled',
-                'type' => 'boolean',
-                'default' => false,
-            ], [
-                'name' => 'gdpr_agreement_enabled',
-                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.gdpr-agreement-enabled',
-                'type' => 'boolean',
-                'default' => false,
-            ], [
-                'name' => 'gdpr_agreement_label',
-                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.gdpr-agreement-label',
-                'type' => 'textarea',
-                'validation' => 'max:2000',
-            ], [
-                'name' => 'gdpr_agreement_content',
-                'title' => 'admin::app.configuration.index.general.store.hajj-auth.register.gdpr-agreement-content',
-                'type' => 'editor',
-                'tinymce' => true,
-            ],
-        ],
-    ], [
-        'key' => 'general.store.navigation',
-        'name' => 'admin::app.configuration.index.general.store.navigation.title',
-        'info' => 'admin::app.configuration.index.general.store.navigation.title-info',
-        'sort' => 3,
-        'fields' => [
-            [
-                'name' => 'show_home',
-                'title' => 'admin::app.configuration.index.general.store.navigation.show-home',
-                'type' => 'boolean',
-                'default' => true,
-            ], [
-                'name' => 'home_label',
-                'title' => 'admin::app.configuration.index.general.store.navigation.home-label',
-                'type' => 'text',
-                'default' => 'Home',
-                'validation' => 'max:100',
-            ], [
-                'name' => 'custom_1_enabled',
-                'title' => 'admin::app.configuration.index.general.store.navigation.custom-1-enabled',
-                'type' => 'boolean',
-                'default' => false,
-            ], [
-                'name' => 'custom_1_label',
-                'title' => 'admin::app.configuration.index.general.store.navigation.custom-1-label',
-                'type' => 'text',
-                'validation' => 'max:100',
-            ], [
-                'name' => 'custom_1_url',
-                'title' => 'admin::app.configuration.index.general.store.navigation.custom-1-url',
-                'type' => 'text',
-                'validation' => 'max:500',
-            ], [
-                'name' => 'custom_2_enabled',
-                'title' => 'admin::app.configuration.index.general.store.navigation.custom-2-enabled',
-                'type' => 'boolean',
-                'default' => false,
-            ], [
-                'name' => 'custom_2_label',
-                'title' => 'admin::app.configuration.index.general.store.navigation.custom-2-label',
-                'type' => 'text',
-                'validation' => 'max:100',
-            ], [
-                'name' => 'custom_2_url',
-                'title' => 'admin::app.configuration.index.general.store.navigation.custom-2-url',
-                'type' => 'text',
-                'validation' => 'max:500',
-            ],
-        ],
-    ], [
+    ]
+    ,
+
+   [
         'key' => 'general.settings',
         'name' => 'admin::app.configuration.index.general.settings.title',
         'info' => 'admin::app.configuration.index.general.settings.info',

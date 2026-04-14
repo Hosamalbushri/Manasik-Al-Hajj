@@ -659,6 +659,18 @@ img.lazy {
         --web-nav-muted: #6b7280;
         --web-nav-border: color-mix(in srgb, var(--web-nav-primary) 28%, white);
         --web-nav-icon: color-mix(in srgb, var(--web-nav-primary) 72%, #2d4a38);
+        /* Sticky bars below navbar (e.g. Manasik tabs): approximate bar height + padding */
+        --web-hajj-sticky-offset: 4.35rem;
+    }
+    @media (max-width: 950px) {
+        :root {
+            --web-hajj-sticky-offset: 3.95rem;
+        }
+    }
+    @media (max-width: 550px) {
+        :root {
+            --web-hajj-sticky-offset: 3.75rem;
+        }
     }
     .web-hajj-navbar, .web-hajj-navbar * { box-sizing: border-box; }
     .web-hajj-navbar {
@@ -2923,8 +2935,10 @@ img.lazy {
     }
     .web-adhkar-ui .web-adhkar-btn-fav {
         flex-shrink: 0;
+        width: 3rem;
+        min-width: 3rem;
         min-height: 3rem;
-        padding: 0.65rem 0.9rem;
+        padding: 0;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -2932,11 +2946,43 @@ img.lazy {
         border-radius: 0.65rem;
         background: #fff;
         color: var(--adhkar-forest-mid);
-        font-size: 0.8125rem;
-        font-weight: 600;
         font-family: inherit;
         cursor: pointer;
         transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+    .web-adhkar-ui .web-adhkar-btn-fav__icons {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.35rem;
+        height: 1.35rem;
+    }
+    .web-adhkar-ui .web-adhkar-btn-fav__icon {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        font-size: 1.2rem;
+        line-height: 1;
+        width: 1em;
+        height: 1em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .web-adhkar-ui .web-adhkar-btn-fav__icon--on {
+        opacity: 0;
+        transform: scale(0.88);
+        color: #b71c1c;
+    }
+    .web-adhkar-ui .web-adhkar-btn-fav.is-saved .web-adhkar-btn-fav__icon--off {
+        opacity: 0;
+        transform: scale(0.88);
+    }
+    .web-adhkar-ui .web-adhkar-btn-fav.is-saved .web-adhkar-btn-fav__icon--on {
+        opacity: 1;
+        transform: scale(1);
     }
     .web-adhkar-ui .web-adhkar-btn-fav:hover {
         background: color-mix(in srgb, var(--adhkar-gold) 14%, white);
@@ -3151,6 +3197,19 @@ img.lazy {
     }
     .web-uf__logo-pill i { font-size: 1.75rem; color: var(--web-uf-primary); }
     .web-uf__logo-pill span { font-size: 1.35rem; font-weight: 700; color: #f5efdf; letter-spacing: -0.5px; }
+    .web-uf__brand-logo-link {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .web-uf__brand-logo-link:focus-visible {
+        outline: 2px solid var(--web-uf-primary, #d4af37);
+        outline-offset: 3px;
+        border-radius: 6px;
+    }
+
     .web-uf__logo-pill img.web-uf__brand-logo {
         max-height: 2.25rem;
         width: auto;
@@ -3413,15 +3472,6 @@ img.lazy {
     66% { transform: translate(-20px, 20px) scale(0.95); }
 }
 
-.hajj-auth-page .hajj-auth-topbar {
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto 0.35rem;
-    padding: 0 2rem;
-    position: relative;
-    z-index: 10;
-}
-
 .hajj-auth-page .auth-container {
     width: 100%;
     max-width: 1100px;
@@ -3455,12 +3505,40 @@ img.lazy {
 .hajj-auth-page .welcome-content {
     position: relative;
     z-index: 2;
+    text-align: center;
 }
 
 .hajj-auth-page .welcome-icon {
     font-size: 3.5rem;
     color: #d4af37;
     margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.hajj-auth-page .welcome-brand-link {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.hajj-auth-page .welcome-brand-link:focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+.hajj-auth-page .welcome-brand-logo {
+    display: block;
+    max-height: 5rem;
+    max-width: min(280px, 100%);
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }
 
 .hajj-auth-page .welcome-title {
@@ -3469,6 +3547,8 @@ img.lazy {
     color: white;
     margin-bottom: 0.8rem;
     letter-spacing: -0.5px;
+    margin-inline: auto;
+    max-width: 22rem;
 }
 
 .hajj-auth-page .welcome-title span {
@@ -3479,7 +3559,7 @@ img.lazy {
     width: 60px;
     height: 3px;
     background: linear-gradient(90deg, #d4af37, transparent);
-    margin: 1rem 0;
+    margin: 1rem auto;
 }
 
 .hajj-auth-page .welcome-text {
@@ -3487,28 +3567,8 @@ img.lazy {
     line-height: 1.7;
     font-size: 0.9rem;
     margin-bottom: 2rem;
-}
-
-.hajj-auth-page .stats {
-    display: flex;
-    gap: 2rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-}
-
-.hajj-auth-page .stat {
-    text-align: center;
-}
-
-.hajj-auth-page .stat-number {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #d4af37;
-}
-
-.hajj-auth-page .stat-label {
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.5);
+    margin-inline: auto;
+    max-width: 26rem;
 }
 
 .hajj-auth-page .auth-form {
@@ -3667,52 +3727,6 @@ img.lazy {
     box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
 }
 
-.hajj-auth-page .divider {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 1.5rem 0;
-    color: #aaa;
-    font-size: 0.75rem;
-}
-
-.hajj-auth-page .divider-line {
-    flex: 1;
-    height: 1px;
-    background: #eee8e0;
-}
-
-.hajj-auth-page .social-buttons {
-    display: flex;
-    gap: 1rem;
-}
-
-.hajj-auth-page .social-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 0.7rem;
-    border: 1.5px solid #eee8e0;
-    border-radius: 60px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
-    font-size: 0.8rem;
-    color: #1a3a2a;
-}
-
-.hajj-auth-page .social-btn:hover {
-    border-color: #d4af37;
-    background: #fefaf5;
-    transform: translateY(-2px);
-}
-
-.hajj-auth-page .social-btn i.fa-google { color: #db4437; }
-.hajj-auth-page .social-btn i.fa-facebook-f { color: #4267b2; }
-
 .hajj-auth-page .hajj-auth-msg {
     padding: 0.7rem 0.85rem;
     border-radius: 16px;
@@ -3792,22 +3806,6 @@ img.lazy {
     color: rgba(255, 255, 255, 0.45);
 }
 
-.hajj-auth-page .hajj-auth-home-link {
-    display: inline-flex;
-    align-items: center;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.65);
-    text-decoration: none;
-}
-
-.hajj-auth-page .hajj-auth-home-link__icon {
-    margin-inline-end: 0.35rem;
-}
-
-.hajj-auth-page .hajj-auth-home-link:hover {
-    color: #d4af37;
-}
-
 .hajj-auth-page .hajj-gdpr-dialog {
     width: min(100%, 42rem);
     max-height: 90vh;
@@ -3875,13 +3873,6 @@ img.lazy {
     }
     .hajj-auth-page .auth-welcome {
         padding: 2rem;
-        text-align: center;
-    }
-    .hajj-auth-page .welcome-divider {
-        margin: 1rem auto;
-    }
-    .hajj-auth-page .stats {
-        justify-content: center;
     }
 }
 
@@ -3891,9 +3882,6 @@ img.lazy {
     }
     .hajj-auth-page .auth-form {
         padding: 1.5rem;
-    }
-    .hajj-auth-page .social-buttons {
-        flex-direction: column;
     }
     .hajj-auth-page .welcome-title {
         font-size: 1.5rem;
@@ -5287,6 +5275,711 @@ html[data-theme='dark'] .hajj-acc2-btn-logout:hover {
     }
     .hajj-acc2-lang-options {
         justify-content: center;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Hajj rites guide (/manasik) — modern tabs layout */
+/* -------------------------------------------------------------------------- */
+.web-manasik-guide {
+    --ms-gold: var(--portal-gold, #d4af37);
+    --ms-gold-bright: var(--portal-gold-bright, #f3d782);
+    --ms-green: var(--shop-primary, #1a3a2a);
+    --ms-green-deep: color-mix(in srgb, var(--shop-primary, #1a3a2a) 88%, black);
+    --ms-ink: var(--portal-ink, #1a3a2a);
+    --ms-muted: var(--portal-muted, #4a5a4a);
+    --ms-line: color-mix(in srgb, var(--shop-primary) 18%, #ffffff);
+    --ms-parchment: color-mix(in srgb, var(--shop-primary) 5%, #fdfcfa);
+    --ms-shadow: 0 1px 3px color-mix(in srgb, var(--shop-primary) 8%, transparent),
+        0 12px 28px color-mix(in srgb, var(--shop-primary) 14%, transparent);
+    box-sizing: border-box;
+    font-family: var(--shop-font-sans);
+    color: var(--ms-ink);
+    background: #ffffff;
+    width: 100%;
+    padding-bottom: 3rem;
+}
+.web-manasik-guide *,
+.web-manasik-guide *::before,
+.web-manasik-guide *::after {
+    box-sizing: border-box;
+}
+.web-manasik-guide__inner {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+.web-manasik-guide__guest-hint {
+    margin-bottom: 1.1rem;
+    padding: 0.9rem 1.1rem;
+    border-radius: 16px;
+    border: 1px solid color-mix(in srgb, var(--ms-gold) 42%, #e5e0d8);
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--ms-parchment) 90%, #fff) 0%,
+        #fff 100%
+    );
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--shop-primary) 6%, transparent);
+}
+.web-manasik-guide__guest-hint-text {
+    margin: 0 0 0.75rem;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--ms-muted);
+    font-weight: 600;
+    text-align: center;
+}
+.web-manasik-guide__guest-hint-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem 1rem;
+}
+.web-manasik-guide__guest-hint-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0.45rem 1.2rem;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--ms-green-deep);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--ms-gold) 88%, #fff), var(--ms-gold-bright));
+    border: 1px solid color-mix(in srgb, var(--ms-gold) 55%, #b8922a);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--ms-gold) 22%, transparent);
+}
+.web-manasik-guide__guest-hint-link:hover {
+    filter: brightness(1.03);
+}
+.web-manasik-guide__guest-hint-dismiss {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: 1px solid color-mix(in srgb, var(--shop-primary) 18%, #d1d5db);
+    background: #fff;
+    color: var(--ms-ink);
+}
+.web-manasik-guide__guest-hint-dismiss:hover {
+    background: color-mix(in srgb, var(--shop-primary) 6%, #fff);
+}
+.web-manasik-guide__layout {
+    display: grid;
+    gap: 1.5rem;
+}
+.web-manasik-guide__sidebar,
+.web-manasik-guide__main {
+    min-width: 0;
+}
+.web-manasik-guide__sidebar {
+    margin-top: 1.25rem;
+    margin-bottom: 3rem;
+    padding: 0.35rem;
+    border-radius: 1rem;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+    position: static;
+    top: auto;
+    z-index: 1;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
+    border: none;
+}
+.web-manasik-guide__tracker {
+    margin: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+.web-manasik-guide__completion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+    padding: 0;
+}
+.web-manasik-guide__completion-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ms-ink);
+}
+.web-manasik-guide__completion-text i {
+    font-size: 0.9rem;
+    color: var(--ms-gold);
+}
+.web-manasik-guide__completion-percent {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--ms-gold);
+    font-variant-numeric: tabular-nums;
+}
+.web-manasik-guide__tabs-progress {
+    margin: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+}
+.web-manasik-guide__bar-wrap {
+    background: #f0ebe3;
+    border-radius: 30px;
+    height: 6px;
+    overflow: hidden;
+}
+.web-manasik-guide__bar-wrap--tabs {
+    margin-bottom: 0.7rem;
+}
+.web-manasik-guide__bar-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #d4af37, #f5d060);
+    transition: width 0.5s ease;
+}
+.web-manasik-guide__steps-scroll--stack {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 0.35rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--ms-gold) 42%, transparent) transparent;
+    padding-bottom: 2px;
+    scroll-padding-inline: 0.5rem;
+}
+.web-manasik-guide__steps--stack {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem;
+    margin-inline: auto;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    width: max-content;
+    max-width: none;
+    border: none;
+}
+.web-manasik-guide__step {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.35rem;
+    border-radius: 0.65rem;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+    min-width: auto;
+}
+.web-manasik-guide__tab-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: color-mix(in srgb, var(--shop-primary) 88%, black);
+    transition: all 0.3s;
+    white-space: nowrap;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+}
+/* مكتمل: خلفية وحدود خضراء فاتحة */
+.web-manasik-guide__step.is-done:not(.is-active) {
+    background: color-mix(in srgb, #22c55e 16%, #ffffff);
+    border: 1px solid color-mix(in srgb, #22c55e 38%, #e5e7eb);
+    box-shadow: 0 1px 2px color-mix(in srgb, #15803d 12%, transparent);
+}
+.web-manasik-guide__step.is-done:not(.is-active) .web-manasik-guide__tab-title {
+    color: #166534;
+    font-weight: 700;
+}
+.web-manasik-guide__step.is-active {
+    background: linear-gradient(145deg, color-mix(in srgb, var(--shop-primary) 88%, black) 0%, var(--shop-primary) 100%);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--shop-primary) 28%, transparent);
+    border-color: transparent;
+}
+.web-manasik-guide__step.is-active .web-manasik-guide__tab-title {
+    color: #ffffff;
+}
+.web-manasik-guide__step.is-done.is-active .web-manasik-guide__tab-title {
+    font-weight: 800;
+}
+.web-manasik-guide__step.is-locked,
+.web-manasik-guide__step:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.web-manasik-guide__step:not(.is-locked):not(.is-active):hover {
+    background: color-mix(in srgb, var(--shop-primary) 8%, white);
+    color: var(--shop-primary);
+    transform: none;
+}
+.web-manasik-guide__step.is-done:not(.is-active):not(.is-locked):hover {
+    background: color-mix(in srgb, #22c55e 22%, #ffffff);
+    border-color: color-mix(in srgb, #22c55e 45%, #d1d5db);
+}
+.web-manasik-guide__main-head {
+    margin: 0;
+}
+.web-manasik-guide__eyebrow {
+    display: none;
+}
+.web-manasik-guide__step-meta {
+    margin: 0 0 1.25rem;
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--ms-ink);
+}
+.web-manasik-guide__card {
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+.web-manasik-guide__card[hidden] {
+    display: none !important;
+}
+.web-manasik-guide__card-head {
+    background: linear-gradient(135deg, #1a3a2a, #0d2a1a);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.web-manasik-guide__card-num {
+    width: 50px;
+    height: 50px;
+    background: rgba(212, 175, 55, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #d4af37;
+    border: 2px solid rgba(212, 175, 55, 0.5);
+}
+.web-manasik-guide__card-titles {
+    flex: 1;
+    min-width: 0;
+}
+.web-manasik-guide__card-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 0.4rem;
+    line-height: 1.35;
+}
+.web-manasik-guide__card-sub {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    line-height: 1.6;
+}
+.web-manasik-guide__card-badge {
+    background: rgba(212, 175, 55, 0.15);
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    font-size: 0.88rem;
+    color: #d4af37;
+    font-weight: 600;
+    border: none;
+}
+.web-manasik-guide__btn-done {
+    background: linear-gradient(135deg, #d4af37, #f5d060);
+    border: none;
+    color: #1a3a2a;
+    padding: 0.55rem 0.95rem;
+    min-height: 42px;
+    border-radius: 999px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+}
+.web-manasik-guide__card-body {
+    padding: 1.5rem 1.5rem 1.65rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.web-manasik-guide__section {
+    margin: 0;
+    padding: 0;
+}
+.web-manasik-guide__section + .web-manasik-guide__section {
+    margin-top: 1.65rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid color-mix(in srgb, var(--shop-primary) 12%, #e8e4dc);
+}
+.web-manasik-guide__section-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ms-gold) 92%, var(--ms-ink));
+    line-height: 1.35;
+}
+:where([dir="rtl"]) .web-manasik-guide__section-title {
+    letter-spacing: 0.04em;
+}
+.web-manasik-guide__desc {
+    font-size: 1.05rem;
+    line-height: 1.95;
+    color: var(--ms-muted);
+    margin: 0;
+}
+.web-manasik-guide__dua-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
+    gap: 1.1rem;
+    align-items: start;
+}
+.web-manasik-guide__dua-cards--single {
+    grid-template-columns: 1fr;
+    max-width: 42rem;
+}
+.web-manasik-guide__dua-card {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    min-width: 0;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid color-mix(in srgb, var(--shop-primary) 10%, #e8e6e1);
+    box-shadow:
+        0 4px 6px color-mix(in srgb, var(--shop-primary) 5%, transparent),
+        0 14px 32px color-mix(in srgb, var(--shop-primary) 9%, transparent);
+    overflow: hidden;
+    border-top: 3px solid var(--ms-gold);
+}
+.web-manasik-guide__dua-card:has(.web-manasik-guide__dua-card-head) {
+    border-top: none;
+}
+.web-manasik-guide__dua-card-head {
+    margin: 0;
+    padding: 0.7rem 1.1rem;
+    text-align: center;
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--shop-primary) 92%, black) 0%,
+        var(--shop-primary) 48%,
+        color-mix(in srgb, var(--shop-primary) 85%, #0d2818) 100%
+    );
+    border-bottom: 1px solid color-mix(in srgb, var(--ms-gold) 35%, transparent);
+}
+.web-manasik-guide__dua-card-title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.45;
+    color: #fff;
+    text-shadow: 0 1px 2px color-mix(in srgb, black 35%, transparent);
+}
+.web-manasik-guide__dua-card-body {
+    flex: 0 1 auto;
+    padding: 1.1rem 1.2rem 0.25rem;
+    text-align: center;
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--ms-parchment) 55%, #fff) 0%,
+        #fff 100%
+    );
+}
+.web-manasik-guide__dua-text {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 1.08rem;
+    line-height: 2;
+    color: var(--ms-ink);
+    font-weight: 500;
+    font-style: normal;
+    quotes: none;
+    text-align: center;
+}
+.web-manasik-guide__dua-text::before,
+.web-manasik-guide__dua-text::after {
+    content: none;
+}
+.web-manasik-guide__dua-card-foot {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 0;
+    padding: 0.95rem 1.15rem 1.1rem;
+    text-align: center;
+    background: #faf9f7;
+    border-top: 1px solid color-mix(in srgb, var(--shop-primary) 8%, #e5e2dc);
+}
+.web-manasik-guide__dua-ref {
+    /* basis must stay "auto": in a column flex (mobile foot), a rem basis becomes height and leaves a huge gap */
+    flex: 0 1 auto;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: var(--ms-muted);
+    font-style: normal;
+    font-weight: 500;
+    text-align: center;
+}
+.web-manasik-guide__btn-copy {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-inline-start: 0;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--ms-gold) 88%, #fff), var(--ms-gold-bright));
+    border: 1px solid color-mix(in srgb, var(--ms-gold) 55%, #b8922a);
+    padding: 0.5rem 1.15rem;
+    min-height: 42px;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ms-green-deep);
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+    font-family: inherit;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--ms-gold) 22%, transparent);
+}
+.web-manasik-guide__btn-copy:hover {
+    filter: brightness(1.04);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--ms-gold) 35%, transparent);
+}
+.web-manasik-guide__btn-copy:active {
+    transform: scale(0.98);
+}
+.web-manasik-guide__btn-copy:focus-visible {
+    outline: 2px solid var(--ms-green);
+    outline-offset: 2px;
+}
+.web-manasik-guide__info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
+    gap: 1.1rem;
+    align-items: stretch;
+}
+.web-manasik-guide__info-cards--single {
+    grid-template-columns: 1fr;
+    max-width: 42rem;
+}
+.web-manasik-guide__info-card {
+    margin: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background: #ffffff;
+    border: 1px solid color-mix(in srgb, var(--shop-primary) 10%, #e8e6e1);
+    box-shadow:
+        0 4px 6px color-mix(in srgb, var(--shop-primary) 5%, transparent),
+        0 14px 32px color-mix(in srgb, var(--shop-primary) 9%, transparent);
+    overflow: hidden;
+    border-top: 3px solid color-mix(in srgb, var(--ms-gold) 88%, #b8941f);
+}
+.web-manasik-guide__info-card-body {
+    flex: 1 1 auto;
+    margin: 0;
+    padding: 1.05rem 1.15rem 1.15rem;
+    text-align: center;
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--ms-parchment) 40%, #fff) 0%,
+        #fff 100%
+    );
+}
+.web-manasik-guide__info-card-text {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 600;
+    line-height: 1.7;
+    color: var(--ms-ink);
+    text-align: center;
+}
+.web-manasik-guide__below-card {
+    margin-top: 1rem;
+}
+.web-manasik-guide__encouragement { display: none; }
+.web-manasik-guide__encouragement i {
+    color: #d4af37;
+    font-size: 0.8rem;
+}
+.web-manasik-guide__encouragement p {
+    font-size: 0.7rem;
+    color: #1a3a2a;
+    font-weight: 500;
+    margin: 0;
+}
+.web-manasik-guide__nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+.web-manasik-guide__nav-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    flex: 1;
+}
+.web-manasik-guide__nav-btn {
+    background: #1a3a2a;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+    flex: 1;
+    min-height: 44px;
+}
+.web-manasik-guide__nav-btn:hover:not(:disabled) {
+    background: #d4af37;
+    color: #1a3a2a;
+}
+.web-manasik-guide__nav-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 1;
+}
+.web-manasik-guide__nav-btn--ghost {
+    background: #1a3a2a;
+    color: #fff;
+}
+.web-manasik-guide__nav-btn--outline {
+    background: transparent;
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+}
+.web-manasik-guide__nav-btn--outline:hover:not(:disabled) {
+    background: #e74c3c;
+    color: white;
+}
+@media (max-width: 900px) {
+    /* Tabs strip: same frosted white + border/shadow as .web-hajj-navbar (reads as header extension when sticky) */
+    .web-manasik-guide__sidebar {
+        position: sticky;
+        top: calc(env(safe-area-inset-top, 0px) + var(--web-hajj-sticky-offset));
+        z-index: 1090;
+        width: 100vw;
+        max-width: 100vw;
+        margin-inline: calc(50% - 50vw);
+        margin-top: 0;
+        padding: 0.65rem clamp(12px, 1.8vw, 24px) 0.72rem;
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid var(--web-nav-border);
+        background: #ffffff;
+        box-shadow: 0 10px 34px rgba(15, 23, 42, 0.08);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+    .web-manasik-guide .web-manasik-guide__bar-wrap {
+        background: color-mix(in srgb, var(--web-nav-primary) 10%, white);
+    }
+    .web-manasik-guide__steps-scroll--stack {
+        justify-content: flex-start;
+    }
+    .web-manasik-guide__steps--stack {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        margin-inline: 0;
+    }
+    .web-manasik-guide__step {
+        flex: 0 0 auto;
+        padding: 0.62rem 1.15rem;
+    }
+    .web-manasik-guide__tab-title {
+        display: inline !important;
+        font-size: 0.9rem;
+        white-space: nowrap;
+    }
+}
+@media (max-width: 600px) {
+    .web-manasik-guide__card-head {
+        flex-direction: column;
+        text-align: center;
+    }
+    .web-manasik-guide__card-body {
+        padding: 1rem;
+    }
+    .web-manasik-guide__card-title {
+        font-size: 1.35rem;
+    }
+    .web-manasik-guide__desc {
+        font-size: 0.96rem;
+    }
+    .web-manasik-guide__dua-text {
+        font-size: 1.02rem;
+        line-height: 1.9;
+    }
+    .web-manasik-guide__dua-cards,
+    .web-manasik-guide__info-cards {
+        grid-template-columns: 1fr;
+    }
+    .web-manasik-guide__dua-card-head {
+        padding: 0.6rem 0.95rem;
+    }
+    .web-manasik-guide__dua-card-body {
+        padding: 0.85rem 1rem 0.5rem;
+    }
+    .web-manasik-guide__dua-card-foot {
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.65rem 1rem 0.85rem;
+    }
+    .web-manasik-guide__dua-ref {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+    .web-manasik-guide__btn-copy {
+        margin-inline-start: 0;
+        width: 100%;
+        justify-content: center;
+    }
+    .web-manasik-guide__nav {
+        flex-direction: column;
+    }
+    .web-manasik-guide__nav-pair {
+        grid-template-columns: 1fr;
     }
 }
 

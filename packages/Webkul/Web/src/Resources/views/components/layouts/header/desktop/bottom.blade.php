@@ -1,10 +1,11 @@
 {!! view_render_event('shop.components.layouts.header.desktop.bottom.before') !!}
 
 @php
-    $cfgLogoPath = core()->getConfigData('general.store.web.logo_image')
-        ?: core()->getConfigData('general.store.shop.logo_image')
-        ?: core()->getConfigData('general.design.shop.logo_image');
-    $logoUrl = $cfgLogoPath ? \Illuminate\Support\Facades\Storage::url($cfgLogoPath) : config('web.logo_url');
+    use Illuminate\Support\Facades\Route;
+    use Webkul\Web\Support\WebCoreStoreBranding;
+
+    $logoUrl = WebCoreStoreBranding::storefrontLogoUrl() ?: config('web.logo_url');
+    $webHomeUrl = Route::has('web.home.index') ? route('web.home.index') : url('/');
     $middleLogoPath = core()->getConfigData('general.store.web.header_middle_logo')
         ?: core()->getConfigData('general.store.shop.header_middle_logo');
     $middleLogoUrl = $middleLogoPath ? \Illuminate\Support\Facades\Storage::url($middleLogoPath) : null;
@@ -70,16 +71,17 @@
         {!! view_render_event('shop.components.layouts.header.desktop.bottom.logo.before') !!}
 
         <a
-            href="{{ route('web.home.index') }}"
+            href="{{ $webHomeUrl }}"
             class="flex items-center gap-3"
             aria-label="{{ __('web::app.components.layouts.header.desktop.bottom.logo-alt') }}"
+            title="{{ $webHomeUrl }}"
         >
             @if ($logoUrl)
                 <img
                     src="{{ $logoUrl }}"
                     width="131"
                     height="29"
-                    alt="{{ config('app.name') }}"
+                    alt="{{ __('web::app.layout.store_logo_alt', ['name' => config('app.name')]) }}"
                 >
             @else
                 <span class="font-dmserif text-2xl font-medium text-navyBlue max-sm:text-xl">

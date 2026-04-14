@@ -95,7 +95,7 @@ return [
     'footer_sections' => [
         [
             ['title' => 'web::app.home.links.home', 'route' => 'web.home.index'],
-            ['title' => 'web::app.home.links.services', 'url' => '#services'],
+            ['title' => 'web::app.home.links.services', 'url' => '/manasik'],
         ],
         [
             ['title' => 'web::app.home.links.about', 'url' => '#'],
@@ -117,8 +117,8 @@ return [
             'path' => '/',
         ],
         'services' => [
-            'route' => null,
-            'path' => '#services',
+            'route' => 'web.manasik.index',
+            'path' => '/manasik',
         ],
         'maps' => [
             'route' => 'web.maps.index',

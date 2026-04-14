@@ -17,7 +17,7 @@ test("should be able to login", async ({ page }) => {
     await page.getByRole("button", { name: "Sign In" }).click();
 
     await expect(page).toHaveURL(/\/admin\/dashboard/);
-    await expect(page.getByPlaceholder("Mega Search").first()).toBeVisible();
+    await expect(page.getByRole("link", { name: "Visit website" })).toBeVisible();
 });
 
 test("should be able to logout", async ({ adminPage }) => {

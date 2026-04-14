@@ -1563,6 +1563,107 @@ return [
             ],
         ],
 
+        'hajj-rites' => [
+            'menu-title' => 'Hajj rites',
+
+            'acl' => [
+                'title' => 'Hajj rites (/manasik)',
+            ],
+
+            'index' => [
+                'title' => 'Hajj rites',
+                'info' => 'Manage steps shown on the public Hajj rites page. Link existing duas by ID (comma-separated, order preserved).',
+                'create-btn' => 'Add rite',
+            ],
+
+            'create' => [
+                'title' => 'Add Hajj rite',
+            ],
+
+            'edit' => [
+                'title' => 'Edit Hajj rite',
+            ],
+
+            'create-success' => 'Rite created successfully.',
+            'update-success' => 'Rite updated successfully.',
+            'delete-success' => 'Rite deleted successfully.',
+
+            'datagrid' => [
+                'id' => 'ID',
+                'slug' => 'Slug',
+                'title' => 'Title',
+                'dua-count' => 'Linked duas',
+                'sort-order' => 'Sort order',
+                'status' => 'Status',
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+                'updated-at' => 'Updated at',
+                'edit' => 'Edit',
+                'delete' => 'Delete',
+            ],
+
+            'form' => [
+                'back' => 'Back',
+                'save' => 'Save',
+                'locale-heading' => 'Content (:code)',
+                'slug' => 'URL slug',
+                'slug-hint' => 'Lowercase letters, numbers and hyphens only (e.g. ihram).',
+                'tab-label' => 'Tab label (short)',
+                'title' => 'Title',
+                'subtitle' => 'Subtitle',
+                'badge' => 'Badge',
+                'description' => 'Description',
+                'info-items-heading' => 'Info cards (optional)',
+                'info-items-repeater-hint' => 'Drag rows to reorder. Add or remove lines (empty rows are ignored on save).',
+                'info-text' => 'Text',
+                'sort-order' => 'Sort order',
+                'status-active' => 'Visible on site',
+                'linked-duas' => 'Linked dua IDs',
+                'linked-duas-hint' => 'Comma-separated IDs from the Duas list (e.g. 1, 5, 12). Order = display order.',
+                'linked-duas-invalid' => 'One or more dua IDs are invalid.',
+                'dua-catalog' => 'Reference: duas in store',
+                'dua-catalog-hint' => 'Use these IDs in the field above. Create duas under Dhikr & duas first.',
+            ],
+        ],
+
+        'hajj-pilgrims' => [
+            'menu-title' => 'Hajj pilgrims',
+
+            'acl' => [
+                'title' => 'Hajj pilgrims (portal)',
+            ],
+
+            'index' => [
+                'title' => 'Hajj pilgrims',
+                'info' => 'Hajj accounts that register on the public portal (/hajj). View-only: profile, favorites count, and full manasik completions.',
+            ],
+
+            'show' => [
+                'title' => 'Hajj account: :name',
+                'back' => 'Back to list',
+                'section-profile' => 'Profile',
+                'section-activity' => 'Activity',
+                'birth-date' => 'Birth date',
+                'address' => 'Address',
+                'favorites-count' => 'Favorite duas',
+            ],
+
+            'datagrid' => [
+                'id' => 'ID',
+                'name' => 'Name',
+                'email' => 'Email',
+                'phone' => 'Phone',
+                'locale' => 'Locale',
+                'completions' => 'Full manasik completions',
+                'status' => 'Status',
+                'active' => 'Active',
+                'inactive' => 'Inactive',
+                'email-verified' => 'Email verified',
+                'created-at' => 'Registered at',
+                'view' => 'View',
+            ],
+        ],
+
         'dua-sections' => [
             'acl' => [
                 'title' => 'Dhikr & duas — sections',
@@ -3107,6 +3208,36 @@ return [
             'start-date' => 'Start Date',
             'end-date' => 'End Date',
 
+            'manasik' => [
+                'title' => 'Hajj rites (Manasik)',
+                'guide-full-completions' => 'Total full manasik completions (all visitors)',
+                'duas-total' => 'Supplications (Duas) in library',
+                'map-locations-total' => 'Map locations',
+                'hajj-rites-active' => 'Published Hajj rites (on the rites page)',
+                'charts-section-title' => 'Charts — Manasik & maps',
+                'charts-section-hint' => 'Visual summary of content and usage (not filtered by date).',
+                'charts-overview-title' => 'Content & activity (counts)',
+                'charts-map-title' => 'Map locations: active vs inactive',
+                'charts-map-empty' => 'No map locations yet. Add locations under Maps / settings.',
+                'chart-label-duas' => 'Duas',
+                'chart-label-rites' => 'Rites',
+                'chart-label-map' => 'Map pins',
+                'chart-label-hajj-users' => 'Hajj accounts',
+                'chart-label-guide-completions' => 'Full manasik completions',
+                'map-active' => 'Active',
+                'map-inactive' => 'Inactive',
+                'hajj-users-total' => 'Registered Hajj accounts',
+                'hajj-users-with-completion' => 'Accounts that fully completed the rites at least once',
+                'hajj-users-completions-sum' => 'Sum of full manasik completions (registered users)',
+                'top-hajj-title' => 'Hajj accounts — most full manasik completions',
+                'top-hajj-hint' => 'Ranked by how many times each account fully completed all Hajj rites online.',
+                'top-hajj-rank' => '#',
+                'top-hajj-name' => 'Name',
+                'top-hajj-email' => 'Email',
+                'top-hajj-completions' => 'Full manasik completions',
+                'top-hajj-empty' => 'No registered account has fully completed all rites yet.',
+            ],
+
             'revenue' => [
                 'lost-revenue' => 'Lost Revenue',
                 'won-revenue' => 'Won Revenue',
@@ -3134,6 +3265,7 @@ return [
             'student-subscriptions-over-time' => [
                 'title' => 'Student Subscriptions Over Time',
                 'legend' => 'Subscriptions',
+                'empty-info' => 'No chart data for the selected range yet.',
             ],
 
             'events-status-distribution' => [

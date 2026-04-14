@@ -4,6 +4,7 @@ namespace Webkul\Manasik\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Webkul\Manasik\Repositories\DuaRepository;
+use Webkul\Manasik\Repositories\HajjRiteRepository;
 use Webkul\Manasik\Repositories\HajjUserRepository;
 use Webkul\Manasik\Repositories\MapLocationRepository;
 
@@ -21,6 +22,10 @@ class ManasikServiceProvider extends ServiceProvider
 
         $this->app->singleton(DuaRepository::class, function () {
             return new DuaRepository;
+        });
+
+        $this->app->singleton(HajjRiteRepository::class, function ($app) {
+            return new HajjRiteRepository($app->make(DuaRepository::class));
         });
     }
 

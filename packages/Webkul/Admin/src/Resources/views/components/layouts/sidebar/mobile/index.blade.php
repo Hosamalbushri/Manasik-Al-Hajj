@@ -79,8 +79,12 @@
                                         @foreach ($menuItem->getChildren() as $subMenuItem)
                                             <a
                                                 href="{{ $subMenuItem->getUrl() }}"
-                                                class="submenu-link block whitespace-nowrap p-2 pl-10 text-sm transition-colors duration-200"
+                                                class="submenu-link flex items-center gap-2 whitespace-nowrap p-2 pl-10 text-sm transition-colors duration-200"
                                                 :class="{ 'text-brandColor font-medium bg-gray-100 dark:bg-gray-800': '{{ $subMenuItem->isActive() }}' === '1', 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800': '{{ $subMenuItem->isActive() }}' !== '1' }">
+                                                @if ($subMenuItem->getIcon())
+                                                    <span class="{{ $subMenuItem->getIcon() }} shrink-0 text-lg"></span>
+                                                @endif
+
                                                 {{ $subMenuItem->getName() }}
                                             </a>
                                         @endforeach

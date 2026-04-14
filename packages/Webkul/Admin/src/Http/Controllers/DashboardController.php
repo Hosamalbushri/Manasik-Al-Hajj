@@ -5,6 +5,7 @@ namespace Webkul\Admin\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 use Webkul\Admin\Helpers\Dashboard;
+use Webkul\Admin\Helpers\ManasikDashboardStats;
 
 class DashboardController extends Controller
 {
@@ -14,10 +15,8 @@ class DashboardController extends Controller
      * @var array
      */
     protected $typeFunctions = [
-        'events-students-over-all' => 'getEventsStudentsOverAllStats',
-        'student-subscriptions-over-time' => 'getStudentSubscriptionsOverTime',
-        'events-status-distribution' => 'getEventsStatusDistribution',
-        'top-subscribed-events' => 'getTopSubscribedEvents',
+        'manasik-over-all' => 'getManasikOverAllStats',
+        'manasik-charts'   => 'getManasikChartsStats',
     ];
 
     /**
@@ -25,7 +24,10 @@ class DashboardController extends Controller
      *
      * @return void
      */
-    public function __construct(protected Dashboard $dashboardHelper) {}
+    public function __construct(
+        protected Dashboard $dashboardHelper,
+        protected ManasikDashboardStats $manasikDashboardStats
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -34,9 +36,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $snap = $this->manasikDashboardStats->snapshot();
+
         return view('admin::dashboard.index')->with([
-            'startDate' => $this->dashboardHelper->getStartDate(),
-            'endDate' => $this->dashboardHelper->getEndDate(),
+            'manasikModuleAvailable' => $snap['available'],
+            'topHajjUsers'           => $snap['available']
+                ? $this->manasikDashboardStats->topUsersByCompletions(15)
+                : [],
         ]);
     }
 

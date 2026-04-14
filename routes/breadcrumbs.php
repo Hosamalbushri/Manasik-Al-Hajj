@@ -129,6 +129,35 @@ Breadcrumbs::for('adhkar_duas.duas.edit', function (BreadcrumbTrail $trail, $dua
     $trail->push(trans('admin::app.settings.duas.edit.title'), route('admin.adhkar-duas.duas.edit', $id));
 });
 
+Breadcrumbs::for('manasik_hajj_rites', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push(trans('admin::app.settings.hajj-rites.menu-title'), route('admin.manasik-hajj-rites.index'));
+});
+
+Breadcrumbs::for('manasik_hajj_rites.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('manasik_hajj_rites');
+    $trail->push(trans('admin::app.settings.hajj-rites.create.title'), route('admin.manasik-hajj-rites.create'));
+});
+
+Breadcrumbs::for('manasik_hajj_rites.edit', function (BreadcrumbTrail $trail, $rite) {
+    $trail->parent('manasik_hajj_rites');
+    $id = is_object($rite) ? $rite->id : $rite;
+    $trail->push(trans('admin::app.settings.hajj-rites.edit.title'), route('admin.manasik-hajj-rites.edit', $id));
+});
+
+// Hajj pilgrims (portal accounts)
+Breadcrumbs::for('hajj_pilgrims', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard');
+    $trail->push(trans('admin::app.settings.hajj-pilgrims.menu-title'), route('admin.manasik-hajj-users.index'));
+});
+
+Breadcrumbs::for('hajj_pilgrims.show', function (BreadcrumbTrail $trail, $hajjUser) {
+    $trail->parent('hajj_pilgrims');
+    $name = is_object($hajjUser) ? $hajjUser->name : '';
+    $id = is_object($hajjUser) ? $hajjUser->id : $hajjUser;
+    $trail->push($name !== '' ? $name : (string) $id, route('admin.manasik-hajj-users.show', $id));
+});
+
 // Configuration
 Breadcrumbs::for('configuration', function (BreadcrumbTrail $trail) {
     $trail->parent('dashboard');

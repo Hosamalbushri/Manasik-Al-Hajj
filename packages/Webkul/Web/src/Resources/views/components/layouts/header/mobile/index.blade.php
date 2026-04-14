@@ -1,10 +1,11 @@
 {!! view_render_event('shop.components.layouts.header.mobile.before') !!}
 
 @php
-    $cfgLogoPath = core()->getConfigData('general.store.web.logo_image')
-        ?: core()->getConfigData('general.store.shop.logo_image')
-        ?: core()->getConfigData('general.design.shop.logo_image');
-    $logoUrl = $cfgLogoPath ? \Illuminate\Support\Facades\Storage::url($cfgLogoPath) : config('web.logo_url');
+    use Illuminate\Support\Facades\Route;
+    use Webkul\Web\Support\WebCoreStoreBranding;
+
+    $logoUrl = WebCoreStoreBranding::storefrontLogoUrl() ?: config('web.logo_url');
+    $webHomeUrl = Route::has('web.home.index') ? route('web.home.index') : url('/');
 
     $homeLabel = trim((string) core()->getConfigData('general.store.navigation.home_label'));
     $navItems = [];
@@ -126,14 +127,15 @@
         </div>
 
         <a
-            href="{{ route('web.home.index') }}"
+            href="{{ $webHomeUrl }}"
             class="mx-auto flex max-h-[30px] min-w-0 max-w-full items-center justify-center px-2"
             aria-label="{{ __('web::app.components.layouts.header.mobile.logo-alt') }}"
+            title="{{ $webHomeUrl }}"
         >
             @if ($logoUrl)
                 <img
                     src="{{ $logoUrl }}"
-                    alt="{{ config('app.name') }}"
+                    alt="{{ __('web::app.layout.store_logo_alt', ['name' => config('app.name')]) }}"
                     width="131"
                     height="29"
                     class="mx-auto block max-h-[30px] w-auto max-w-[min(100%,170px)] object-contain"

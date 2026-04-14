@@ -13,14 +13,14 @@ return [
     ],
 
     /**
-     * Map locations (top-level sidebar; permissions map_locations.*).
+     * Hajj rites guide (/manasik) — core manasik content.
      */
     [
-        'key' => 'map_locations',
-        'name' => 'admin::app.settings.map-locations.menu-title',
-        'route' => 'admin.map-locations.index',
+        'key' => 'hajj_rites',
+        'name' => 'admin::app.settings.hajj-rites.menu-title',
+        'route' => 'admin.manasik-hajj-rites.index',
         'sort' => 2,
-        'icon-class' => 'icon-location',
+        'icon-class' => 'icon-activity',
     ],
 
     /**
@@ -31,13 +31,13 @@ return [
         'name' => 'admin::app.settings.adhkar-duas.menu-title',
         'route' => 'admin.adhkar-duas.dua-sections.index',
         'sort' => 3,
-        'icon-class' => 'icon-configuration',
+        'icon-class' => 'icon-bookmark',
     ], [
         'key' => 'adhkar_duas.dua_sections',
         'name' => 'admin::app.settings.adhkar-duas.menu-sections',
         'route' => 'admin.adhkar-duas.dua-sections.index',
         'sort' => 0,
-        'icon-class' => 'icon-settings-group',
+        'icon-class' => 'icon-folder',
     ], [
         'key' => 'adhkar_duas.duas',
         'name' => 'admin::app.settings.adhkar-duas.menu-duas',
@@ -47,13 +47,35 @@ return [
     ],
 
     /**
+     * Map locations (top-level sidebar; permissions map_locations.*).
+     */
+    [
+        'key' => 'map_locations',
+        'name' => 'admin::app.settings.map-locations.menu-title',
+        'route' => 'admin.map-locations.index',
+        'sort' => 4,
+        'icon-class' => 'icon-location',
+    ],
+
+    /**
+     * Hajj pilgrims (registered portal accounts).
+     */
+    [
+        'key' => 'hajj_pilgrims',
+        'name' => 'admin::app.settings.hajj-pilgrims.menu-title',
+        'route' => 'admin.manasik-hajj-users.index',
+        'sort' => 5,
+        'icon-class' => 'icon-contact',
+    ],
+
+    /**
      * Settings.
      */
     [
         'key' => 'settings',
         'name' => 'admin::app.layouts.settings',
         'route' => 'admin.settings.index',
-        'sort' => 8,
+        'sort' => 6,
         'icon-class' => 'icon-setting',
     ], [
         'key' => 'settings.locales',
@@ -61,21 +83,21 @@ return [
         'route' => 'admin.settings.locales.index',
         'info' => 'admin::app.layouts.locales-info',
         'sort' => 0,
-        'icon-class' => 'icon-configuration',
+        'icon-class' => 'icon-language',
     ], [
         'key' => 'settings.locales.catalog',
         'name' => 'admin::app.settings.locales.tabs.catalog',
         'route' => 'admin.settings.locales.index',
         'info' => 'admin::app.settings.locales.tabs.catalog-info',
         'sort' => 1,
-        'icon-class' => 'icon-configuration',
+        'icon-class' => 'icon-language',
     ], [
         'key' => 'settings.locales.website',
         'name' => 'admin::app.settings.locales.tabs.website',
         'route' => 'admin.settings.locales.website',
         'info' => 'admin::app.settings.locales.tabs.website-info',
         'sort' => 2,
-        'icon-class' => 'icon-configuration',
+        'icon-class' => 'icon-language',
     ], [
         'key' => 'settings.user',
         'name' => 'admin::app.layouts.user',
@@ -103,14 +125,14 @@ return [
         'route' => 'admin.settings.web-theme.index',
         'info' => 'admin::app.settings.web-theme.section-info',
         'sort' => 4,
-        'icon-class' => 'icon-settings',
+        'icon-class' => 'icon-image',
     ], [
         'key' => 'settings.web_theme.homepage',
         'name' => 'admin::app.settings.web-theme.index.title',
         'route' => 'admin.settings.web-theme.index',
         'info' => 'admin::app.settings.web-theme.index.info',
         'sort' => 1,
-        'icon-class' => 'icon-setting',
+        'icon-class' => 'icon-image',
     ],
 
     /**
@@ -120,7 +142,7 @@ return [
         'key' => 'configuration',
         'name' => 'admin::app.layouts.configuration',
         'route' => 'admin.configuration.index',
-        'sort' => 9,
+        'sort' => 7,
         'icon-class' => 'icon-configuration',
     ],
 ];

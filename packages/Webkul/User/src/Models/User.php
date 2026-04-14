@@ -154,6 +154,19 @@ class User extends Authenticatable implements UserContract
             return true;
         }
 
+        if ($permission === 'hajj_rites' && (
+            in_array('hajj_rites', $permissions, true)
+            || in_array('hajj_rites.create', $permissions, true)
+            || in_array('hajj_rites.edit', $permissions, true)
+            || in_array('hajj_rites.delete', $permissions, true)
+            || in_array('adhkar_duas.hajj_rites', $permissions, true)
+            || in_array('adhkar_duas.hajj_rites.create', $permissions, true)
+            || in_array('adhkar_duas.hajj_rites.edit', $permissions, true)
+            || in_array('adhkar_duas.hajj_rites.delete', $permissions, true)
+        )) {
+            return true;
+        }
+
         $adhkarLegacy = [
             'adhkar_duas.dua_sections' => 'settings.dua_sections',
             'adhkar_duas.dua_sections.create' => 'settings.dua_sections.create',
@@ -163,6 +176,14 @@ class User extends Authenticatable implements UserContract
             'adhkar_duas.duas.create' => 'settings.duas.create',
             'adhkar_duas.duas.edit' => 'settings.duas.edit',
             'adhkar_duas.duas.delete' => 'settings.duas.delete',
+            'hajj_rites' => 'settings.duas',
+            'hajj_rites.create' => 'settings.duas.create',
+            'hajj_rites.edit' => 'settings.duas.edit',
+            'hajj_rites.delete' => 'settings.duas.delete',
+            'adhkar_duas.hajj_rites' => 'settings.duas',
+            'adhkar_duas.hajj_rites.create' => 'settings.duas.create',
+            'adhkar_duas.hajj_rites.edit' => 'settings.duas.edit',
+            'adhkar_duas.hajj_rites.delete' => 'settings.duas.delete',
         ];
         if (isset($adhkarLegacy[$permission]) && in_array($adhkarLegacy[$permission], $permissions, true)) {
             return true;

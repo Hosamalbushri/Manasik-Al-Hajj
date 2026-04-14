@@ -61,7 +61,10 @@
                                     {{ __('web::app.adhkar.copy') }}
                                 </button>
                                 <button type="button" class="web-adhkar-btn-fav" data-web-adhkar-fav aria-label="{{ __('web::app.adhkar.favorite_aria') }}">
-                                    {{ __('web::app.adhkar.favorite_btn') }}
+                                    <span class="web-adhkar-btn-fav__icons" aria-hidden="true">
+                                        <i class="far fa-heart web-adhkar-btn-fav__icon web-adhkar-btn-fav__icon--off"></i>
+                                        <i class="fas fa-heart web-adhkar-btn-fav__icon web-adhkar-btn-fav__icon--on"></i>
+                                    </span>
                                 </button>
                             </div>
                         </article>

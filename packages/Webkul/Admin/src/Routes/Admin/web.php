@@ -16,6 +16,16 @@ require 'map-locations-routes.php';
 require 'adhkar-duas-routes.php';
 
 /**
+ * Hajj rites guide (Manasik /manasik content).
+ */
+require 'hajj-rites-routes.php';
+
+/**
+ * Hajj pilgrims (portal Hajj accounts).
+ */
+require 'hajj-pilgrims-routes.php';
+
+/**
  * Settings routes (minimal).
  */
 require 'settings-routes.php';

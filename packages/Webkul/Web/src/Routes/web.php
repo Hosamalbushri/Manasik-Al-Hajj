@@ -7,8 +7,11 @@ use Webkul\Web\Http\Controllers\Hajj\AccountPreferencesController as HajjAccount
 use Webkul\Web\Http\Controllers\Hajj\Auth\RegisterController as HajjRegisterController;
 use Webkul\Web\Http\Controllers\Hajj\Auth\SessionController as HajjSessionController;
 use Webkul\Web\Http\Controllers\Hajj\DuaFavoriteController as HajjDuaFavoriteController;
+use Webkul\Web\Http\Controllers\Hajj\ManasikProgressController as HajjManasikProgressController;
 use Webkul\Web\Http\Controllers\HomeController;
 use Webkul\Web\Http\Controllers\LocaleController;
+use Webkul\Web\Http\Controllers\ManasikGuestCompletionController;
+use Webkul\Web\Http\Controllers\ManasikGuideController;
 use Webkul\Web\Http\Controllers\MapsController;
 use Webkul\Web\Http\Middleware\WebLocale;
 
@@ -35,6 +38,8 @@ Route::middleware(['web', WebLocale::class])
             Route::delete('account/favorites', [HajjDuaFavoriteController::class, 'clear'])->name('account.favorites.clear');
             Route::delete('account/favorites/{dua}', [HajjDuaFavoriteController::class, 'destroy'])->name('account.favorites.destroy');
             Route::delete('account', [HajjAccountController::class, 'destroy'])->name('account.destroy');
+
+            Route::put('manasik/progress', [HajjManasikProgressController::class, 'update'])->name('manasik.progress');
         });
     });
 
@@ -44,6 +49,13 @@ Route::middleware(['web', WebLocale::class])->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])
         ->name('web.home.index');
+
+    Route::get('manasik', [ManasikGuideController::class, 'index'])
+        ->name('web.manasik.index');
+
+    Route::post('manasik/guest-completion', [ManasikGuestCompletionController::class, 'store'])
+        ->middleware('throttle:40,1')
+        ->name('web.manasik.guest_completion');
 
     Route::get('maps', [MapsController::class, 'index'])
         ->name('web.maps.index');

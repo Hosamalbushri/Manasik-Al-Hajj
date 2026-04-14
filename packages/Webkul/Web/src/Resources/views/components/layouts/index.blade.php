@@ -5,6 +5,7 @@
 ])
 
 @php
+    use Webkul\Web\Support\WebCoreStoreBranding;
     use Webkul\Web\Support\WebStoreBandColors;
 
     $fb = config('web.identity.fallback_shop_colors', []);
@@ -63,6 +64,7 @@
 
     $storeInnerBand = WebStoreBandColors::innerHeroStoreDefaults();
     $storeDividerBand = WebStoreBandColors::sectionDividerStoreDefaults();
+    $storefrontFaviconPath = WebCoreStoreBranding::storefrontFaviconStoragePath();
 @endphp
 
 <!DOCTYPE html>
@@ -125,10 +127,10 @@
             content="{{ csrf_token() }}"
         >
 
-        @if ($favicon = core()->getConfigData('general.store.web.favicon') ?: core()->getConfigData('general.store.shop.favicon') ?: core()->getConfigData('general.design.shop.favicon'))
+        @if ($storefrontFaviconPath !== '')
             <link
                 type="image/x-icon"
-                href="{{ \Illuminate\Support\Facades\Storage::url($favicon) }}"
+                href="{{ \Illuminate\Support\Facades\Storage::url($storefrontFaviconPath) }}"
                 rel="shortcut icon"
                 sizes="16x16"
             >

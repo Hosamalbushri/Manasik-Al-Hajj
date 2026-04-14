@@ -2,6 +2,7 @@
 
 @php
     use Illuminate\Support\Facades\Storage;
+    use Webkul\Web\Support\WebCoreStoreBranding;
     use Webkul\Web\Support\WebHeaderPrimaryTabs;
 
     $o = is_array($opts) ? $opts : [];
@@ -9,6 +10,7 @@
         'icon' => 'fas fa-kaaba', 'title' => '', 'subtitle' => '', 'logo_path' => '',
     ], $o['brand'] ?? []);
     $homeUrl = \Illuminate\Support\Facades\Route::has('web.home.index') ? route('web.home.index') : '#';
+    $webHomeUrlForTitle = $homeUrl !== '#' ? $homeUrl : url('/');
     $logoPath = trim((string) ($brand['logo_path'] ?? ''));
     $logoUrl = '';
     if ($logoPath !== '') {
@@ -16,6 +18,9 @@
         if ($pub !== '' && Storage::disk('public')->exists($pub)) {
             $logoUrl = Storage::url($pub);
         }
+    }
+    if ($logoUrl === '') {
+        $logoUrl = WebCoreStoreBranding::storefrontLogoUrl();
     }
     $dirAttr = in_array(strtolower(app()->getLocale()), ['ar', 'fa', 'he', 'ur', 'ku', 'dv'], true) ? 'rtl' : 'ltr';
 
@@ -139,11 +144,16 @@
     <div class="web-hajj-navbar__backdrop" aria-hidden="true"></div>
     <div class="nav-container">
         <div class="nav-brand-zone">
-            <a href="{{ $homeUrl }}" class="logo">
+            <a
+                href="{{ $homeUrl }}"
+                class="logo"
+                aria-label="{{ __('web::app.components.layouts.header.desktop.bottom.logo-alt') }}"
+                title="{{ $webHomeUrlForTitle }}"
+            >
                 @if ($logoUrl !== '')
                     <img
                         src="{{ $logoUrl }}"
-                        alt="{{ $brand['title'] ?: __('web::app.layout.brand') }}"
+                        alt="{{ __('web::app.layout.store_logo_alt', ['name' => $brand['title'] ?: config('app.name')]) }}"
                         class="header-brand-logo max-h-10 w-auto max-w-[200px] object-contain object-left"
                     >
                 @else

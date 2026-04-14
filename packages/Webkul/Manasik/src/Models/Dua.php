@@ -4,6 +4,7 @@ namespace Webkul\Manasik\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Webkul\Manasik\Contracts\Dua as DuaContract;
 
 class Dua extends Model implements DuaContract
@@ -27,5 +28,14 @@ class Dua extends Model implements DuaContract
     public function section(): BelongsTo
     {
         return $this->belongsTo(DuaSection::class, 'manasik_dua_section_id');
+    }
+
+    /**
+     * @return BelongsToMany<HajjRite, $this>
+     */
+    public function hajjRites(): BelongsToMany
+    {
+        return $this->belongsToMany(HajjRite::class, 'manasik_hajj_rite_dua', 'manasik_dua_id', 'manasik_hajj_rite_id')
+            ->withPivot('sort_order');
     }
 }

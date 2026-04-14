@@ -212,6 +212,34 @@ return [
         'route' => 'admin.adhkar-duas.duas.destroy',
         'sort' => 3,
     ], [
+        'key' => 'hajj_rites',
+        'name' => 'admin::app.settings.hajj-rites.acl.title',
+        'route' => 'admin.manasik-hajj-rites.index',
+        'sort' => 6,
+    ], [
+        'key' => 'hajj_rites.create',
+        'name' => 'admin::app.acl.create',
+        'route' => 'admin.manasik-hajj-rites.store',
+        'sort' => 1,
+    ], [
+        'key' => 'hajj_rites.edit',
+        'name' => 'admin::app.acl.edit',
+        'route' => ['admin.manasik-hajj-rites.edit', 'admin.manasik-hajj-rites.update'],
+        'sort' => 2,
+    ], [
+        'key' => 'hajj_rites.delete',
+        'name' => 'admin::app.acl.delete',
+        'route' => 'admin.manasik-hajj-rites.destroy',
+        'sort' => 3,
+    ], [
+        'key' => 'hajj_pilgrims',
+        'name' => 'admin::app.settings.hajj-pilgrims.acl.title',
+        'route' => [
+            'admin.manasik-hajj-users.index',
+            'admin.manasik-hajj-users.show',
+        ],
+        'sort' => 12,
+    ], [
         'key' => 'configuration',
         'name' => 'admin::app.acl.configuration',
         'route' => [

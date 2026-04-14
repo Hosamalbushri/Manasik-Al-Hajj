@@ -49,6 +49,7 @@ class HajjUser extends Authenticatable implements HajjUserContract
             'password' => 'hashed',
             'status' => 'boolean',
             'preferences' => 'array',
+            'manasik_guide_completions_count' => 'integer',
         ];
     }
 
