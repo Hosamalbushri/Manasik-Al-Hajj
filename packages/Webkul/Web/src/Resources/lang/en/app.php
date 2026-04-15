@@ -218,6 +218,10 @@ return [
             'guest_login'        => 'Sign in',
             'guest_dismiss'      => 'Close',
             'toast_sync_failed'  => 'Could not save progress to your account',
+            'done_modal_title'   => 'Congratulations! You completed all rites',
+            'done_modal_text'    => 'May Allah accept from you. You can restart from the beginning to review the rites again.',
+            'done_modal_restart' => 'Back to start',
+            'done_modal_close'   => 'Close dialog',
         ],
 
         'steps' => [
@@ -346,7 +350,12 @@ return [
             'supplications'       => 'Supplications and adhkar',
             'section-divider'     => 'Section heading band',
             'maps-showcase'       => 'Holy sites — homepage preview',
+            'manasik-showcase'    => 'Hajj rites — homepage preview',
             'prayer-times'        => 'Daily prayer times',
+        ],
+        'manasik-showcase' => [
+            'details'   => 'Rite details',
+            'view_more' => 'View more',
         ],
         'maps-showcase' => [
             'link-default' => 'View all maps',

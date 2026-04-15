@@ -78,7 +78,7 @@ class SystemConfig
                 fields: $configItem['fields'] ?? null,
                 icon: $configItem['icon'] ?? null,
                 key: $configItem['key'],
-                name: trans($configItem['name']),
+                name: $this->resolveConfigurationDisplayName($configItem['key'], (string) $configItem['name']),
                 route: $configItem['route'] ?? null,
                 info: trans($configItem['info']) ?? null,
                 sort: $configItem['sort'],
@@ -102,7 +102,7 @@ class SystemConfig
                     fields: $subConfigItem['fields'] ?? null,
                     icon: $subConfigItem['icon'] ?? null,
                     key: $subConfigItem['key'],
-                    name: trans($subConfigItem['name']),
+                    name: $this->resolveConfigurationDisplayName($subConfigItem['key'], (string) $subConfigItem['name']),
                     info: trans($subConfigItem['info']) ?? null,
                     route: $subConfigItem['route'] ?? null,
                     sort: $subConfigItem['sort'] ?? null,
@@ -172,6 +172,43 @@ class SystemConfig
             : null;
 
         return Config::get($field, $default);
+    }
+
+    /**
+     * Optional custom title for a configuration tree node (Configuration home cards and edit headings).
+     * Stored as general.settings.configuration_tab_labels.{field} where field is "label_" + key with dots → underscores.
+     */
+    protected function configurationTabLabelOverride(string $configItemKey): ?string
+    {
+        static $cache = [];
+
+        if (array_key_exists($configItemKey, $cache)) {
+            return $cache[$configItemKey];
+        }
+
+        $field = 'label_'.str_replace('.', '_', $configItemKey);
+        $code = 'general.settings.configuration_tab_labels.'.$field;
+
+        $row = $this->coreConfigRepository->findOneWhere(['code' => $code]);
+        $value = $row?->value;
+
+        if (! is_string($value)) {
+            return $cache[$configItemKey] = null;
+        }
+
+        $trimmed = trim($value);
+
+        return $cache[$configItemKey] = ($trimmed === '' ? null : $trimmed);
+    }
+
+    /**
+     * Resolved label: DB override if set, otherwise translated name from core_config definition.
+     */
+    protected function resolveConfigurationDisplayName(string $configItemKey, string $nameLangKey): string
+    {
+        $override = $this->configurationTabLabelOverride($configItemKey);
+
+        return $override ?? trans($nameLangKey);
     }
 
     /**

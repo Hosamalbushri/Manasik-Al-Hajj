@@ -58,7 +58,7 @@
         $menuBrandRaw = core()->getConfigData('general.settings.menu_color.brand_color');
         $brandColor = is_string($menuBrandRaw) && preg_match('/^#[0-9A-Fa-f]{6}$/', $menuBrandRaw)
             ? $menuBrandRaw
-            : '#0E90D9';
+            : '#165022';
 
         $shopAccent = core()->getConfigData('general.store.web.accent_color')
             ?: core()->getConfigData('general.store.shop.accent_color')
@@ -66,7 +66,7 @@
         $accentOk = is_string($shopAccent) && preg_match('/^#[0-9A-Fa-f]{6}$/', $shopAccent);
         $accentColor = $accentOk ? $shopAccent : $brandColor;
 
-        $loginBgDefault = '#1a5f3f';
+        $loginBgDefault = '#165022';
         $loginBgRaw = core()->getConfigData('general.settings.admin_login.background_accent_color');
         $loginBgAccent = is_string($loginBgRaw) && preg_match('/^#[0-9A-Fa-f]{6}$/', $loginBgRaw)
             ? $loginBgRaw

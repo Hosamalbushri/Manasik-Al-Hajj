@@ -27,26 +27,38 @@ class ManasikProgressController extends Controller
         }
 
         $userId = Auth::guard('hajj')->id();
-        $newCompleted = array_map(static fn ($v): bool => (bool) $v, $request->input('completed', []));
+        $requestedCompleted = array_map(static fn ($v): bool => (bool) $v, $request->input('completed', []));
 
-        DB::transaction(function () use ($userId, $request, $expected, $newCompleted): void {
+        DB::transaction(function () use ($userId, $request, $expected, $requestedCompleted): void {
             $user = HajjUser::query()->lockForUpdate()->findOrFail($userId);
             $prefs = is_array($user->preferences) ? $user->preferences : [];
             $oldGuide = $prefs['manasik_guide'] ?? null;
             $oldCompleted = is_array($oldGuide['completed'] ?? null)
                 ? array_map(static fn ($v): bool => (bool) $v, $oldGuide['completed'])
                 : [];
+            $newCompleted = [];
+            for ($i = 0; $i < $expected; $i++) {
+                $old = (bool) ($oldCompleted[$i] ?? false);
+                $requested = (bool) ($requestedCompleted[$i] ?? false);
+                // Completed rites are immutable: once true, always true.
+                $newCompleted[$i] = $old || $requested;
+            }
 
-            if (ManasikGuideCompletion::shouldRecordNewFullCompletion($oldCompleted, $newCompleted, $expected)) {
+            $completedNow = ManasikGuideCompletion::shouldRecordNewFullCompletion($oldCompleted, $newCompleted, $expected);
+
+            if ($completedNow) {
                 ManasikGlobalStat::incrementGuideFullCompletions();
                 if (Schema::hasColumn('manasik_hajj_users', 'manasik_guide_completions_count')) {
                     $user->increment('manasik_guide_completions_count');
                 }
+
+                // After recording a full completion, re-initialize guide progress from the first step on server.
+                $newCompleted = array_fill(0, $expected, false);
             }
 
             $prefs['manasik_guide'] = [
                 'completed'    => $newCompleted,
-                'active_index' => (int) $request->input('active_index'),
+                'active_index' => $completedNow ? 0 : (int) $request->input('active_index'),
                 'updated_at'   => now()->toIso8601String(),
             ];
             $user->preferences = $prefs;

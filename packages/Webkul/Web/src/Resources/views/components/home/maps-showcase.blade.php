@@ -48,38 +48,40 @@
 
 @if (count($cards) > 0)
     <section
-        class="web-home-maps-showcase"
+        class="web-supplications web-home-maps-showcase"
         aria-label="{{ $sectionAria }}"
     >
-        <div class="web-maps-locations-page">
-            <div class="web-maps-locations-page__container">
-                @if ($heading !== '' || $subheading !== '')
-                    <header class="web-home-maps-showcase__head">
-                        @if ($heading !== '')
-                            <h2 class="web-home-maps-showcase__title">{{ $heading }}</h2>
-                        @endif
-                        @if ($subheading !== '')
-                            <p class="web-home-maps-showcase__sub">{{ $subheading }}</p>
-                        @endif
-                    </header>
-                @endif
+        <div class="web-supplications__inner">
+            @if ($heading !== '' || $subheading !== '')
+                <header class="web-supplications__head">
+                    @if ($heading !== '')
+                        <h2 class="web-supplications__title">{{ $heading }}</h2>
+                    @endif
+                    @if ($subheading !== '')
+                        <p class="web-supplications__sub">{{ $subheading }}</p>
+                    @endif
+                </header>
+            @endif
 
-                @include('web::maps.partials.location-cards', [
-                    'cards' => $cards,
-                    'cardDetails' => $cardDetails,
-                    'idSuffix' => $idSuffix,
-                ])
+            <div class="web-maps-locations-page">
+                <div class="web-maps-locations-page__container">
+                    @include('web::maps.partials.location-cards', [
+                        'cards' => $cards,
+                        'cardDetails' => $cardDetails,
+                        'idSuffix' => $idSuffix,
+                    ])
 
-                @if ($linkShow && $mapsUrl !== '#')
-                    <div class="web-home-cta-below-grid">
-                        <a
-                            href="{{ $mapsUrl }}"
-                            class="web-maps-locations-page__btn-details"
-                        >
-                            {{ $linkLabel }}
-                        </a>
-                    </div>
-                @endif
+                    @if ($linkShow && $mapsUrl !== '#')
+                        <div class="web-home-cta-below-grid">
+                            <a
+                                href="{{ $mapsUrl }}"
+                                class="web-maps-locations-page__btn-details"
+                            >
+                                {{ $linkLabel }}
+                            </a>
+                        </div>
+                    @endif
+                </div>
             </div>
         </div>
     </section>

@@ -1,0 +1,214 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram id="erd-chen-manasik" name="ERD Chen">
+    <mxGraphModel dx="1501" dy="791" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=1" value="ERD — Chen notation (from Laravel migrations)" vertex="1">
+          <mxGeometry height="30" width="600" x="40" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="e_role" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="ROLE&#xa;────────&#xa;PK id&#xa;name, description&#xa;permission_type&#xa;permissions (json)" vertex="1">
+          <mxGeometry height="110" width="160" x="40" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e_user" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="USER (admin)&#xa;────────&#xa;PK id&#xa;FK role_id → ROLE&#xa;name, email (UQ)&#xa;password, status&#xa;…" vertex="1">
+          <mxGeometry height="120" width="180" x="545" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r_has_role" parent="1" style="rhombus;whiteSpace=wrap;html=1;shadow=0;fontSize=11;fontStyle=1" value="HAS_ROLE" vertex="1">
+          <mxGeometry height="80" width="90" x="250" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="e_role" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="r_has_role">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e1c1" parent="1" style="text;html=1;align=center;fontSize=11;fontStyle=1" value="1" vertex="1">
+          <mxGeometry height="20" width="24" x="210" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="r_has_role" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="e_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2cn" parent="1" style="text;html=1;align=center;fontSize=11;fontStyle=1" value="N" vertex="1">
+          <mxGeometry height="20" width="24" x="330" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="e_group" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="GROUP&#xa;────────&#xa;PK id&#xa;name, description" vertex="1">
+          <mxGeometry height="90" width="160" x="40" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="e_user_group" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1;dashed=1" value="USER_GROUP&#xa;(associative)&#xa;────────&#xa;FK group_id → GROUP&#xa;FK user_id → USER" vertex="1">
+          <mxGeometry height="100" width="180" x="250" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="eg1" edge="1" parent="1" source="e_group" style="endArrow=none;html=1;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" target="e_user_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eg1c" parent="1" style="text;html=1;align=center;fontSize=11;fontStyle=1" value="1" vertex="1">
+          <mxGeometry height="20" width="24" x="150" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="eg2" edge="1" parent="1" source="e_user_group" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0.25;entryY=0;" target="e_user">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eg2c" parent="1" style="text;html=1;align=center;fontSize=11;fontStyle=1" value="N" vertex="1">
+          <mxGeometry height="20" width="24" x="320" y="185" as="geometry" />
+        </mxCell>
+        <mxCell id="eg3" edge="1" parent="1" source="e_user" style="endArrow=none;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" target="e_user_group">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="450" y="200" />
+              <mxPoint x="340" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eg3c" parent="1" style="text;html=1;align=center;fontSize=11;fontStyle=1" value="N" vertex="1">
+          <mxGeometry height="20" width="24" x="400" y="175" as="geometry" />
+        </mxCell>
+        <mxCell id="e_country" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="COUNTRY&#xa;────────&#xa;PK id&#xa;code, name" vertex="1">
+          <mxGeometry height="85" width="140" x="40" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="e_state" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="COUNTRY_STATE&#xa;────────&#xa;PK id&#xa;FK country_id&#xa;country_code, code, name" vertex="1">
+          <mxGeometry height="100" width="200" x="280" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="r_has_state" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1" value="HAS_STATE" vertex="1">
+          <mxGeometry height="75" width="90" x="195" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="hs1" edge="1" parent="1" source="e_country" style="endArrow=none;html=1;" target="r_has_state">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hs1c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="175" y="378" as="geometry" />
+        </mxCell>
+        <mxCell id="hs2" edge="1" parent="1" source="r_has_state" style="endArrow=none;html=1;" target="e_state">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hs2c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="N" vertex="1">
+          <mxGeometry height="20" width="20" x="265" y="378" as="geometry" />
+        </mxCell>
+        <mxCell id="e_locale" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="LOCALE&#xa;────────&#xa;PK id&#xa;code (UQ), name&#xa;direction, flags…" vertex="1">
+          <mxGeometry height="100" width="170" x="915" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="e_corecfg" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="CORE_CONFIG&#xa;────────&#xa;PK id&#xa;code, value" vertex="1">
+          <mxGeometry height="80" width="170" x="800" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="e_stc" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="SHOP_THEME_CUSTOMIZATION&#xa;────────&#xa;PK id&#xa;type, name, sort_order&#xa;status, theme_code" vertex="1">
+          <mxGeometry height="110" width="220" x="600" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="e_stct" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="SHOP_THEME_CUSTOMIZATION_TRANSLATION&#xa;────────&#xa;PK id&#xa;FK shop_theme_customization_id&#xa;locale, options (json)" vertex="1">
+          <mxGeometry height="110" width="280" x="880" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="r_tr" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontSize=10;fontStyle=1" value="HAS_TRANSLATION" vertex="1">
+          <mxGeometry height="80" width="110" x="830" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="tr1" edge="1" parent="1" source="e_stc" style="endArrow=none;html=1;" target="r_tr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tr1c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="800" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="tr2" edge="1" parent="1" source="r_tr" style="endArrow=none;html=1;" target="e_stct">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="tr2c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="N" vertex="1">
+          <mxGeometry height="20" width="20" x="960" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dgf" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="DATAGRID_SAVED_FILTER&#xa;────────&#xa;PK id&#xa;user_id (→ USER, logical)&#xa;name, src, applied" vertex="1">
+          <mxGeometry height="100" width="240" x="600" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="r_saves" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontSize=10;fontStyle=1" value="SAVES_FILTER" vertex="1">
+          <mxGeometry height="75" width="95" x="450" y="462.5" as="geometry" />
+        </mxCell>
+        <mxCell id="sf1" edge="1" parent="1" source="e_dgf" style="endArrow=none;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="r_saves">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sf1c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="N" vertex="1">
+          <mxGeometry height="20" width="20" x="560" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="sf2" edge="1" parent="1" source="r_saves" style="endArrow=none;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.75;" target="e_user">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="498" />
+              <mxPoint x="420" y="150" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sf2c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="430" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="sec_man" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=14;fontStyle=1" value="Manasik (Hajj portal)" vertex="1">
+          <mxGeometry height="28" width="300" x="40" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sec" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="MANASIK_DUA_SECTION&#xa;────────&#xa;PK id&#xa;slug (UQ), sort_order&#xa;status, content (json)" vertex="1">
+          <mxGeometry height="105" width="200" x="40" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="e_dua" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="MANASIK_DUA&#xa;────────&#xa;PK id&#xa;FK manasik_dua_section_id&#xa;sort_order, status&#xa;content (json)" vertex="1">
+          <mxGeometry height="110" width="200" x="400" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="r_contains" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1" value="CONTAINS" vertex="1">
+          <mxGeometry height="75" width="85" x="250" y="575" as="geometry" />
+        </mxCell>
+        <mxCell id="c1" edge="1" parent="1" source="e_sec" style="endArrow=none;html=1;" target="r_contains">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c1a" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="225" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" edge="1" parent="1" source="r_contains" style="endArrow=none;html=1;" target="e_dua">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c2a" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="N" vertex="1">
+          <mxGeometry height="20" width="20" x="305" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="e_rite" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="MANASIK_HAJJ_RITE&#xa;────────&#xa;PK id&#xa;slug (UQ), sort_order&#xa;status, content (json)" vertex="1">
+          <mxGeometry height="105" width="200" x="40" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="rd1" edge="1" parent="1" source="e_rite" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="e_p_rite_dua">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rd1c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="250" y="775" as="geometry" />
+        </mxCell>
+        <mxCell id="rd2" edge="1" parent="1" source="e_p_rite_dua" style="endArrow=none;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" target="e_dua">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rd2c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="N" vertex="1">
+          <mxGeometry height="20" width="20" x="400" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="e_huser" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="MANASIK_HAJJ_USER&#xa;────────&#xa;PK id&#xa;name, email (UQ)&#xa;phone, birth_date, address&#xa;password, status&#xa;locale, preferences&#xa;manasik_guide_completions_count" vertex="1">
+          <mxGeometry height="150" width="240" x="980" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="e_p_fav" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1;dashed=1" value="MANASIK_HAJJ_USER_DUA_FAVORITE&#xa;(associative)&#xa;────────&#xa;FK manasik_hajj_user_id&#xa;FK manasik_dua_id" vertex="1">
+          <mxGeometry height="95" width="240" x="330" y="905" as="geometry" />
+        </mxCell>
+        <mxCell id="fv1" edge="1" parent="1" source="e_huser" style="endArrow=none;html=1;" target="e_p_fav">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="720" y="720" />
+              <mxPoint x="640" y="720" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fv1c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="1" vertex="1">
+          <mxGeometry height="20" width="20" x="700" y="705" as="geometry" />
+        </mxCell>
+        <mxCell id="fv2" edge="1" parent="1" source="e_p_rite_dua" style="endArrow=none;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="e_dua">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="fv2c" parent="1" style="text;html=1;fontSize=11;fontStyle=1" value="N" vertex="1">
+          <mxGeometry height="20" width="20" x="500" y="675" as="geometry" />
+        </mxCell>
+        <mxCell id="e_map" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1;fontColor=#666666" value="MANASIK_MAP_LOCATION&#xa;────────&#xa;PK id&#xa;slug (UQ), map_id&#xa;lat, lng, zoom&#xa;image, embed, content…&#xa;(no FK in schema)" vertex="1">
+          <mxGeometry height="125" width="260" x="670" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="e_gstat" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1" value="MANASIK_GLOBAL_STATS&#xa;────────&#xa;PK id (singleton)&#xa;guide_full_completions" vertex="1">
+          <mxGeometry height="85" width="240" x="600" y="910" as="geometry" />
+        </mxCell>
+        <mxCell id="leg" parent="1" style="rounded=1;whiteSpace=wrap;html=1;align=left;spacingLeft=10;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" value="Legend (Chen-style in draw.io)&#xa;• Rectangle = Entity&#xa;• Rhombus = Relationship&#xa;• Dashed rectangle = Associative entity / pivot table&#xa;• 1 / N on edges = cardinality&#xa;• Auth tables (password_resets, tokens, jobs) omitted for clarity" vertex="1">
+          <mxGeometry height="130" width="360" x="1010" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="JOxJuSHd_cU7cQGnCSvk-1" edge="1" parent="1" source="e_p_fav" style="endArrow=none;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="e_p_rite_dua" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="953" as="sourcePoint" />
+            <mxPoint x="600" y="615" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_p_rite_dua" parent="1" style="rounded=0;whiteSpace=wrap;html=1;align=left;spacingLeft=8;verticalAlign=top;fontStyle=1;dashed=1" value="MANASIK_HAJJ_RITE_DUA&#xa;(associative)&#xa;────────&#xa;FK manasik_hajj_rite_id&#xa;FK manasik_dua_id&#xa;pivot: sort_order" vertex="1">
+          <mxGeometry height="115" width="220" x="305" y="735" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

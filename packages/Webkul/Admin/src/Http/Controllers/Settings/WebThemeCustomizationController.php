@@ -28,6 +28,7 @@ class WebThemeCustomizationController extends Controller
         ThemeCustomization::SUPPLICATIONS_CONTENT,
         ThemeCustomization::SECTION_DIVIDER,
         ThemeCustomization::MAPS_SHOWCASE,
+        ThemeCustomization::MANASIK_SHOWCASE,
         ThemeCustomization::PRAYER_TIMES,
         ThemeCustomization::WEB_HEADER,
         ThemeCustomization::WEB_FOOTER,
@@ -154,6 +155,16 @@ class WebThemeCustomizationController extends Controller
             'show_more'  => $showMore,
             'more_url'   => mb_substr($moreUrl, 0, 2048),
         ];
+    }
+
+    /**
+     * Homepage Hajj rites block: copy from manasik_hajj_rites; theme sets framing + limit + CTA (same shape as supplications).
+     *
+     * @return array{heading: string, subheading: string, limit: int, show_more: bool, more_url: string}
+     */
+    protected function normalizeManasikShowcaseOptions(Request $request): array
+    {
+        return $this->normalizeSupplicationsOptions($request);
     }
 
     /**
@@ -583,6 +594,11 @@ class WebThemeCustomizationController extends Controller
 
             case ThemeCustomization::MAPS_SHOWCASE:
                 $this->persistLocalizedOptions($theme, $locale, $this->normalizeMapsShowcaseOptions($request));
+
+                break;
+
+            case ThemeCustomization::MANASIK_SHOWCASE:
+                $this->persistLocalizedOptions($theme, $locale, $this->normalizeManasikShowcaseOptions($request));
 
                 break;
 

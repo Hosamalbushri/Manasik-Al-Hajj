@@ -177,7 +177,16 @@
                             </div>
                         </form>
 
-                        <form method="post" action="{{ route('hajj.session.destroy') }}" class="hajj-acc2-logout-form">
+                        <form
+                            method="post"
+                            action="{{ route('hajj.session.destroy') }}"
+                            class="hajj-acc2-logout-form"
+                            data-hajj-logout-form
+                            data-logout-title="{{ __('web::hajj_account.logout_confirm.title') }}"
+                            data-logout-message="{{ __('web::hajj_account.logout_confirm.message') }}"
+                            data-logout-agree="{{ __('web::hajj_account.logout_confirm.agree') }}"
+                            data-logout-cancel="{{ __('web::hajj_account.logout_confirm.cancel') }}"
+                        >
                             @csrf
                             <button type="submit" class="hajj-acc2-btn-logout">
                                 {{ __('web::hajj_account.logout') }}

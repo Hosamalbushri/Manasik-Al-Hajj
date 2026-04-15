@@ -143,6 +143,7 @@
                             inner_page_hero: "@lang('admin::app.settings.web-theme.create.type.inner-page-hero')",
                             section_divider: "@lang('admin::app.settings.web-theme.create.type.section-divider')",
                             maps_showcase: "@lang('admin::app.settings.web-theme.create.type.maps-showcase')",
+                            manasik_showcase: "@lang('admin::app.settings.web-theme.create.type.manasik-showcase')",
                             prayer_times: "@lang('admin::app.settings.web-theme.create.type.prayer-times')",
                         },
 

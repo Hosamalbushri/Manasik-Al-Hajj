@@ -1723,29 +1723,10 @@ img.lazy {
     .web-home-maps-showcase {
         width: 100%;
     }
-    .web-home-maps-showcase .web-maps-locations-page {
-        padding-top: clamp(1.25rem, 3vw, 2.25rem);
+    /* Heading uses .web-supplications__* (same as duas / manasik home blocks); keep maps band tight under that head */
+    .web-home-maps-showcase.web-supplications .web-maps-locations-page {
+        padding-top: 0;
         padding-bottom: clamp(1.25rem, 3vw, 2.25rem);
-    }
-    .web-home-maps-showcase__head {
-        margin-bottom: clamp(1.25rem, 3vw, 2rem);
-        text-align: center;
-        max-width: 42rem;
-        margin-inline: auto;
-    }
-    .web-home-maps-showcase__title {
-        margin: 0;
-        font-size: clamp(1.35rem, 3.2vw, 1.85rem);
-        font-weight: 800;
-        color: var(--portal-ink);
-        letter-spacing: -0.02em;
-        line-height: 1.3;
-    }
-    .web-home-maps-showcase__sub {
-        margin: 0.65rem 0 0;
-        font-size: 0.98rem;
-        line-height: 1.65;
-        color: var(--portal-muted);
     }
     /* Homepage CTAs below card grids (maps showcase, supplications — same pill as map card “details”) */
     .web-home-cta-below-grid {
@@ -3127,6 +3108,221 @@ img.lazy {
     }
     .web-supplications .web-adhkar-ui .web-adhkar-grid {
         width: 100%;
+    }
+
+    /* Home: Hajj rites cards (theme manasik_showcase; scoped ritual-card layout from portal mock) */
+    .web-home-manasik-showcase,
+    .web-home-manasik-showcase * {
+        box-sizing: border-box;
+    }
+    .web-home-manasik-showcase .rituals-showcase {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+        gap: clamp(1.25rem, 3vw, 2rem);
+        align-items: stretch;
+    }
+    .web-home-manasik-showcase a.ritual-card {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        height: 100%;
+        align-self: stretch;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        background: #fff;
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+        transition:
+            transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1),
+            box-shadow 0.35s ease;
+    }
+    .web-home-manasik-showcase a.ritual-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.15);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .web-home-manasik-showcase a.ritual-card {
+            transition: none;
+        }
+        .web-home-manasik-showcase a.ritual-card:hover {
+            transform: none;
+        }
+    }
+    .web-home-manasik-showcase a.ritual-card::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: 0;
+        height: 5px;
+        z-index: 3;
+        background: linear-gradient(
+            90deg,
+            var(--shop-badge-color, #d4af37),
+            #f5d060,
+            var(--shop-badge-color, #d4af37)
+        );
+        pointer-events: none;
+    }
+    .web-home-manasik-showcase .card-header {
+        flex-shrink: 0;
+        position: relative;
+        z-index: 0;
+        background: linear-gradient(
+            135deg,
+            var(--shop-primary, #1a3a2a),
+            color-mix(in srgb, var(--shop-primary, #1a3a2a) 70%, #0d2a1a)
+        );
+        padding: 1.5rem;
+        text-align: center;
+    }
+    .web-home-manasik-showcase .card-badge {
+        position: absolute;
+        inset-block-start: 1rem;
+        inset-inline-start: 1rem;
+        z-index: 4;
+        background: rgba(212, 175, 55, 0.2);
+        padding: 0.2rem 0.7rem;
+        border-radius: 30px;
+        font-size: 0.6rem;
+        font-weight: 600;
+        color: var(--shop-badge-color, #d4af37);
+        pointer-events: none;
+    }
+    .web-home-manasik-showcase .card-number {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto 0.8rem;
+        background: rgba(212, 175, 55, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid rgba(212, 175, 55, 0.5);
+    }
+    .web-home-manasik-showcase .card-number span {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--shop-badge-color, #d4af37);
+        line-height: 1;
+    }
+    .web-home-manasik-showcase .ritual-card__title {
+        margin: 0 0 0.2rem;
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.25;
+    }
+    .web-home-manasik-showcase .ritual-card__subtitle {
+        margin: 0;
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.45;
+    }
+    .web-home-manasik-showcase .card-body {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        position: relative;
+        z-index: 0;
+        padding: 1.5rem;
+        gap: 0;
+        background: #fff;
+    }
+    .web-home-manasik-showcase .ritual-card__main {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        min-height: clamp(10.5rem, 22vw, 12.5rem);
+    }
+    .web-home-manasik-showcase .ritual-description {
+        margin: 0 0 0.75rem;
+        font-size: clamp(0.95rem, 0.9rem + 0.35vw, 1.05rem);
+        line-height: 1.68;
+        color: #4a5a4a;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        min-height: 0;
+    }
+    .web-home-manasik-showcase .quick-info {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        min-height: 2.55rem;
+        margin-bottom: 0.75rem;
+        padding: 0.45rem 0;
+        border-block: 1px solid #f0ebe3;
+    }
+    .web-home-manasik-showcase .info-chip {
+        display: block;
+        font-size: clamp(0.82rem, 0.78rem + 0.25vw, 0.92rem);
+        line-height: 1.5;
+        color: #7a8a7a;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .web-home-manasik-showcase .dua-preview {
+        flex-shrink: 0;
+        background: linear-gradient(135deg, #fefaf5, #fef5e8);
+        border-radius: 16px;
+        padding: 0.85rem 0.95rem;
+        margin-top: 0.35rem;
+        margin-bottom: 0;
+        border-inline-start: 3px solid var(--shop-badge-color, #d4af37);
+        min-height: 5.35rem;
+    }
+    .web-home-manasik-showcase .dua-preview .dua-text {
+        font-size: clamp(0.88rem, 0.82rem + 0.3vw, 0.98rem);
+        line-height: 1.62;
+        font-weight: 500;
+        color: var(--shop-primary, #1a3a2a);
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+    }
+    .web-home-manasik-showcase .dua-preview .dua-source {
+        font-size: clamp(0.72rem, 0.68rem + 0.2vw, 0.8rem);
+        color: #b8a87a;
+        margin-top: 0.35rem;
+    }
+    /* Same footer row + pill as maps location cards (.web-maps-locations-page__btn-details) */
+    .web-home-manasik-showcase a.ritual-card .ritual-card__footer-buttons {
+        width: 100%;
+        margin-top: auto;
+        padding-top: 1rem;
+        flex-shrink: 0;
+    }
+    .web-home-manasik-showcase a.ritual-card .ritual-card__footer-buttons .web-maps-locations-page__btn-details {
+        width: 100%;
+        flex: 1 1 auto;
+        min-width: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    @media (max-width: 768px) {
+        .web-home-manasik-showcase .card-header {
+            padding: 1.2rem;
+        }
+        .web-home-manasik-showcase .card-number {
+            width: 50px;
+            height: 50px;
+        }
+        .web-home-manasik-showcase .card-number span {
+            font-size: 1.2rem;
+        }
+        .web-home-manasik-showcase .ritual-card__title {
+            font-size: 1.1rem;
+        }
     }
 
     /* Manasik unique footer (RTL/LTR; uses --shop-font-sans, gold accent) */
@@ -5919,6 +6115,83 @@ html[data-theme='dark'] .hajj-acc2-btn-logout:hover {
 .web-manasik-guide__nav-btn--outline:hover:not(:disabled) {
     background: #e74c3c;
     color: white;
+}
+.web-manasik-guide__done-modal[hidden] {
+    display: none;
+}
+.web-manasik-guide__done-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+}
+.web-manasik-guide__done-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(9, 16, 12, 0.6);
+    backdrop-filter: blur(2px);
+}
+.web-manasik-guide__done-modal-dialog {
+    position: relative;
+    width: min(100%, 30rem);
+    border-radius: 1.25rem;
+    background: linear-gradient(180deg, #ffffff, #f8fbf8);
+    border: 1px solid rgba(26, 58, 42, 0.14);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.28);
+    padding: 1.4rem 1.2rem 1.1rem;
+    text-align: center;
+}
+.web-manasik-guide__done-modal-close {
+    position: absolute;
+    top: 0.6rem;
+    inset-inline-end: 0.6rem;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    border-radius: 9999px;
+    background: #eef2ef;
+    color: #405647;
+    cursor: pointer;
+}
+.web-manasik-guide__done-modal-icon {
+    width: 3.6rem;
+    height: 3.6rem;
+    margin: 0 auto 0.8rem;
+    border-radius: 9999px;
+    display: grid;
+    place-items: center;
+    background: #1a3a2a;
+    color: #d4af37;
+    font-size: 1.7rem;
+}
+.web-manasik-guide__done-modal-title {
+    margin: 0 0 0.55rem;
+    font-size: 1.3rem;
+    color: #1a3a2a;
+    font-weight: 800;
+}
+.web-manasik-guide__done-modal-text {
+    margin: 0;
+    color: #51665b;
+    font-size: 0.96rem;
+    line-height: 1.8;
+}
+.web-manasik-guide__done-modal-btn {
+    margin-top: 1rem;
+    border: none;
+    border-radius: 9999px;
+    min-height: 44px;
+    padding: 0.72rem 1.35rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #fff;
+    background: #1a3a2a;
+}
+.web-manasik-guide__done-modal-btn:hover {
+    background: #d4af37;
+    color: #1a3a2a;
 }
 @media (max-width: 900px) {
     /* Tabs strip: same frosted white + border/shadow as .web-hajj-navbar (reads as header extension when sticky) */

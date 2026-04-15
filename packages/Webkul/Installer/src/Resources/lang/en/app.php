@@ -215,6 +215,10 @@ return [
                 'heading' => 'Supplications and adhkar',
                 'subheading' => 'Selected authentic supplications and remembrances for Hajj and Umrah pilgrims—the same collection as on the dedicated page. Use “View more” to open the full library.',
             ],
+            'manasik-showcase' => [
+                'heading' => 'Hajj rites at a glance',
+                'subheading' => 'Main steps from ihram to farewell tawaf—open the full guide for details, duas, and key reminders.',
+            ],
             'section-divider' => [
                 'prayer' => [
                     'title'       => 'Prayer times',
@@ -222,7 +226,7 @@ return [
                 ],
                 'supplications' => [
                     'title'       => 'Dhikr & duas',
-                    'description' => 'Selected supplications for travel and rites — explore the full library from the link under the cards.',
+                    'description' => 'Selected supplications for travel and rites. The cards below match the dedicated page—use “View more” for the full library.',
                 ],
                 'maps' => [
                     'title'       => 'Holy sites and maps',
@@ -231,6 +235,14 @@ return [
             ],
             'maps-showcase' => [
                 'link_all' => 'View all maps',
+                'heading' => 'Holy sites and maps',
+                'subheading' => 'Principal locations for Hajj and Umrah: browse the preview cards, then open the full maps page for every site and interactive views.',
+            ],
+            'static-hajj-tips' => [
+                'heading' => 'Golden tips for pilgrims',
+                'subheading' => 'Important guidance for every pilgrim and visitor to the holy sites.',
+                'read_more' => 'Read more',
+                'got_it' => 'Understood',
             ],
             'prayer-times' => [
                 'heading' => 'Prayer times',

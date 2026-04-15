@@ -77,13 +77,20 @@
                                 {{ __('web::hajj_auth.auth-shell.welcome_brand') }}
                             </h1>
                         @else
-                            <div class="welcome-icon" aria-hidden="true">
-                                <i class="fas fa-kaaba"></i>
-                            </div>
-                            <h1 class="welcome-title">
-                                {{ __('web::hajj_auth.auth-shell.welcome_lead') }}
-                                <span>{{ __('web::hajj_auth.auth-shell.welcome_brand') }}</span>
-                            </h1>
+                            <a
+                                href="{{ $webHomeUrl }}"
+                                class="welcome-brand-link"
+                                aria-label="{{ __('web::app.components.layouts.header.desktop.bottom.logo-alt') }}"
+                                title="{{ $webHomeUrl }}"
+                            >
+                                <div class="welcome-icon" aria-hidden="true">
+                                    <i class="fas fa-kaaba"></i>
+                                </div>
+                                <h1 class="welcome-title">
+                                    {{ __('web::hajj_auth.auth-shell.welcome_lead') }}
+                                    <span>{{ __('web::hajj_auth.auth-shell.welcome_brand') }}</span>
+                                </h1>
+                            </a>
                         @endif
                         <div class="welcome-divider" aria-hidden="true"></div>
                         <p class="welcome-text">{{ __('web::hajj_auth.auth-shell.welcome_text') }}</p>

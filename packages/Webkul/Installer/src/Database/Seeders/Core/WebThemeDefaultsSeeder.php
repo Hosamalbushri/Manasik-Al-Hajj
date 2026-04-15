@@ -40,6 +40,9 @@ class WebThemeDefaultsSeeder extends Seeder
      */
     public function run(array $parameters = []): void
     {
+        $now = now();
+        $this->seedAdminPanelBrandColors($now);
+
         if (! Schema::hasTable('shop_theme_customizations')) {
             return;
         }
@@ -51,8 +54,6 @@ class WebThemeDefaultsSeeder extends Seeder
         if (! in_array($defaultLocale, self::THEME_LOCALES, true)) {
             $defaultLocale = 'en';
         }
-
-        $now = now();
 
         $this->seedCoreWebColors($now);
         $this->seedAdminPanelFooterLabel($now, $defaultLocale);
@@ -95,8 +96,9 @@ class WebThemeDefaultsSeeder extends Seeder
     }
 
     /**
-     * Homepage chain: hero → prayer times (heading + description in block) → supplications (title + description + 3 cards)
-     * → section divider (title + description for maps) → maps showcase (3 cards).
+     * Homepage chain: hero → prayer times → Hajj rites showcase (4 cards) → full-bleed divider (supplications intro)
+     * → supplications (no section title; cards only) → maps showcase (heading + description + cards)
+     * → static HTML band (Hajj tips grid + CSS-only modals).
      * Clears prior rows of these types for the storefront theme code so re-seeding matches the template.
      */
     protected function seedStorefrontHomeSections(string $themeCode, string $defaultLocale, Carbon $now): void
@@ -105,8 +107,10 @@ class WebThemeDefaultsSeeder extends Seeder
             ThemeCustomization::IMMERSIVE_HERO,
             ThemeCustomization::SECTION_DIVIDER,
             ThemeCustomization::PRAYER_TIMES,
+            ThemeCustomization::MANASIK_SHOWCASE,
             ThemeCustomization::SUPPLICATIONS_CONTENT,
             ThemeCustomization::MAPS_SHOWCASE,
+            ThemeCustomization::STATIC_CONTENT,
         ];
 
         DB::table('shop_theme_customizations')
@@ -139,25 +143,37 @@ class WebThemeDefaultsSeeder extends Seeder
         );
 
         $this->insertHomeThemeRow(
-            ThemeCustomization::SUPPLICATIONS_CONTENT,
-            'Home supplications',
-            30,
+            ThemeCustomization::MANASIK_SHOWCASE,
+            'Hajj rites showcase',
+            25,
             $themeCode,
             $this->buildLocalizableOptions($defaultLocale, [
-                'ar' => $this->supplicationsHomeOptionsForLocale('ar'),
-                'en' => $this->supplicationsHomeOptionsForLocale('en'),
+                'ar' => $this->manasikShowcaseHomeOptionsForLocale('ar'),
+                'en' => $this->manasikShowcaseHomeOptionsForLocale('en'),
             ]),
             $now
         );
 
         $this->insertHomeThemeRow(
             ThemeCustomization::SECTION_DIVIDER,
-            'Maps section intro',
+            'Supplications section intro',
+            30,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->sectionDividerFullBleedOptionsForLocale('ar', 'supplications'),
+                'en' => $this->sectionDividerFullBleedOptionsForLocale('en', 'supplications'),
+            ]),
+            $now
+        );
+
+        $this->insertHomeThemeRow(
+            ThemeCustomization::SUPPLICATIONS_CONTENT,
+            'Home supplications',
             35,
             $themeCode,
             $this->buildLocalizableOptions($defaultLocale, [
-                'ar' => $this->sectionDividerFullBleedOptionsForLocale('ar', 'maps'),
-                'en' => $this->sectionDividerFullBleedOptionsForLocale('en', 'maps'),
+                'ar' => $this->supplicationsHomeOptionsForLocale('ar'),
+                'en' => $this->supplicationsHomeOptionsForLocale('en'),
             ]),
             $now
         );
@@ -170,6 +186,18 @@ class WebThemeDefaultsSeeder extends Seeder
             $this->buildLocalizableOptions($defaultLocale, [
                 'ar' => $this->mapsShowcaseHomeOptionsForLocale('ar'),
                 'en' => $this->mapsShowcaseHomeOptionsForLocale('en'),
+            ]),
+            $now
+        );
+
+        $this->insertHomeThemeRow(
+            ThemeCustomization::STATIC_CONTENT,
+            'Home closing band',
+            45,
+            $themeCode,
+            $this->buildLocalizableOptions($defaultLocale, [
+                'ar' => $this->staticContentHomeCalloutForLocale('ar'),
+                'en' => $this->staticContentHomeCalloutForLocale('en'),
             ]),
             $now
         );
@@ -253,19 +281,48 @@ class WebThemeDefaultsSeeder extends Seeder
     }
 
     /**
-     * Title and description from installer lang; cards use the same content as the adhkar page.
+     * Section title comes from the preceding full-bleed divider; this block is cards only.
      *
      * @return array{heading: string, subheading: string, limit: int, show_more: bool, more_url: string}
      */
     protected function supplicationsHomeOptionsForLocale(string $locale): array
     {
         return [
-            'heading'    => $this->t('seeders.web-theme.supplications.heading', $locale, ''),
-            'subheading' => $this->t('seeders.web-theme.supplications.subheading', $locale, ''),
+            'heading'    => '',
+            'subheading' => '',
             'limit'      => 3,
             'show_more'  => true,
             'more_url'   => '',
         ];
+    }
+
+    /**
+     * @return array{heading: string, subheading: string, limit: int, show_more: bool, more_url: string}
+     */
+    protected function manasikShowcaseHomeOptionsForLocale(string $locale): array
+    {
+        return [
+            'heading'    => $this->t('seeders.web-theme.manasik-showcase.heading', $locale, ''),
+            'subheading' => $this->t('seeders.web-theme.manasik-showcase.subheading', $locale, ''),
+            'limit'      => 4,
+            'show_more'  => true,
+            'more_url'   => '',
+        ];
+    }
+
+    /**
+     * Static HTML block after maps: Hajj tips cards + :target modals (see WebThemeHajjTipsStaticSeed).
+     *
+     * @return array{html: string, css: string}
+     */
+    protected function staticContentHomeCalloutForLocale(string $locale): array
+    {
+        return WebThemeHajjTipsStaticSeed::htmlAndCss($locale, [
+            'heading'    => $this->t('seeders.web-theme.static-hajj-tips.heading', $locale, ''),
+            'subheading' => $this->t('seeders.web-theme.static-hajj-tips.subheading', $locale, ''),
+            'read_more'  => $this->t('seeders.web-theme.static-hajj-tips.read_more', $locale, 'Read more'),
+            'got_it'     => $this->t('seeders.web-theme.static-hajj-tips.got_it', $locale, 'Got it'),
+        ]);
     }
 
     /**
@@ -274,12 +331,42 @@ class WebThemeDefaultsSeeder extends Seeder
     protected function mapsShowcaseHomeOptionsForLocale(string $locale): array
     {
         return [
-            'heading'    => '',
-            'subheading' => '',
+            'heading'    => $this->t('seeders.web-theme.maps-showcase.heading', $locale, ''),
+            'subheading' => $this->t('seeders.web-theme.maps-showcase.subheading', $locale, ''),
             'limit'      => 3,
             'link_show'  => true,
             'link_label' => $this->t('seeders.web-theme.maps-showcase.link_all', $locale, 'View all maps'),
         ];
+    }
+
+    /**
+     * Admin sidebar / shell brand color + login accent (skips if row already exists).
+     */
+    protected function seedAdminPanelBrandColors(Carbon $now): void
+    {
+        if (! Schema::hasTable('core_config')) {
+            return;
+        }
+
+        $brand = self::SHOP_PRIMARY;
+
+        $map = [
+            'general.settings.menu_color.brand_color'                 => $brand,
+            'general.settings.admin_login.background_accent_color'    => $brand,
+        ];
+
+        foreach ($map as $code => $value) {
+            if (DB::table('core_config')->where('code', $code)->exists()) {
+                continue;
+            }
+
+            DB::table('core_config')->insert([
+                'code'       => $code,
+                'value'      => $value,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
     }
 
     protected function seedCoreWebColors(Carbon $now): void

@@ -916,6 +916,29 @@ function initHajjAccountPage() {
         });
     }
 
+    const logoutForm = root.querySelector('form[data-hajj-logout-form]');
+    if (logoutForm) {
+        logoutForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const title = logoutForm.getAttribute('data-logout-title') || '';
+            const message = logoutForm.getAttribute('data-logout-message') || '';
+            const btnAgree = logoutForm.getAttribute('data-logout-agree') || '';
+            const btnDisagree = logoutForm.getAttribute('data-logout-cancel') || '';
+
+            const openConfirmEvent = new CustomEvent('open-confirm-modal', {
+                detail: {
+                    title,
+                    message,
+                    options: { btnAgree, btnDisagree },
+                    agree: () => logoutForm.submit(),
+                },
+            });
+
+            document.dispatchEvent(openConfirmEvent);
+        });
+    }
+
     root.querySelectorAll('[data-toggle-pass]').forEach((btn) => {
         btn.addEventListener('click', () => {
             const id = btn.getAttribute('data-toggle-pass');
@@ -1082,7 +1105,6 @@ function initWebManasikGuide() {
         return;
     }
 
-    const storageKey = root.getAttribute('data-storage-key') || 'web_manasik_rituals_v1';
     const n = parseInt(root.getAttribute('data-step-count') || '0', 10);
     if (!Number.isFinite(n) || n <= 0) {
         return;
@@ -1120,19 +1142,7 @@ function initWebManasikGuide() {
         completed = serverProgress.completed.map((v) => !!v);
         loadedFromServer = true;
     }
-    if (!loadedFromServer) {
-        try {
-            const raw = localStorage.getItem(storageKey);
-            if (raw) {
-                const p = JSON.parse(raw);
-                if (Array.isArray(p) && p.length === n) {
-                    completed = p.map((v) => !!v);
-                }
-            }
-        } catch (e) {
-            completed = new Array(n).fill(false);
-        }
-    }
+    // No browser persistence: progress starts fresh unless loaded from server.
 
     let activeIndex = 0;
     if (hajjAuth && serverProgress && serverProgress.active_index !== undefined && serverProgress.active_index !== null) {
@@ -1151,6 +1161,25 @@ function initWebManasikGuide() {
     const nextBtn = root.querySelector('[data-manasik-next]');
     const resetBtn = root.querySelector('[data-manasik-reset]');
     const stepMetaEl = root.querySelector('[data-manasik-step-meta]');
+    const doneModal = root.querySelector('[data-manasik-done-modal]');
+    const doneRestartBtn = root.querySelector('[data-manasik-done-restart]');
+    const doneCloseBtns = root.querySelectorAll('[data-manasik-done-close]');
+
+    function openDoneModal() {
+        if (!doneModal) {
+            return;
+        }
+        doneModal.removeAttribute('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeDoneModal() {
+        if (!doneModal) {
+            return;
+        }
+        doneModal.setAttribute('hidden', '');
+        document.body.style.overflow = '';
+    }
 
     function canAccessStep(j) {
         if (j < 0 || j >= n) {
@@ -1350,16 +1379,15 @@ function initWebManasikGuide() {
             const doneLabel = ui.mark_complete_done || ui.mark_complete || '';
             const openLabel = ui.mark_complete || '';
             btn.textContent = completed[idx] ? doneLabel : openLabel;
+        btn.disabled = !!completed[idx];
+        btn.setAttribute('aria-disabled', completed[idx] ? 'true' : 'false');
         });
 
         updateEncouragement();
-        try {
-            localStorage.setItem(storageKey, JSON.stringify(completed));
-        } catch (e) {
-            /* ignore quota */
-        }
-
         const allDoneNow = n > 0 && completed.every(Boolean);
+        if (allDoneNow && !prevAllDone) {
+            openDoneModal();
+        }
         if (allDoneNow && !prevAllDone && !hajjAuth && guestCompletionUrl) {
             const guestToken = getManasikCsrfToken();
             if (guestToken) {
@@ -1408,9 +1436,20 @@ function initWebManasikGuide() {
             if (idx < 0 || idx >= n) {
                 return;
             }
-            completed[idx] = !completed[idx];
+            // Once a rite is marked complete, do not allow reverting it.
+            if (completed[idx]) {
+                return;
+            }
+            completed[idx] = true;
             updateUI();
-            scrollPillIntoView(idx);
+            // Auto-advance to next rite after marking current one complete.
+            if (idx < n - 1) {
+                goToStep(idx + 1);
+            } else {
+                scrollPillIntoView(idx);
+                // Open completion modal explicitly on finishing the final rite.
+                openDoneModal();
+            }
         });
     });
 
@@ -1463,6 +1502,22 @@ function initWebManasikGuide() {
             goToStep(0);
         });
     }
+
+    if (doneRestartBtn) {
+        doneRestartBtn.addEventListener('click', () => {
+            completed = new Array(n).fill(false);
+            activeIndex = 0;
+            closeDoneModal();
+            updateUI();
+            goToStep(0);
+        });
+    }
+
+    doneCloseBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            closeDoneModal();
+        });
+    });
 
     const guestHint = root.querySelector('[data-manasik-guest-hint]');
     if (guestHint) {

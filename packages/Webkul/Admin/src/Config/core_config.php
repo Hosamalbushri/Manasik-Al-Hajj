@@ -190,7 +190,7 @@ return [
                 'name' => 'brand_color',
                 'title' => 'admin::app.configuration.index.general.settings.menu-color.brand-color',
                 'type' => 'color',
-                'default' => '#0E90D9',
+                'default' => '#165022',
             ],
         ],
     ], [
@@ -203,7 +203,7 @@ return [
                 'name' => 'background_accent_color',
                 'title' => 'admin::app.configuration.index.general.settings.admin-login.background-accent',
                 'type' => 'color',
-                'default' => '#1a5f3f',
+                'default' => '#165022',
             ],
         ],
     ],

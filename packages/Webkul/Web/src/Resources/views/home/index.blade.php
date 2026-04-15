@@ -62,6 +62,15 @@
 
                 @break
 
+            @case (ThemeCustomization::MANASIK_SHOWCASE)
+                <x-web::home.manasik-showcase
+                    :options="$data"
+                    :section-id="$homeSectionInstanceId"
+                    :aria-label="__('web::app.home.index.manasik-showcase')"
+                />
+
+                @break
+
             @case (ThemeCustomization::PRAYER_TIMES)
                 <x-web::home.prayer-times
                     :options="$data"

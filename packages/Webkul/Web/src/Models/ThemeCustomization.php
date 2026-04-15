@@ -29,6 +29,9 @@ class ThemeCustomization
     /** Home: same map location cards as the maps page (data from Web map locations). */
     public const MAPS_SHOWCASE = 'maps_showcase';
 
+    /** Home: Hajj rites preview cards (data from manasik_hajj_rites); theme sets framing + limit + CTA. */
+    public const MANASIK_SHOWCASE = 'manasik_showcase';
+
     /** Home: prayer times card with Swiper + Aladhan API (timings by city). */
     public const PRAYER_TIMES = 'prayer_times';
 }

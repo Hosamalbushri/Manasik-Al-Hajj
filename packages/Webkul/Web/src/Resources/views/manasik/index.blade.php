@@ -287,6 +287,35 @@
                             </button>
                         </nav>
                     </div>
+
+                    <div class="web-manasik-guide__done-modal" data-manasik-done-modal hidden>
+                        <div class="web-manasik-guide__done-modal-backdrop" data-manasik-done-close></div>
+                        <div class="web-manasik-guide__done-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="web-manasik-done-title">
+                            <button
+                                type="button"
+                                class="web-manasik-guide__done-modal-close"
+                                data-manasik-done-close
+                                aria-label="{{ $manasikUi['done_modal_close'] ?? '' }}"
+                            >
+                                <i class="fas fa-times" aria-hidden="true"></i>
+                            </button>
+
+                            <div class="web-manasik-guide__done-modal-icon" aria-hidden="true">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+
+                            <h3 id="web-manasik-done-title" class="web-manasik-guide__done-modal-title">
+                                {{ $manasikUi['done_modal_title'] ?? '' }}
+                            </h3>
+                            <p class="web-manasik-guide__done-modal-text">
+                                {{ $manasikUi['done_modal_text'] ?? '' }}
+                            </p>
+
+                            <button type="button" class="web-manasik-guide__done-modal-btn" data-manasik-done-restart>
+                                {{ $manasikUi['done_modal_restart'] ?? '' }}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

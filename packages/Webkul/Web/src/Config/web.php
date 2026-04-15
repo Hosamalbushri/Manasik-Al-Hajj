@@ -81,7 +81,8 @@ return [
     /**
      * Home page sections when DB has no rows (fallback only).
      * After installer seeding, rows come from shop_theme_customizations (see WebThemeDefaultsSeeder):
-     * hero → prayer times (title/description in block) → supplications (title + 3 cards) → section divider (maps intro) → maps showcase (3 cards).
+     * hero → prayer times → Hajj rites showcase (4 cards) → full-bleed divider (supplications intro) → supplications (no block title; 3 cards)
+     * → maps showcase (heading + subheading + 3 cards) → static HTML (Hajj tips grid + modals).
      */
     'home_customizations' => [
         [

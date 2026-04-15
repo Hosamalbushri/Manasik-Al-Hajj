@@ -161,6 +161,11 @@
                                     'opts' => $opts,
                                 ])
 
+                                @includeWhen($theme->type === 'manasik_showcase', 'admin::settings.web-theme.edit.manasik-showcase', [
+                                    'theme' => $theme,
+                                    'opts' => $opts,
+                                ])
+
                                 @includeWhen($theme->type === 'prayer_times', 'admin::settings.web-theme.edit.prayer-times', [
                                     'theme' => $theme,
                                     'opts' => $opts,
@@ -242,6 +247,7 @@
                                     <option value="inner_page_hero">@lang('admin::app.settings.web-theme.create.type.inner-page-hero')</option>
                                     <option value="section_divider">@lang('admin::app.settings.web-theme.create.type.section-divider')</option>
                                     <option value="maps_showcase">@lang('admin::app.settings.web-theme.create.type.maps-showcase')</option>
+                                    <option value="manasik_showcase">@lang('admin::app.settings.web-theme.create.type.manasik-showcase')</option>
                                     <option value="prayer_times">@lang('admin::app.settings.web-theme.create.type.prayer-times')</option>
                                 </x-admin::form.control-group.control>
 

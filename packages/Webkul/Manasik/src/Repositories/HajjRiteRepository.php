@@ -124,6 +124,92 @@ class HajjRiteRepository
         return $out;
     }
 
+    /**
+     * Homepage manasik block: lightweight rows for ritual cards (same order as the guide).
+     *
+     * @return list<array{index: int, title: string, subtitle: string, badge: string, description: string, info_chips: list<string>, dua_text: string, dua_reference: string}>
+     *         info_chips contains at most one text line for the homepage preview.
+     */
+    public function getHomePreviewRites(int $limit, ?string $locale = null): array
+    {
+        $limit = max(1, min(50, $limit));
+        $steps = $this->getGuideStepsForLocale($locale);
+        if ($steps === []) {
+            return [];
+        }
+
+        $steps = array_slice($steps, 0, $limit);
+        $out = [];
+        $i = 1;
+
+        foreach ($steps as $step) {
+            if (! is_array($step)) {
+                continue;
+            }
+
+            $title = trim((string) ($step['title'] ?? ''));
+            if ($title === '') {
+                $title = trim((string) ($step['tab_label'] ?? ''));
+            }
+
+            $rawDesc = (string) ($step['description'] ?? '');
+            $stripped = strip_tags($rawDesc);
+            $collapsed = preg_replace('/\s+/u', ' ', $stripped);
+            $plain = trim(is_string($collapsed) ? $collapsed : '');
+            $descMax = 120;
+            $excerpt = mb_substr($plain, 0, $descMax);
+            if (mb_strlen($plain) > $descMax) {
+                $excerpt .= '…';
+            }
+
+            $chips = [];
+            $items = $step['info_items'] ?? [];
+            if (is_array($items)) {
+                foreach ($items as $it) {
+                    if (count($chips) >= 1) {
+                        break;
+                    }
+                    if (! is_array($it)) {
+                        continue;
+                    }
+                    $chipText = trim((string) ($it['text'] ?? ''));
+                    if ($chipText !== '') {
+                        $chips[] = mb_substr($chipText, 0, 200);
+                    }
+                }
+            }
+
+            $duaText = trim((string) ($step['dua_text'] ?? ''));
+            $duaRef = trim((string) ($step['dua_reference'] ?? ''));
+            $duaMax = 160;
+            if (mb_strlen($duaText) > $duaMax) {
+                $duaText = mb_substr($duaText, 0, $duaMax).'…';
+            }
+
+            if ($title === '' && $excerpt === '' && $duaText === '') {
+                continue;
+            }
+
+            if ($title === '') {
+                $title = mb_substr($excerpt !== '' ? $excerpt : (string) $i, 0, 80);
+            }
+
+            $out[] = [
+                'index'           => $i,
+                'title'           => mb_substr($title, 0, 500),
+                'subtitle'        => mb_substr(trim((string) ($step['subtitle'] ?? '')), 0, 500),
+                'badge'           => mb_substr(trim((string) ($step['badge'] ?? '')), 0, 200),
+                'description'     => $excerpt,
+                'info_chips'      => $chips,
+                'dua_text'        => $duaText,
+                'dua_reference'   => $duaRef,
+            ];
+            $i++;
+        }
+
+        return $out;
+    }
+
     public function getGuideStepCount(?string $locale = null): int
     {
         $steps = $this->getGuideStepsForLocale($locale);

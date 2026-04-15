@@ -218,6 +218,10 @@ return [
             'guest_login'        => 'تسجيل الدخول',
             'guest_dismiss'      => 'إغلاق',
             'toast_sync_failed'  => 'تعذر حفظ التقدم في حسابك',
+            'done_modal_title'   => 'مبارك! أكملت جميع المناسك',
+            'done_modal_text'    => 'نسأل الله لك القبول. يمكنك البدء من جديد لمراجعة المناسك مرة أخرى.',
+            'done_modal_restart' => 'العودة إلى البداية',
+            'done_modal_close'   => 'إغلاق النافذة',
         ],
 
         'steps' => [
@@ -346,7 +350,12 @@ return [
             'supplications'       => 'الأدعية والأذكار',
             'section-divider'     => 'عنوان القسم',
             'maps-showcase'       => 'المشاعر المقدسة — معاينة',
+            'manasik-showcase'    => 'مناسك الحج — معاينة',
             'prayer-times'        => 'مواقيت الصلاة اليومية',
+        ],
+        'manasik-showcase' => [
+            'details'   => 'تفاصيل المناسك',
+            'view_more' => 'عرض المزيد',
         ],
         'maps-showcase' => [
             'link-default' => 'عرض كل الخرائط',
