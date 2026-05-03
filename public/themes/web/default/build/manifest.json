@@ -1,6 +1,22 @@
 {
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-BP5tdqmh.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-nyy7hhHF.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-DRAAbZTg.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
+  },
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2": {
+    "file": "assets/fa-v4compatibility-DD84SGiu.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
+  },
   "src/Resources/assets/css/app.css": {
-    "file": "assets/app-gehzozrB.css",
+    "file": "assets/app-CD2lsMoB.css",
     "src": "src/Resources/assets/css/app.css",
     "isEntry": true
   },
@@ -41,15 +57,19 @@
     "src": "src/Resources/assets/fonts/bagisto-shop.woff"
   },
   "src/Resources/assets/js/app.js": {
-    "file": "assets/app-CGrAaL5A.js",
+    "file": "assets/app-BJ-Klht9.js",
     "name": "app",
     "src": "src/Resources/assets/js/app.js",
     "isEntry": true,
     "css": [
       "assets/app-CJ-KzOvo.css",
-      "assets/app-gehzozrB.css"
+      "assets/app-CD2lsMoB.css"
     ],
     "assets": [
+      "assets/fa-brands-400-BP5tdqmh.woff2",
+      "assets/fa-regular-400-nyy7hhHF.woff2",
+      "assets/fa-solid-900-DRAAbZTg.woff2",
+      "assets/fa-v4compatibility-DD84SGiu.woff2",
       "assets/Cairo-ExtraLight-B8LDBVyd.ttf",
       "assets/Cairo-Light-DijhTkuQ.ttf",
       "assets/Cairo-Regular-CvRCENXA.ttf",

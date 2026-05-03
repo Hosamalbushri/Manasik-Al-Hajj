@@ -136,9 +136,7 @@
     }
 @endphp
 
-@pushOnce('styles', 'web-hajj-navbar-styles')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-@endPushOnce
+
 
 <nav class="web-hajj-navbar" dir="{{ $dirAttr }}" @if ($headerNavInlineStyle !== '') style="{{ $headerNavInlineStyle }}" @endif>
     <div class="web-hajj-navbar__backdrop" aria-hidden="true"></div>
